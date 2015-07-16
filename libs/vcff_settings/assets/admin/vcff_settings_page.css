@@ -1,0 +1,22 @@
+.vcff-settings-container {}
+.vcff-settings-container .inside { margin:0px !important;padding:15px !important; }
+
+.vcff-settings-page { }
+.vcff-settings-page .settings-page-header {  }
+.vcff-settings-page .settings-page-header h3 { font-size:28px !important; }
+
+.vcff-settings-group { padding:0px;border:1px #EEE solid;margin-top:25px; }
+.vcff-settings-group .settings-group-header { padding-left:10px;padding-right:10px; }
+.vcff-settings-group .settings-group-header h4 { margin:0px;padding:5px 10px;position:relative;top:-9px;margin-top:-9px;display:inline-block;background:#FFF;font-weight:bold; }
+.vcff-settings-group .settings-group-header a.help-lnk { float:right;position:relative;top:-8px;margin-top:-8px;display:inline-block;padding:5px 10px;background:#FFF;font-weight:bold; }
+.vcff-settings-group .row-content { padding:15px; }
+.vcff-settings-group .row-content .col-fields {}
+.vcff-settings-group .row-content .col-details {}
+.vcff-settings-group .row-content .instructions { padding:0px 15px 15px 15px; }
+.vcff-settings-group .row-content .instructions h4:first-child { margin-top:0px; }
+
+.vcff-settings-fields {}
+.vcff-settings-fields .vcff-settings-fieldset { padding-top:10px; }
+
+.vcff-settings-textfield {}
+.vcff-settings-textfield .hints { font-size:12px;font-style:italic;color:#999;margin-top:5px;line-height:1.3em; }

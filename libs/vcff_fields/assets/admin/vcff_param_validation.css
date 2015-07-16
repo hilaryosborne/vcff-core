@@ -1,0 +1,11 @@
+.vcff_param_validation { }
+.vcff_param_validation h3 { margin-bottom:15px !important;border-bottom:1px #EEE solid;padding-bottom:15px !important; }
+.vcff_param_validation h3 .help-link { float:right;font-size:14px;margin-top:8px; }
+.vcff_param_validation h3 .help-link span { position:relative;top:-2px;margin-bottom:-2px; }
+.vcff_param_validation .validation-item { margin-bottom:10px; }
+.vcff_param_validation .validation-item .col-item { text-align:left; }
+.vcff_param_validation .validation-item .col-value { text-align:left; }
+.vcff_param_validation .validation-item .col-links { text-align:right; }
+.vcff_param_validation .validation-item .dashicons { font-size:26px;width:26px;height:26px;margin:6px 0px; }
+.vcff_param_validation .validation-item .dashicons:hover,
+.vcff_param_validation .validation-item .dashicons:active { text-decoration:none; }

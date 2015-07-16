@@ -1,0 +1,8 @@
+.page_import_export {}
+.page_import_export .form-group { margin-bottom:25px !important; }
+.page_import_export .form-group:last-child { margin-bottom:0px !important; }
+.page_import_export .vcff-field-group { padding:0px;border:1px #CCC solid;margin-top:25px; }
+.page_import_export .vcff-field-group .vcff-field-header { padding-left:10px;padding-right:10px; }
+.page_import_export .vcff-field-group .vcff-field-header h4 { margin:0px;padding:5px 10px;position:relative;top:-9px;margin-top:-9px;display:inline-block;background:#f1f1f1;font-weight:bold; }
+.page_import_export .vcff-field-group .vcff-field-header a.help-lnk { float:right;position:relative;top:-8px;margin-top:-8px;display:inline-block;padding:5px 10px;background:#f1f1f1;font-weight:bold; }
+.page_import_export .vcff-field-group .vcff-field-contents { padding:5px 15px 15px 15px; }

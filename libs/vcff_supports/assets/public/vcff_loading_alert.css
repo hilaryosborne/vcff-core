@@ -1,0 +1,4 @@
+.form-loading-alert { display:block;background:#EEE; }
+.form-loading-alert .inner-wrap { padding:15px;text-align:center;font-weight:bold; }
+
+.form-loading-alert.for-hovering { position:fixed;bottom:0px;left:15%;right:15%;z-index:9999; }

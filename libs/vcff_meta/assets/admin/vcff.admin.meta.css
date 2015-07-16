@@ -1,0 +1,30 @@
+.vcff-tabs { position:relative;background:#f5f5f5;padding:1px;margin:1px; }
+.vcff-tabs .ui-tabs-nav { position:absolute;top:16px;left:15px;width:201px;margin:0px;padding:0px; }
+.vcff-tabs .ui-tabs-nav li.ui-state-default {}
+.vcff-tabs .ui-tabs-nav li.ui-state-default a { text-decoration:none;display:block;padding:15px;font-weight:bold;color:#000; }
+.vcff-tabs .ui-tabs-nav li.ui-state-default a:focus { outline:none;box-shadow:none }
+.vcff-tabs .ui-tabs-nav li.ui-state-active { background:#FFF; }
+.vcff-tabs .ui-tabs-panel { background:#FFF;margin:15px 15px 15px 215px;min-height:350px;box-sizing:border-box;padding:15px 15px 15px 15px; }
+
+.vcff-meta-container {}
+.vcff-meta-container .inside { margin:0px !important;padding:15px !important; }
+
+.vcff-meta-page { }
+.vcff-meta-page .meta-page-header {  }
+.vcff-meta-page .meta-page-header h3 { font-size:28px !important; }
+
+.vcff-meta-group { padding:0px;border:1px #EEE solid;margin-top:25px; }
+.vcff-meta-group .meta-group-header { padding-left:10px;padding-right:10px; }
+.vcff-meta-group .meta-group-header h4 { margin:0px;padding:5px 10px;position:relative;top:-9px;margin-top:-9px;display:inline-block;background:#FFF;font-weight:bold; }
+.vcff-meta-group .meta-group-header a.help-lnk { float:right;position:relative;top:-8px;margin-top:-8px;display:inline-block;padding:5px 10px;background:#FFF;font-weight:bold; }
+.vcff-meta-group .row-content { padding:15px; }
+.vcff-meta-group .row-content .col-fields {}
+.vcff-meta-group .row-content .col-details {}
+.vcff-meta-group .row-content .instructions { padding:0px 15px 15px 15px; }
+.vcff-meta-group .row-content .instructions h4:first-child { margin-top:0px; }
+
+.vcff-meta-fields {}
+.vcff-meta-fields .vcff-meta-fieldset { padding-top:10px; }
+
+.vcff-meta-textfield {}
+.vcff-meta-textfield .hints { font-size:12px;font-style:italic;color:#999;margin-top:5px;line-height:1.3em; }
