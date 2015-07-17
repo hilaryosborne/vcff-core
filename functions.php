@@ -186,6 +186,8 @@ function vcff_get_file_url($urlpath) {
 
 function array_key_check($needle_key, $needle_value, $haystack, $strict = false) {
     
+    if (!$haystack || !is_array($haystack)) { return false; }
+    
 	foreach ($haystack as $k => $value) {
 		
 		if (!isset($value[$needle_key])) { continue; }

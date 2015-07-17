@@ -226,11 +226,14 @@ class VCFF_Forms {
             // Run the params through a filter
             $params = apply_filters('vcff_form_vc_params',array(
                 array (
-                    "type" => "textfield",
-                    "heading" => __("Attributes", VCFF_FORM ),
-                    "param_name" => "form_attributes",
+                    "type" => "vcff_heading",
+                    "heading" => false,
+                    "param_name" => "field_heading",
+                    'html_title' => 'VCFF Form',
+                    'html_description' => 'A form field provides a page element which users can import data into or make selections using to provide information for your form. Each field element requires at least a machine code and a set of labels explaining what the field is for to the user and administrator.',
+                    'help_url' => 'http://blah',
                 ),
-                array (
+                array(
                     'type' => 'textfield',
                     'heading' => __('Extra Class', VCFF_FORM ),
                     'param_name' => 'extra_class',

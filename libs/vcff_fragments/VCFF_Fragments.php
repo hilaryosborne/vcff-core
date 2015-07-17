@@ -154,6 +154,9 @@ class VCFF_Fragments {
         if (!$published) { return; }
         
         $fragment_list = array();
+        
+        $fragment_list['Please select a fragment'] = '';
+
         // Loop through each published post
         foreach ($published as $k => $_post) { 
             // Retrieve the post object
