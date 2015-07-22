@@ -28,6 +28,8 @@ class VCFF_Fragments {
         require_once(VCFF_FRAGMENTS_DIR.'/VCFF_Fragments_Public.php');
         // Fire the shortcode init action
         do_action('vcff_fragments_after_init',$this);
+        // Add the css to scripts
+        add_action('wp_print_scripts', array($this,'Inject_CSS'));
     }
  
     public function Register_Pages() {
@@ -192,6 +194,29 @@ class VCFF_Fragments {
         ));
         // Fire the vc init action
         do_action('vcff_fragments_vc_init',$this);
+    }
+    
+    public function Inject_CSS() {
+        // Retrieve all of the fragments
+        $fragments = get_posts(array(
+            'post_type' => 'vcff_fragment',
+            'numberposts' => - 1
+        ));
+        // If no fragments were returned, return out
+        if (!$fragments || !is_array($fragments) || count($fragments) == 0) { return; }
+        // Return a new inline style block
+        echo '<style type="text/css" data-type="vc_shortcodes-custom-css">';
+        // Loop through each block
+        foreach ($fragments as $k => $post) {
+            // Retrieve the custom css
+            $custom_css = get_post_meta($post->ID,'_wpb_shortcodes_custom_css',true);
+            // If no custom css, move on
+            if (!$custom_css) { continue; }
+            // Return the custom css
+            echo $custom_css;
+        }
+        // Echo the style
+        echo '</style>';
     }
 
 }
