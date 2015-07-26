@@ -140,7 +140,7 @@ add_filter('vcff_settings_field_list',function($field_list, $form_instance){
         'machine_code' => 'form_attributes',
         'field_label' => 'Form Attributes',
         'weight' => 2,
-        'validation' => array('required' => true),
+        'validation' => array(),
         'field_type' => 'textfield',
         'field_dependancy' => false,
     );

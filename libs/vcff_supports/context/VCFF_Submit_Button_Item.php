@@ -8,9 +8,9 @@ class VCFF_Submit_Button_Item extends VCFF_Support_Item {
             'btn_label'=>'',
             'btn_value'=>'',
             'extra_class'=>'',
-            'el_extra_class',
+            'el_extra_class' => '',
             'css'=>'',
-        ), $this->attributes));
+        ), $this->attributes)); 
         // Compile the css class
         $css_class = apply_filters(VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, vc_shortcode_custom_css_class( $css, ' ' ), $this->settings['base'], $atts);
         // Start gathering content
