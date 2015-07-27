@@ -25,7 +25,7 @@ class VCFF_Single_Select_Field_Item extends VCFF_Field_Item {
             'css'=>'',
         ), $this->attributes));
         // Compile the css class
-        $css_class = apply_filters(VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, vc_shortcode_custom_css_class( $css, ' ' ), $this->settings['base'], $atts);
+        $css_class = apply_filters(VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, vc_shortcode_custom_css_class( $css, ' ' ), $this->settings['base'], $this->attributes);
         // The options list
         $options_list = array();
         // Explode the options by a new line
