@@ -6,7 +6,7 @@ class VCFF_Standard_Form_Item extends VCFF_Form_Item {
         // Convert attrs to vars
         extract(shortcode_atts(array(
             'form_attributes'=>'',
-            'form_extra_class'=>'',
+            'extra_class'=>'',
         ), $this->form_attributes));
 
         $form_content = $this->form_content;

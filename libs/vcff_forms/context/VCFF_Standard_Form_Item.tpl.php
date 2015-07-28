@@ -1,4 +1,4 @@
-<form <?php if ($form_attributes): ?><?php echo $form_attributes ?><?php endif ?> method="post" action="" enctype="multipart/form-data" autocomplete="off" class="<?php if ($this->Get_Meta_Field_Value('use_ajax') == 'yes'): ?>do-ajax-submit<?php endif; ?> vcff-form <?php if ($form_extra_class): ?><?php echo $form_extra_class ?><?php endif ?>">
+<form <?php if ($form_attributes): ?><?php echo $form_attributes ?><?php endif ?> method="post" action="" enctype="multipart/form-data" autocomplete="off" class="<?php if ($this->Get_Meta_Field_Value('use_ajax') == 'yes'): ?>do-ajax-submit<?php endif; ?> vcff-form <?php if ($extra_class): ?><?php echo $extra_class; ?><?php endif ?>">
     <?php do_action('vcff_form_render_pre_content',$this); ?>
     <div class="form-alerts">
         <?php echo $this->Get_Alerts_HTML(); ?>
