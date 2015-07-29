@@ -23,14 +23,22 @@ class VCFF_Forms_Helper_Submission extends VCFF_Helper {
         if (!isset($this->form_instance)) { return false; }
 		// Retrieve the form instance
         $form_instance = $this->form_instance;
+        // Do required actions
+        do_action('vcff_form_submit_standard',$form_instance);
         // If the active field check fails
         if (!$form_instance->Is_Valid()) {
             // Complete the form
-            $form_instance->Submission_Failed(); 
+            $form_instance->Submission_Failed();
+            // Do required actions
+            do_action('vcff_form_submit_failed_standard',$form_instance);
+            do_action('vcff_form_submit_failed',$form_instance);
         } // Otherwise if the submission works 
         elseif ($form_instance->Is_Valid()) {
             // Complete the form
             $form_instance->Submission_Passed();
+            // Do required actions
+            do_action('vcff_form_submit_passed_standard',$form_instance);
+            do_action('vcff_form_submit_passed',$form_instance);
             // Do any redirects
             $this->_Do_Standard_Redirects();
         }
@@ -99,14 +107,22 @@ class VCFF_Forms_Helper_Submission extends VCFF_Helper {
         if (!isset($this->form_instance)) { return false; }
 		// Retrieve the form instance
         $form_instance = $this->form_instance; 
+        // Do required actions
+        do_action('vcff_form_submit_ajax',$form_instance);
         // If the active field check fails
         if (!$form_instance->Is_Valid()) { 
             // Complete the form
-            $form_instance->Submission_Failed(); 
+            $form_instance->Submission_Failed();
+            // Do required actions
+            do_action('vcff_form_submit_failed_ajax',$form_instance);
+            do_action('vcff_form_submit_failed',$form_instance);
         } // Otherwise if the submission works 
         elseif ($form_instance->Is_Valid()) { 
             // Complete the form
             $form_instance->Submission_Passed();
+            // Do required actions
+            do_action('vcff_form_submit_passed_ajax',$form_instance);
+            do_action('vcff_form_submit_passed',$form_instance);
         }
     }
 

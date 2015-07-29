@@ -155,38 +155,54 @@ class Event_Email_Item extends VCFF_Event_Item {
         
         $mailer->From = $this->Get_From_Address();
         $mailer->FromName = $this->Get_From_Name();
-        $mailer->addReplyTo($this->Get_Reply_Address(), $this->Get_Reply_Name());
+        
+        if ($this->Get_Reply_Address()) {
+            $mailer->addReplyTo($this->Get_Reply_Address(), $this->Get_Reply_Name());
+        }
+
         $mailer->isHTML(true);
+        
+        
         
         $mailer_is_smtp = vcff_get_setting_value('mailer_is_smtp');
         
-        if ($mailer_is_smtp) { $mailer->isSMTP(); }
+        if ($mailer_is_smtp) { 
+            
+            $mailer->isSMTP(); 
 
-        $mailer_host = vcff_get_setting_value('mailer_host');
-        
-        if ($mailer_host && strlen($mailer_host) > 1) { $mailer->Host = $mailer_host; }
-        
-        $mailer_smtp_auth = vcff_get_setting_value('mailer_smtp_auth');
-        
-        if ($mailer_smtp_auth) { $mailer->SMTPAuth = true; }
-        
-        $mailer_username = vcff_get_setting_value('mailer_username');
-        
-        if ($mailer_username) { $mailer->Username = $mailer_username; }
-        
-        $mailer_password = vcff_get_setting_value('mailer_password');
-        
-        if ($mailer_password) { $mailer->Password = $mailer_password; }
+            $mailer->SMTPOptions = array(
+                'ssl' => array(
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true
+                )
+            );
+            
+            $mailer_host = vcff_get_setting_value('mailer_host');
 
-        $mailer_secure = vcff_get_setting_value('mailer_secure');
-        
-        if ($mailer_secure) { $mailer->SMTPSecure = $mailer_secure; }
-        
-        $mailer_port = vcff_get_setting_value('mailer_port');
-        
-        if ($mailer_port) { $mailer->Port = $mailer_port; }
-        
-        
+            if ($mailer_host && strlen($mailer_host) > 1) { $mailer->Host = $mailer_host; }
+
+            $mailer_smtp_auth = vcff_get_setting_value('mailer_smtp_auth');
+
+            if ($mailer_smtp_auth) { $mailer->SMTPAuth = true; }
+
+            $mailer_username = vcff_get_setting_value('mailer_username');
+
+            if ($mailer_username) { $mailer->Username = $mailer_username; }
+
+            $mailer_password = vcff_get_setting_value('mailer_password');
+
+            if ($mailer_password) { $mailer->Password = $mailer_password; }
+
+            $mailer_secure = vcff_get_setting_value('mailer_secure');
+
+            if ($mailer_secure) { $mailer->SMTPSecure = $mailer_secure; }
+
+            $mailer_port = vcff_get_setting_value('mailer_port');
+
+            if ($mailer_port) { $mailer->Port = $mailer_port; }
+        }
+
         $send_to = $this->Get_Send_Emails();
         
         if ($send_to && is_array($send_to)) {
@@ -275,7 +291,7 @@ class Event_Email_Item extends VCFF_Event_Item {
         
         $mailer->AltBody = $text_content;
         
-        if (!$mailer->send()) { $this->error = $mailer->ErrorInfo; }
+        if (!$mailer->send()) { $this->error = $mailer->ErrorInfo; $form_instance->Add_Alert('danger','There was a problem with PHPMailer: '.$mailer->ErrorInfo); } 
     }
 }
 

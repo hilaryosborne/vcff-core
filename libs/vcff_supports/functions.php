@@ -32,7 +32,7 @@ function vcff_parse_support_data($text) {
     // Allow plugins/themes to override the default caption template.
     $text = apply_filters('vcff_support_pre_parse', $text);
     // Extract all of the shortcodes from the content
-    preg_match_all('/\[([^}]*?)\]/', $text, $support_matches);
+    preg_match_all("/\[(.*?)\]/", $text, $support_matches);
     // Loop through each of the field matches
     foreach ($support_matches[1] as $k => $string) {
         // If the first character is an ending
