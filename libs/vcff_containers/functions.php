@@ -57,7 +57,7 @@ function vcff_parse_container_data($text) {
         $container_list[$machine_code] = array(
             'type' => $_shortcode,
             'name' => $machine_code,
-            //'el' => $el,
+            'el' => $el,
             'context' => $_context,
             'attributes' => $_attributes
         );

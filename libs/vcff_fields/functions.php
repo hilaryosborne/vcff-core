@@ -60,7 +60,7 @@ function vcff_parse_field_data($text) {
             'type' => $_shortcode,
             'name' => $_attributes['machine_code'],
             'label' => $_attributes['field_label'],
-            //'el' => $el,
+            'el' => $el,
             'context' => $_context,
             'attributes' => $_attributes
         );
