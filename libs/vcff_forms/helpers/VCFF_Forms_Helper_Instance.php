@@ -361,5 +361,5 @@ class VCFF_Forms_Helper_Instance extends VCFF_Helper {
             
         return $this;
     }
-	
+
 }

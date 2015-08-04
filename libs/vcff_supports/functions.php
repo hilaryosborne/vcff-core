@@ -31,41 +31,38 @@ function vcff_parse_support_data($text) {
     $support_list = array(); 
     // Allow plugins/themes to override the default caption template.
     $text = apply_filters('vcff_support_pre_parse', $text);
-    // Extract all of the shortcodes from the content
-    preg_match_all("/\[(.*?)\]/", $text, $support_matches);
-    // Loop through each of the field matches
-    foreach ($support_matches[1] as $k => $string) {
-        // If the first character is an ending
-        if (strpos($string,'/') === 0) { continue; }
-        // Retrieve the shortcode
-        $support_type = strtok($string, " ");
+    // Create a new parser
+    $blq_parser = new BLQ_Parser($text);
+    // Retrieve a list of shortcodes
+    $_shortcodes = $blq_parser
+        ->Set_Ends('[',']')
+        ->Parse()
+        ->Get_Flattened();
+    // If no shortcodes were returned
+    if (!$_shortcodes || !is_array($_shortcodes)) { return; }
+    // Loop through each shortcode
+    foreach ($_shortcodes as $k => $el) {
+        // If this is not a tag
+        if (!$el->is_tag || !$el->tag) { continue; }
+        // If this is not a tag
+        $_shortcode = $el->tag;
         // If no field handler was returned
-        if (!isset($contexts[$support_type])) { continue; }
+        if (!isset($contexts[$_shortcode])) { continue; }
         // Retrieve the field shortcode
-        $context = $contexts[$support_type];
-        // If no context could be found
-        if (!$context) { continue; }
-        // Look for all attribute matches
-        preg_match_all('/(\w+)\s*=\s*"(.*?)"/', $string, $attribute_matches);
-        // Start the attribute list
-        $attributes = array();
-        // Loop through each attribute match
-        foreach ($attribute_matches[1] as $_k => $_attr) {
-            // Populate the attributes list
-            $attributes[$_attr] = $attribute_matches[2][$_k];
-        }
-        // Retrieve the support name
-        $machine_code = $attributes['machine_code'];
-        // If no machine name could be found
-        if (!$machine_code) { continue; }
+        $_context = $contexts[$_shortcode];
+        // Retrieve the attributes
+        $_attributes = $el->attributes;
+        // Retrieve the machine code
+        $machine_code = $_attributes['machine_code'];
         // Populate the field data
         $support_list[$machine_code] = array(
+            'type' => $_shortcode,
             'name' => $machine_code,
-            'type' => $support_type,
-            'context' => $context,
-            'attributes' => $attributes
+            'el' => $el,
+            'context' => $_context,
+            'attributes' => $_attributes
         );
-    } 
+    }
     // Allow plugins/themes to override the default caption template.
     $support_list = apply_filters('vcff_support_post_parse', $support_list);
     // Return the field list

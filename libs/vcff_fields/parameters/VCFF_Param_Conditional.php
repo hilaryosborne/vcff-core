@@ -107,12 +107,14 @@ class VCFF_Param_Conditional {
     }
 
     public function render($settings,$value) { 
-        // Retrieve the post object
-        $post = get_post($_POST['post_id']);
+        // Decode the form data
+        $raw_post_contents = base64_decode($_POST['post_contents']);
+        // Parse the form data
+        parse_str($raw_post_contents,$post_data);
         // If no post could be found
-        if (!$post) { return; }
+        if (!$post_data) { return; }
         // Populate the field data
-        $this->field_data = vcff_parse_field_data($post->post_content);
+        $this->field_data = vcff_parse_field_data($post_data['content']);
         // Populate the current value
         $this->value = $value;
         // Retrieve the current rules

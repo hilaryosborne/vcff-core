@@ -15,7 +15,7 @@ class VCFF_Containers_Helper_Populator extends VCFF_Helper {
         // Retrieve the form instance
 		$form_instance = $this->form_instance;
 		// Retrieve the container name
-		$machine_code = $container_data['attributes']['machine_code'];
+		$machine_code = $container_data['name'];
 		// Create the field item classname
 		$container_classname = $container_data['context']['class_item'];
 		// If no form instance was found
@@ -40,23 +40,27 @@ class VCFF_Containers_Helper_Populator extends VCFF_Helper {
 		$container_instance->context = $container_data['context'];
 		// Populate the field list
 		$container_instance->attributes = $container_data['attributes'];
-        // Retrieve the raw field data from the container text
-        $raw_field_data = vcff_parse_field_data($container_data['content']);
-        // If no fields were returned
-        if (!$raw_field_data || !is_array($raw_field_data)) { return $container_instance; }
-        // Loop through each of the field data
-		foreach ($raw_field_data as $k => $field_data) { 
-			// If there is no field name
-			if (!isset($field_data['attributes']['machine_code'])) { continue; }
-			// Retrieve the field name
-			$machine_code = $field_data['attributes']['machine_code'];
+        // Populate the handler object
+		$container_instance->el = $container_data['el'];
+        // Retrieve the container's children
+        $children = $container_instance->el->children;
+        // If no shortcodes were returned
+        if (!$children || !is_array($children)) { return $container_instance; }
+        // Loop through each shortcode
+        foreach ($children as $k => $el) {
+            // If this is not a tag
+            if (!$el->is_tag || !$el->tag) { continue; }
+            // Retrieve the attributes
+            $_attributes = $el->attributes;
+            // If no machine code, move on
+            if (!isset($_attributes['machine_code'])) { continue; }
             // Retrieve the field instance
-            $field_instance = $form_instance->Get_Field($machine_code);
+            $field_instance = $form_instance->Get_Field($_attributes['machine_code']);
             // If no field instance was returned
             if (!$field_instance) { continue; }
             // Add the field instance to the container
             $container_instance->Add_Field($field_instance);
-		} 
+        } 
 		// Return the generated field instance
 		return $container_instance;
 	}

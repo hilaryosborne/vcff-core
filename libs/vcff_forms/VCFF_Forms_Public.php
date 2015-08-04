@@ -51,6 +51,8 @@ class VCFF_Forms_Public {
         $events_trigger_helper
             ->Set_Form_Instance($form_instance)
             ->Trigger();
+        // Perform the form closure
+        do_action('vcff_form_closure', $form_instance);
         // Create a new ajax helper
         $form_ajax_helper = new VCFF_Forms_Helper_AJAX();
         // Build the json data array
@@ -106,6 +108,8 @@ class VCFF_Forms_Public {
         $events_trigger_helper
             ->Set_Form_Instance($form_instance)
             ->Trigger();
+        // Perform the form closure
+        do_action('vcff_form_closure', $form_instance);
         // Create a new ajax helper
         $form_ajax_helper = new VCFF_Forms_Helper_AJAX();
         // Build the json data array
@@ -195,6 +199,8 @@ class VCFF_Forms_Public {
             $events_trigger_helper
                 ->Set_Form_Instance($form_instance)
                 ->Trigger();
+            // Perform the form closure
+            do_action('vcff_form_closure', $form_instance);
             // Create a new ajax helper
             $form_ajax_helper = new VCFF_Forms_Helper_AJAX();
             // Build the json data array
@@ -222,6 +228,8 @@ class VCFF_Forms_Public {
         $events_trigger_helper
             ->Set_Form_Instance($form_instance)
             ->Trigger();
+        // Perform the form closure
+        do_action('vcff_form_closure', $form_instance);
         // Create a new ajax helper
         $form_ajax_helper = new VCFF_Forms_Helper_AJAX();
         // Build the json data array
@@ -287,6 +295,8 @@ class VCFF_Forms_Public {
             ->Check_Validation();
         // If the form failed to validate
         if (!$form_instance->Is_Valid()) {  
+            // Perform the form closure
+            do_action('vcff_form_closure', $form_instance);
             // Create a new trigger helper
             $events_trigger_helper = new VCFF_Events_Helper_Trigger();
             // Check events conditions and trigger
@@ -308,6 +318,8 @@ class VCFF_Forms_Public {
         $events_trigger_helper
             ->Set_Form_Instance($form_instance)
             ->Trigger();
+        // Perform the form closure
+        do_action('vcff_form_closure', $form_instance);
     }
 }
 

@@ -50,6 +50,8 @@ class VCFF {
 
     public function Load_Vendors() {
         // Include the VCFF Meta handling library
+        require_once(VCFF_DIR.'/vendors/blq_parser/BLQ_Parser.php');
+        // Include the VCFF Meta handling library
         require_once(VCFF_DIR.'/vendors/gump/GUMP.php');
         // Include the VCFF Meta handling library
         require_once(VCFF_DIR.'/vendors/phpmailer/PHPMailerAutoload.php');
@@ -125,6 +127,8 @@ class VCFF {
     }
     
     public function Init() {
+        
+        do_action('vcff_init');
         // Load the core classes
         $this->Load_Core();
         // Load the various helper classes

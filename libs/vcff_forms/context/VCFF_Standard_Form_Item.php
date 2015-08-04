@@ -16,8 +16,10 @@ class VCFF_Standard_Form_Item extends VCFF_Form_Item {
         $form_content = do_shortcode($form_content);
         // Start gathering content
         ob_start();
+        // Retrieve the context director
+        $dir = untrailingslashit( plugin_dir_path(__FILE__ ) );
         // Include the template file
-        include(vcff_get_file_dir(VCFF_FORMS_DIR.'/context/'.get_class($this).".tpl.php"));
+        include(vcff_get_file_dir($dir.'/'.get_class($this).".tpl.php"));
         // Get contents
         $output = ob_get_contents();
         // Clean up
@@ -27,23 +29,5 @@ class VCFF_Standard_Form_Item extends VCFF_Form_Item {
         // Return the contents
         return $output_html;
     }
-    
-    public function Post_Validation() {
-    
-        if ($this->is_valid) { return; }
-        
-        $this->Add_Alert('The form failed to valid','danger');
-    }
-    
-}
 
-add_filter('vcff_form_render_html', function($output,$form_instance){
-    
-    if (isset($form_instance->standard['html'])) { 
-        
-        return $form_instance->standard['html']; 
-    }
-    
-    return $output;
-    
-},false,2);
+}

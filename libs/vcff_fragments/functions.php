@@ -2,33 +2,39 @@
 
 function vcff_parse_fragment($text) {  
     // Allow plugins/themes to override the default caption template.
-    $text = apply_filters('vcff_fragment_pre_parse', $text);  
-    // Extract all of the shortcodes from the content 
-    preg_match_all('/\[vcff_fragment (.*?)\]/s', $text, $_matches);
-    // Loop through each of the field matches
-    foreach ($_matches[0] as $k => $string) {
-        // Look for all attribute matches
-        preg_match_all('/(\w+)\s*=\s*"(.*?)"/', $_matches[1][$k], $attr_matches);
-        // Start the attribute list
-        $attributes = array();
-        // Loop through each attribute match
-        foreach ($attr_matches[1] as $_k => $_attr) {
-            // Populate the attributes list
-            $attributes[$_attr] = $attr_matches[2][$_k];
-        } 
+    $text = apply_filters('vcff_fragment_pre_parse', $text); 
+    // Create a new parser
+    $blq_parser = new BLQ_Parser($text);
+    // Retrieve a list of shortcodes
+    $_shortcodes = $blq_parser
+        ->Set_Ends('[',']')
+        ->Parse()
+        ->Get_Flattened();
+    // If no shortcodes were returned
+    if (!$_shortcodes || !is_array($_shortcodes)) { return; }
+    // Loop through each shortcode
+    foreach ($_shortcodes as $k => $el) {
+        // If this is not a tag
+        if (!$el->is_tag || !$el->tag) { continue; }
+        // If this is not a tag
+        $_shortcode = $el->tag;
+        // If this is not a fragment
+        if ($_shortcode != 'vcff_fragment') { continue; }
+        // Retrieve the attributes
+        $_attributes = $el->attributes;
         // If no fragment id was found
-        if (!isset($attributes['fragment_uuid'])) { continue; }
+        if (!isset($_attributes['fragment_uuid'])) { continue; }
         // Retrieve the fragment id
-        $fragment_uuid = $attributes['fragment_uuid'];
+        $fragment_uuid = $_attributes['fragment_uuid'];
         // Retrieve the fragment post            
         $post = vcff_get_fragment_by_uuid($fragment_uuid);
         // If no fragment id was found
         if (!$post) { continue; }
         // Retrieve the post content
         $post_content = $post->post_content;
-        
-        $text = str_replace($string,$string.stripslashes($post_content).'[/vcff_fragment]',$text); 
-    } 
+        // Create the new text string
+        $text = str_replace('['.$el->string.']','['.$el->string.']'.stripslashes($post_content).'[/'.$_shortcode.']',$text);
+    }
     // Allow plugins/themes to override the default caption template.
     $text = apply_filters('vcff_fragment_post_parse', $text);
     // Return the contents

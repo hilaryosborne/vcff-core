@@ -104,6 +104,8 @@ class VCFF_Fields_Helper_Populator {
 		$field_instance->attributes = $field_data['attributes'];
 		// Populate the field list
 		$field_instance->form_instance = $this->form_instance;
+        // Populate the field list
+		$field_instance->el = $field_data['el'];
 		// Get the field value
         $this->_Get_Field_Value($field_instance);
         // If the field has a sanitize method

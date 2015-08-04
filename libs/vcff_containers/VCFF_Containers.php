@@ -123,7 +123,7 @@ class VCFF_Containers {
         // Loop through each of the found contexts
         foreach ($contexts as $_type => $_context) {
             // Add the render function
-            add_shortcode($_type, function($attr,$contents,$shortcode) { 
+            add_shortcode($_type, function($attr,$contents,$shortcode) {
                 // Retrieve the global vcff forms class
                 $vcff_forms = vcff_get_library('vcff_forms');
                 // Retrieve the form instance

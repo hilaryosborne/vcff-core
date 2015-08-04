@@ -30,30 +30,38 @@ function vcff_parse_container_data($text) {
     $container_list = array(); 
     // Allow plugins/themes to override the default caption template.
     $text = apply_filters('vcff_container_pre_parse', $text);
-    // Loop through each context
-    foreach ($contexts as $type => $context) { 
-        // Extract all of the shortcodes from the content 
-        preg_match_all('/\['.$type.' (.*?)\](.*?)\[\/'.$type.'\]/s', $text, $_matches);
-        // Loop through each of the field matches
-        foreach ($_matches[1] as $k => $shortcode) {
-            // Look for all attribute matches
-            preg_match_all('/(\w+)\s*=\s*"(.*?)"/', $_matches[1][$k], $attribute_matches);
-            // Start the attribute list
-            $attributes = array();
-            // Loop through each attribute match
-            foreach ($attribute_matches[1] as $_k => $_attr) {
-                // Populate the attributes list
-                $attributes[$_attr] = $attribute_matches[2][$_k];
-            } 
-            // Populate the container data
-            $container_list[] = array(
-                'type' => $type,
-                'context' => $context,
-                'content' => $_matches[2][$k],
-                'attributes' => $attributes,
-            );
-        }
-    } 
+    // Create a new parser
+    $blq_parser = new BLQ_Parser($text);
+    // Retrieve a list of shortcodes
+    $_shortcodes = $blq_parser
+        ->Set_Ends('[',']')
+        ->Parse()
+        ->Get_Flattened();
+    // If no shortcodes were returned
+    if (!$_shortcodes || !is_array($_shortcodes)) { return; }
+    // Loop through each shortcode
+    foreach ($_shortcodes as $k => $el) {
+        // If this is not a tag
+        if (!$el->is_tag || !$el->tag) { continue; }
+        // If this is not a tag
+        $_shortcode = $el->tag;
+        // If no field handler was returned
+        if (!isset($contexts[$_shortcode])) { continue; }
+        // Retrieve the field shortcode
+        $_context = $contexts[$_shortcode];
+        // Retrieve the attributes
+        $_attributes = $el->attributes;
+        // Retrieve the machine code
+        $machine_code = $_attributes['machine_code'];
+        // Populate the field data
+        $container_list[$machine_code] = array(
+            'type' => $_shortcode,
+            'name' => $machine_code,
+            //'el' => $el,
+            'context' => $_context,
+            'attributes' => $_attributes
+        );
+    }
     // Allow plugins/themes to override the default caption template.
     $container_list = apply_filters('vcff_container_post_parse', $container_list);
     // Return the container list
