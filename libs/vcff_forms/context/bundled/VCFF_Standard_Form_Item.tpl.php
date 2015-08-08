@@ -3,7 +3,6 @@
     <div class="form-alerts">
         <?php echo $this->Get_Alerts_HTML(); ?>
     </div>
-
     <?php echo $form_content; ?>
     <?php do_action('vcff_form_render_post_content',$this); ?>
     <input type="hidden" name="vcff_form" value="true">

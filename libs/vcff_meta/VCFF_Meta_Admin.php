@@ -184,14 +184,9 @@ class VCFF_Meta_Admin {
         // Retrieve the form id
         $form_content = $_REQUEST['content'];
         // If there is no form type and form id
-        if (!$_REQUEST['form_type'] && $form_id) {
-            // Retrieve the form post object
-            $form_post = get_post($form_id);
-            // If a form post has been returned
-            if ($form_post && is_object($form_post)) {
-                // Get the saved vcff form type
-                $meta_form_type = get_post_meta($form_post->ID, 'form_type',true);
-            }
+        if (!$_REQUEST['form_type'] && $_REQUEST['post_ID']) {
+            // Get the saved vcff form type
+            $meta_form_type = get_post_meta($_REQUEST['post_ID'], 'form_type',true);
         } // Otherwise use the passed form type 
         else { $meta_form_type = $_REQUEST['form_type']; }
         // If no meta form type has been passed, use the default

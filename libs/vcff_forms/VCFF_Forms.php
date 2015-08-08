@@ -32,6 +32,8 @@ class VCFF_Forms {
         $this->_Load_Context();
         // Load the pages
         $this->_Load_Pages();
+        // Load AJAX
+        $this->_Load_AJAX();
         // Fire the shortcode init action
         do_action('vcff_forms_init',$this);
         // Include the admin class
@@ -122,71 +124,107 @@ class VCFF_Forms {
     }
 
     protected function _Load_Helpers() {
+        // Retrieve the context director
+        $dir = untrailingslashit( plugin_dir_path(__FILE__ ) );
         // Load each of the form shortcodes
-        foreach (new DirectoryIterator(VCFF_FORMS_DIR.'/helpers') as $FileInfo) {
+        foreach (new DirectoryIterator($dir.'/helpers') as $FileInfo) {
             // If this is a directory dot
             if($FileInfo->isDot()) { continue; }
             // If this is a directory
-            if($FileInfo->isDir()) { continue; } 
+            if($FileInfo->isDir()) { continue; }
+            // If this is not false
+            if (stripos($FileInfo->getFilename(),'.tpl') !== false) { continue; } 
             // Include the file
-            require_once(VCFF_FORMS_DIR.'/helpers/'.$FileInfo->getFilename());
+            require_once($FileInfo->getPathname());
         }
         // Fire the shortcode init action
         do_action('vcff_forms_helper_init',$this);
     }
 
     protected function _Load_Core() {
+        // Retrieve the context director
+        $dir = untrailingslashit( plugin_dir_path(__FILE__ ) );
         // Load each of the form shortcodes
-        foreach (new DirectoryIterator(VCFF_FORMS_DIR.'/core') as $FileInfo) {
+        foreach (new DirectoryIterator($dir.'/core') as $FileInfo) {
             // If this is a directory dot
             if($FileInfo->isDot()) { continue; }
             // If this is a directory
             if($FileInfo->isDir()) { continue; }
             // If this is not false
-            if (stripos($FileInfo->getFilename(),'.tpl') !== false) { continue; }
+            if (stripos($FileInfo->getFilename(),'.tpl') !== false) { continue; } 
             // Include the file
-            require_once(VCFF_FORMS_DIR.'/core/'.$FileInfo->getFilename());
+            require_once($FileInfo->getPathname());
         }
         // Fire the shortcode init action
         do_action('vcff_forms_core_init',$this);
     }
 
     protected function _Load_Context() {
-        // Load each of the form shortcodes
-        foreach (new DirectoryIterator(VCFF_FORMS_DIR.'/context') as $FileInfo) {
+        // Retrieve the context director
+        $dir = untrailingslashit( plugin_dir_path(__FILE__ ) );
+        // Load each of the field shortcodes
+        foreach (new DirectoryIterator($dir.'/context') as $FileInfo) { 
             // If this is a directory dot
-            if($FileInfo->isDot()) { continue; }
+            if ($FileInfo->isDot()) { continue; }
             // If this is a directory
-            if($FileInfo->isDir()) { continue; }
-            // If this is not false
-            if (stripos($FileInfo->getFilename(),'.tpl') !== false) { continue; }
-            // Include the file
-            require_once(VCFF_FORMS_DIR.'/context/'.$FileInfo->getFilename());
-            // If this is not false
-            if (stripos($FileInfo->getFilename(),'_Item') !== false) { continue; }
-            // Retrieve the classname
-            $context_classname = $FileInfo->getBasename('.php');
-            
-            vcff_map_form($context_classname);
+            if ($FileInfo->isDir()) { 
+                // Load each of the field shortcodes
+                foreach (new DirectoryIterator($FileInfo->getPathname()) as $_FileInfo) {
+                    // If this is a directory dot
+                    if ($_FileInfo->isDot()) { continue; }
+                    // If this is a directory
+                    if ($_FileInfo->isDir()) { continue; }
+                    // If this is not false
+                    if (stripos($_FileInfo->getFilename(),'.tpl') !== false) { continue; } 
+                    // Include the file
+                    require_once($_FileInfo->getPathname());
+                }
+            } // Otherwise this is just a file
+            else {
+                // If this is not false
+                if (stripos($FileInfo->getFilename(),'.tpl') !== false) { continue; } 
+                // Include the file
+                require_once($FileInfo->getPathname());
+            }
         }
         // Fire the shortcode init action
         do_action('vcff_forms_context_init',$this);
     }
     
     protected function _Load_Pages() { 
+        // Retrieve the context director
+        $dir = untrailingslashit( plugin_dir_path(__FILE__ ) );
         // Load each of the form shortcodes
-        foreach (new DirectoryIterator(VCFF_FORMS_DIR.'/pages') as $FileInfo) {
+        foreach (new DirectoryIterator($dir.'/pages') as $FileInfo) {
             // If this is a directory dot
             if($FileInfo->isDot()) { continue; }
             // If this is a directory
             if($FileInfo->isDir()) { continue; }
             // If this is not false
-            if (stripos($FileInfo->getFilename(),'.tpl') !== false) { continue; }
+            if (stripos($FileInfo->getFilename(),'.tpl') !== false) { continue; } 
             // Include the file
-            require_once(VCFF_FORMS_DIR.'/pages/'.$FileInfo->getFilename());
+            require_once($FileInfo->getPathname());
         }
         // Fire the shortcode init action
         do_action('vcff_forms_pages_init',$this);
+    }
+    
+    protected function _Load_AJAX() {
+        // Retrieve the context director
+        $dir = untrailingslashit( plugin_dir_path(__FILE__ ) );
+        // Load each of the field shortcodes
+        foreach (new DirectoryIterator($dir.'/ajax') as $FileInfo) { 
+            // If this is a directory dot
+            if($FileInfo->isDot()) { continue; }
+            // If this is a directory
+            if($FileInfo->isDir()) { continue; }
+            // If this is not false
+            if (stripos($FileInfo->getFilename(),'.tpl') !== false) { continue; } 
+            // Include the file
+            require_once($FileInfo->getPathname());
+        }
+        // Fire the shortcode init action
+        do_action('vcff_forms_ajax_init',$this);
     }
     
     public function Map_Visual_Composer() {
@@ -359,42 +397,59 @@ class VCFF_Forms {
         $form_obj = vcff_get_form_by_uuid($form_unique_id);
         // If no form unique id then return out
         if (!$form_obj || !is_object($form_obj)) { return; }
-        // Retrieve a new form instance helper
-        $form_instance_helper = new VCFF_Forms_Helper_Instance();
-        // Generate a new form instance
-        $form_instance = $form_instance_helper
-            ->Set_Post_ID(get_the_ID() ? get_the_ID() : false)
-            ->Set_Form_UUID($form_unique_id)
-            ->Set_Form_Data(array())
-            ->Set_Form_Attributes($attributes)
-            ->Generate();
+        // PREPARE PHASE
+        $form_prepare_helper = new VCFF_Forms_Helper_Prepare();
+        // Get the form instance
+        $form_instance = $form_prepare_helper
+            ->Get_Form(array(
+                'post_id' => get_the_ID() ? get_the_ID() : false,
+                'uuid' => $form_unique_id,
+                'attributes' => $attributes,
+            ));
+        // If the form instance could not be created
+        if (!$form_instance) { die('could not create form instance'); }
         // Create a new cache helper
         $form_cache_helper = new VCFF_Forms_Helper_Cache();
         // Cache the submitted form
         $form_instance = $form_cache_helper
             ->Set_Form_Instance($form_instance)
-            ->Retrieve();    
+            ->Retrieve();  
+        // POPULATE PHASE
+        $form_populate_helper = new VCFF_Forms_Helper_Populate();
+        // Run the populate helper
+        $form_populate_helper
+            ->Set_Form_Instance($form_instance)
+            ->Populate(array());
+        // CALCULATE PHASE
+        $form_calculate_helper = new VCFF_Forms_Helper_Calculate();
+        // Initiate the calculate helper
+        $form_calculate_helper
+            ->Set_Form_Instance($form_instance)
+            ->Calculate(array());
+        // REVIEW PHASE
+        $form_review_helper = new VCFF_Forms_Helper_Review();
+        // Initiate the calculate helper
+        $form_review_helper
+            ->Set_Form_Instance($form_instance)
+            ->Review(array());
+        // FINALIZE PHASE
+        $form_finalize_helper = new VCFF_Forms_Helper_Finalize();
+        // Initiate the calculate helper
+        $form_finalize_helper
+            ->Set_Form_Instance($form_instance)
+            ->Finalize(array());
         // Populate the focused form
         $this->vcff_focused_form = $form_instance;
         // Set the focused post id
         $this->vcff_focused_post_id = get_the_ID();
         // Set the focused post id
         $this->vcff_focused_form_uuid = $form_unique_id;
-        // If the form instance could not be created
-        if (!$form_instance) { die('could not create form instance'); }
-        // Complete setting up the form instance
-        $form_instance_helper
-            ->Add_Fields()
-            ->Filter()
-            ->Add_Containers()
-            ->Add_Meta()
-            ->Add_Supports()
-            ->Check_Conditions();
         // Fire the shortcode init action
         $form_instance = apply_filters('vcff_forms_render_init',$form_instance);
         // Render the form
-        return $form_instance
-            ->Render();
+        $html = $form_instance->Render();
+        // Return the rendered form
+        return $html;
     }
 }
 

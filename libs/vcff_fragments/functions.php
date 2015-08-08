@@ -1,6 +1,6 @@
 <?php
 
-function vcff_parse_fragment($text) {  
+function vcff_parse_fragment($text) { 
     // Allow plugins/themes to override the default caption template.
     $text = apply_filters('vcff_fragment_pre_parse', $text); 
     // Create a new parser

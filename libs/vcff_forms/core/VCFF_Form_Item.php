@@ -1,6 +1,6 @@
 <?php
 
-class VCFF_Form_Item {
+class VCFF_Form_Item extends VCFF_Item {
 
     public $post_id;
 
@@ -53,6 +53,12 @@ class VCFF_Form_Item {
 	public $result_events;
     
     public $security_key;
+    
+    public $is_session = false;
+    
+    public $session_key;
+    
+    public $session_data;
     
     /**
      * ALERTS
@@ -333,6 +339,37 @@ class VCFF_Form_Item {
         }
         // Return all of the values
         return $field_values;
+    }
+    
+    public function Setup() {
+        // Create a new session helper
+        $session_helper = new VCFF_Forms_Helper_Session();
+        // Update the form's session
+        $session_helper
+            ->Set_Form_Instance($this)
+            ->Get_Key();
+        // Populate the session data
+        $this->session_data = $session_helper->Get_Data();
+        // Return out
+        return $this; 
+    }
+    
+    public function Get_Session_Data() {
+        
+        return $this->session_data;
+    }
+    
+    public function Set_Session_Data($session_data) {
+        // Create a new session helper
+        $session_helper = new VCFF_Forms_Helper_Session();
+        // Update the session data
+        $this->session_data = $session_data;
+        // Update the form's session
+        $session_helper
+            ->Set_Form_Instance($this)
+            ->Update();
+        // Return out
+        return $this; 
     }
     
     public function Get_Curly_Tags() {

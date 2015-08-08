@@ -73,8 +73,6 @@ class VCFF_Containers_Helper_Validation extends VCFF_Helper {
 		if (!$form_containers || !is_array($form_containers)) { return; }
 		// Loop through each of the form's containers
 		foreach ($form_containers as $k => $container_instance) {
-			// If this field has a condition result and the field is hidden
-			if (!$container_instance->Is_Hidden()) { continue; }
 			// If this field has a custom validation method
 			if (method_exists($container_instance,'Pre_Validation')) { $container_instance->Pre_Validation(); }
             // Retrieve the validation result
@@ -91,8 +89,6 @@ class VCFF_Containers_Helper_Validation extends VCFF_Helper {
 		if (!$form_containers || !is_array($form_containers)) { return; }
 		// Loop through each of the form's containers
 		foreach ($form_containers as $k => $container_instance) {
-			// If this field has a condition result and the field is hidden
-			if (!$container_instance->Is_Hidden()) { continue; }
 			// If this field has a custom validation method
 			if (method_exists($container_instance,'Post_Validation')) { $container_instance->Post_Validation(); }
             // Retrieve the validation result
@@ -109,8 +105,6 @@ class VCFF_Containers_Helper_Validation extends VCFF_Helper {
 		if (!$form_containers || !is_array($form_containers)) { return; }
 		// Loop through each of the form's containers
 		foreach ($form_containers as $k => $container_instance) {
-			// If this field has a condition result and the field is hidden
-			if (!$container_instance->Is_Hidden()) { continue; }
 			// If this field has a custom validation method
 			if (!method_exists($container_instance,'Do_Validation')) { continue; }
 			// Retrieve the validation result
@@ -127,8 +121,6 @@ class VCFF_Containers_Helper_Validation extends VCFF_Helper {
 		if (!$form_containers || !is_array($form_containers)) { return; }
 		// Loop through each of the form's containers
 		foreach ($form_containers as $k => $container_instance) {
-			// If this field has a condition result and the field is hidden
-			if (!$container_instance->Is_Hidden()) { continue; }
 			// Retrieve the validation result
             do_action('vcff_do_container_validation', $container_instance );
 		}

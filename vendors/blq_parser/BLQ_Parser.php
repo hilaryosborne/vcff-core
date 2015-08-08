@@ -151,6 +151,7 @@ class BLQ_Parser {
                 $this->_elements[] = $current_el;
                 // Add the character
                 $current_el->Is_Tag(true);
+                $current_el->Set_Ends($this->tag_open,$this->tag_close);
                 $current_el->Is_Opening_Tag($this->_Is_Closing_Tag($_array_iter) ? false : true);
                 $current_el->Is_Closing_Tag($this->_Is_Closing_Tag($_array_iter) ? true : false);
             } // Otherwise if this is the end of a tag
@@ -158,7 +159,7 @@ class BLQ_Parser {
                 // If this was a closing tag
                 if ($current_el->is_closing_tag) {
                     // Search for opening tags
-                    $this-> _Link_Elements($current_el);
+                    $this->_Link_Elements($current_el);
                 }
                 // Set the current element to false
                 $current_el = false;
@@ -287,12 +288,18 @@ class BLQ_Element {
     public $is_opening_tag;
     
     public $is_closing_tag;
-    
+
     public $level;
+
+    public $tag_open;
+
+    public $tag_close;
     
     public function Add_Char($var) {
         
         $this->string .= $var;
+        
+        $this->raw = $this->tag_open.$this->string.$this->tag_close;
         
         if (!$this->is_tag || $this->is_tag_complete) { return $this; }
             
@@ -302,7 +309,18 @@ class BLQ_Element {
         }  
         elseif ($var != '/') { $this->tag .= $var; }
         
+        
+        
         return $this;   
+    }
+    
+    public function Set_Ends($opening,$closing) {
+        // Determine the first open character
+        $this->tag_open = $opening;
+        // Determine the first close character
+        $this->tag_close = $closing;
+        // Return for chaining
+        return $this;
     }
     
     public function Add_Child($child_el) {

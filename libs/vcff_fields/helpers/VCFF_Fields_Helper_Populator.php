@@ -26,23 +26,6 @@ class VCFF_Fields_Helper_Populator {
 		
 		return $this;
 	}
-
-	protected function _Requirements_Check() {
-		// Retrieve the form instance
-		$form_instance = $this->form_instance;
-		// If no form instance was found
-		if (!$form_instance || !is_object($form_instance)) {
-			// Populate with an error and return out
-			$this->error = 'No form instance found'; return;
-		}
-		// Retrieve the form contents
-		$form_contents = $form_instance->form_content;
-		// If no form contents was returned
-		if (!$form_contents) {
-			// Populate with an error and return out
-			$this->error = 'No form content found'; return;
-		}
-	}
 	
 	protected function _Get_Contexts() {
 		// Retrieve the global vcff forms class
@@ -54,16 +37,12 @@ class VCFF_Fields_Helper_Populator {
 	}
 	
     public function Populate() {
-		// Check we have everything we need
-		$this->_Requirements_Check(); 
-		// If an error has been detected, return out
-		if ($this->error) { return; }
         // Retrieve the form instance
 		$form_instance = $this->form_instance;
 		// Retrieve the form contents
 		$form_contents = $form_instance->form_content;
 		// Retrieve the field data
-		$fields_data = vcff_parse_field_data($form_contents);
+		$fields_data = vcff_parse_field_data($form_contents); 
 		// If an error has been detected, return out
 		if ($this->error) { return; } 
 		// Retrieve the form instance
@@ -112,6 +91,11 @@ class VCFF_Fields_Helper_Populator {
         if (method_exists($field_instance,'On_Sanitize')) {
             // Call the sanitize method
             $field_instance->On_Sanitize();
+        }
+        // If the field has a sanitize method
+        if (method_exists($field_instance,'On_Create')) {
+            // Call the sanitize method
+            $field_instance->On_Create();
         }
 		// Return the generated field instance
 		return $field_instance;

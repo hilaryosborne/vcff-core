@@ -1,13 +1,13 @@
 <?php
 
-class VCFF_Forms_Public {
-
+class VCFF_AJAX_Validation {
+    
     public function __construct() {
-        // Form submission action
-        add_action('vcff_form_submission', array($this,'Form_Submission'));
+        add_action('wp_ajax_form_check_validation', array($this,'_AJAX_Validate'));
+        add_action('wp_ajax_nopriv_form_check_validation', array($this,'_AJAX_Validate'));
     }
-
-    public function Form_Submission() {
+    
+    public function _AJAX_Validate() {
         // Parse the form data
         parse_str(base64_decode($_POST['form_data']),$output);
         // PREPARE PHASE
@@ -18,8 +18,7 @@ class VCFF_Forms_Public {
                 'post_id' => $output['vcff_post_id'],
                 'uuid' => vcff_get_uuid_by_form($output['vcff_form_id']),
                 'data' => $output,
-                'state' => 'submission_standard',
-                'is_submission' => true
+                'state' => 'validation_check'
             ));
         // If the form instance could not be created
         if (!$form_instance) { die('could not create form instance'); }
@@ -52,10 +51,11 @@ class VCFF_Forms_Public {
         // Initiate the calculate helper
         $form_display_helper
             ->Set_Form_Instance($form_instance)
-            ->Display(array());
+            ->Display(array(
+                'exit_out' => true
+            ));
     }
+    
 }
 
-global $vcff_forms_public;
-
-$vcff_forms_public = new VCFF_Forms_Public();
+new VCFF_AJAX_Validation();

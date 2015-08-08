@@ -13,7 +13,7 @@ class VCFF_Fragments {
 
     public function Init() {
         // Fire the shortcode init action
-        do_action('vcff_container_before_init',$this);
+        do_action('vcff_fragments_before_init',$this);
 		// Include the admin class
         require_once(VCFF_FRAGMENTS_DIR.'/functions.php'); 
         // Load the custom post type
@@ -21,7 +21,7 @@ class VCFF_Fragments {
         // Action to register the page
         add_action('admin_menu', array($this,'Register_Pages'));
         // Fire the shortcode init action
-        do_action('vcff_container_init',$this);
+        do_action('vcff_fragments_init',$this);
         // Include the admin class
         require_once(VCFF_FRAGMENTS_DIR.'/VCFF_Fragments_Admin.php');
         // Otherwise if this is being viewed by the client 

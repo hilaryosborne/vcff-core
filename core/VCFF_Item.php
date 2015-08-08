@@ -2,6 +2,16 @@
 
 class VCFF_Item {
     
+    public $_actions;
+    
+    public function Add_Action($action,$function,$priority = 10,$accepted_args = 1) {
+        
+    }
+
+    public function Do_Action($action,$args) {
+    
+    }
+
     // Add a form alert
     public function Add_Alert($message,$type) {
         // Ensure the type is allowable

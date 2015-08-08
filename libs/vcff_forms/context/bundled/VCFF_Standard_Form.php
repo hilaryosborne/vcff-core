@@ -161,3 +161,5 @@ add_filter('vcff_settings_field_list',function($field_list, $form_instance){
     
     return $field_list;
 },10,2);
+
+vcff_map_form('VCFF_Standard_Form');

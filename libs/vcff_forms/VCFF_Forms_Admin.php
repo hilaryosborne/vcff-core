@@ -4,7 +4,6 @@ class VCFF_Forms_Admin {
 
     public function __construct() {
         add_action('wp_ajax_form_get_field_list', array($this,'AJAX_Get_Field_List'));
-        
         add_filter('vcff_meta_field_list',array($this,'_Filter_Add_Meta_Field_Type'), 15, 2);
         add_filter('vcff_meta_field_list',array($this,'_Filter_Add_Meta_Field_AJAX'), 15, 2);
     }

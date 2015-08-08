@@ -226,6 +226,10 @@ class VCFF_Forms_Helper_Instance extends VCFF_Helper {
 		if ($this->error) { return; }
 		// Populate with the form instance
 		$this->_instance = $form_instance;
+        // If this field has a custom validation method
+        if (method_exists($form_instance,'On_Create')) { $form_instance->On_Create(); }
+        // Retrieve the validation result
+        do_action('vcff_form_create', $form_instance);
 		// Return the form instance
 		return $form_instance;
 	}
@@ -348,6 +352,33 @@ class VCFF_Forms_Helper_Instance extends VCFF_Helper {
 		
 		return $this;
 	}
+    
+    public function Closure() {
+        // Retrieve the form instance
+        $form_instance = $this->_instance;
+        // Retrieve the validation result
+        do_action('vcff_pre_form_closure', $form_instance);
+        // Fields
+        $closure_fields_helper = new VCFF_Fields_Helper_Closure();
+        // Check for closure conditions
+        $closure_fields_helper
+            ->Set_Form_Instance($form_instance)
+			->Check();
+        // Containers
+        $closure_container_helper = new VCFF_Containers_Helper_Closure();
+        // Check for closure conditions
+        $closure_container_helper
+            ->Set_Form_Instance($form_instance)
+			->Check();
+        // Containers
+        $closure_forms_helper = new VCFF_Forms_Helper_Closure();
+        // Check for closure conditions
+        $closure_forms_helper
+            ->Set_Form_Instance($form_instance)
+			->Check();
+        // Retrieve the validation result
+        do_action('vcff_post_form_closure', $form_instance);
+    }
     
     public function Filter() {
         
