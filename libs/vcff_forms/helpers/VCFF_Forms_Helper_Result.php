@@ -47,7 +47,7 @@ class VCFF_Forms_Helper_Result extends VCFF_Helper {
         $_ajax['form'] = array(
             'result' => $form_instance->Is_Valid() ? 'passed' : 'failed',
             'alerts' => $form_instance->Get_Alerts_HTML(),
-        );
+        ); 
         // Create a new fields ajax helper
         $fields_helper_AJAX = new VCFF_Fields_Helper_AJAX();
         // Populate the fields ajax data
@@ -67,11 +67,11 @@ class VCFF_Forms_Helper_Result extends VCFF_Helper {
             ->Set_Form_Instance($form_instance)
             ->Build();
         // Pass the ajax through the filter
-        $_ajax = $form_instance->Apply_Filters('form_ajax',array('helper' => $this, '_ajax' => $_ajax));
+        $_ajax = $form_instance->Apply_Filters('form_ajax',$_ajax,array('helper' => $this, '_ajax' => $_ajax));
          // Encode the meta fields and return
         echo json_encode(array(
             'result' => 'success',
-            'fields' => $_ajax
+            'data' => $_ajax
         ));
     }
     

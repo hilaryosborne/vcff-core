@@ -100,7 +100,7 @@ class VCFF_Forms_Helper_Calculate extends VCFF_Helper {
         // Retrieve the params
         $params = $this->params;
         // If we are not going to populate the fields
-        if (!$params['conditions']) { return; }
+        if (!$params['validation']) { return; }
 		// Retrieve the form instance
 		$form_instance = $this->form_instance;
         // Retrieve the validation result

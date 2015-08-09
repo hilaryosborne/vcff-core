@@ -56,7 +56,7 @@ class VCFF_Containers_Helper_AJAX extends VCFF_Helper {
             // Populate the container type
             $_ajax['alerts'] = $container_instance->Get_Alerts_HTML();
             // Run the ajax data through any filters
-            $_ajax = $container_instance->Apply_Filters('container_ajax',array('helper' => $this, '_ajax' => $_ajax));
+            $_ajax = $container_instance->Apply_Filters('container_ajax',$_ajax,array('helper' => $this, '_ajax' => $_ajax));
             // Populate the ajax data
             $this->data[$machine_code] = $_ajax;
         }

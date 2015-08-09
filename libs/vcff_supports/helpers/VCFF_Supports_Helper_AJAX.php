@@ -54,7 +54,7 @@ class VCFF_Supports_Helper_AJAX extends VCFF_Helper {
             // Populate the support type
             $_ajax['alerts'] = $support_instance->Get_Alerts_HTML();
             // Run the ajax data through any filters
-            $_ajax = $support_instance->Apply_Filters('support_ajax',array('helper' => $this, '_ajax' => $_ajax));
+            $_ajax = $support_instance->Apply_Filters('support_ajax',$_ajax,array('helper' => $this, '_ajax' => $_ajax));
             // Populate the ajax data
             $this->data[$machine_code] = $_ajax;
         }
