@@ -10,8 +10,6 @@ class VCFF_Meta_Admin {
         
         add_action('delete_post',array($this,'Delete_Post'),1,1);
         
-        add_action('wp_ajax_form_meta_fields_refresh',array($this,'AJAX_Meta_Fields_Refresh'));
-        
         add_action('vcff_form_import_export_do',array($this,'_Hook_Export_Hook'));
         
         add_action('vcff_form_import_upload_do',array($this,'_Hook_Import_Hook'));
@@ -22,24 +20,25 @@ class VCFF_Meta_Admin {
     public function _Hook_Edit_Title($form) {
         // If this is not a post form
         if ($form->post_type != 'vcff_form') { return; }
-        // Retrieve a new form instance helper
-        $form_instance_helper = new VCFF_Forms_Helper_Instance();
         // Retrieve the form uuid
         $form_uuid = vcff_get_uuid_by_form($form->ID);
         // If no form uuid
         if (!$form_uuid) { return ''; }
-        // Generate a new form instance
-        $form_instance = $form_instance_helper
-            ->Set_Form_UUID($form_uuid)
-            ->Generate(); 
+        // PREPARE PHASE
+        $form_prepare_helper = new VCFF_Forms_Helper_Prepare();
+        // Get the form instance
+        $form_instance = $form_prepare_helper
+            ->Get_Form(array(
+                'uuid' => $form_uuid,
+            ));
         // If the form instance could not be created
-        if (!$form_instance) { return ''; }
-        // Complete setting up the form instance
-        $form_instance_helper
-            ->Add_Fields()
-            ->Add_Containers()
-            ->Add_Meta()
-            ->Add_Supports();
+        if (!$form_instance) { die('could not create form instance'); }
+        // POPULATE PHASE
+        $form_populate_helper = new VCFF_Forms_Helper_Populate();
+        // Run the populate helper
+        $form_populate_helper
+            ->Set_Form_Instance($form_instance)
+            ->Populate(array());
         // Create a new validation helper
         $meta_validation_helper = new VCFF_Meta_Helper_Validation();
         // Check the meta for validation
@@ -145,25 +144,26 @@ class VCFF_Meta_Admin {
     public function Render_Meta_Container($form) {
         // If this is not a post form
         if ($form->post_type != 'vcff_form') { return; }
-        // Retrieve a new form instance helper
-        $form_instance_helper = new VCFF_Forms_Helper_Instance();
         // Retrieve the form uuid
         $form_uuid = vcff_get_uuid_by_form($form->ID,true); 
         // Get the saved vcff form type
         $meta_form_type = vcff_get_type_by_form($form_uuid);
-        // Generate a new form instance
-        $form_instance = $form_instance_helper
-            ->Set_Form_UUID($form_uuid)
-            ->Set_Form_Type($meta_form_type)
-            ->Generate(); 
+        // PREPARE PHASE
+        $form_prepare_helper = new VCFF_Forms_Helper_Prepare();
+        // Get the form instance
+        $form_instance = $form_prepare_helper
+            ->Get_Form(array(
+                'uuid' => $form_uuid,
+                'type' => $meta_form_type
+            ));
         // If the form instance could not be created
         if (!$form_instance) { die('could not create form instance'); }
-        // Complete setting up the form instance
-        $form_instance_helper
-            ->Add_Fields()
-            ->Add_Containers()
-            ->Add_Meta()
-            ->Add_Supports();
+        // POPULATE PHASE
+        $form_populate_helper = new VCFF_Forms_Helper_Populate();
+        // Run the populate helper
+        $form_populate_helper
+            ->Set_Form_Instance($form_instance)
+            ->Populate(array());
         // Create new meta helper
         $form_meta_helper = new VCFF_Meta_Helper_AJAX();
         // Retrieve the json data
@@ -171,61 +171,7 @@ class VCFF_Meta_Admin {
             ->Set_Form_Instance($form_instance)
             ->Render_Meta_Container();
     }
-    
-    public function AJAX_Meta_Fields_Refresh() {
-        // Decode the form data
-        $form_data = base64_decode($_REQUEST['form_data']);
-        // Parse the form data
-        parse_str($form_data,$output);
-        // Update the request array with
-        $_REQUEST = array_merge($_REQUEST,$output);
-        // Retrieve the form uuid
-        $form_uuid = vcff_get_uuid_by_form($_REQUEST['post_ID']);
-        // Retrieve the form id
-        $form_content = $_REQUEST['content'];
-        // If there is no form type and form id
-        if (!$_REQUEST['form_type'] && $_REQUEST['post_ID']) {
-            // Get the saved vcff form type
-            $meta_form_type = get_post_meta($_REQUEST['post_ID'], 'form_type',true);
-        } // Otherwise use the passed form type 
-        else { $meta_form_type = $_REQUEST['form_type']; }
-        // If no meta form type has been passed, use the default
-        if (!$meta_form_type) { $meta_form_type = 'vcff_standard_form'; }
-        // Retrieve a new form instance helper
-        $form_instance_helper = new VCFF_Forms_Helper_Instance();
-        // Generate a new form instance
-        $form_instance = $form_instance_helper
-            ->Set_Form_UUID($form_uuid)
-            ->Set_Form_Contents($form_content)
-            ->Set_Form_Type($meta_form_type)
-            ->Generate(); 
-        // If the form instance could not be created
-        if (!$form_instance) { die('could not create form instance'); }
-        // Complete setting up the form instance
-        $form_instance_helper
-            ->Add_Fields()
-            ->Add_Containers()
-            ->Add_Meta($_REQUEST)
-            ->Add_Supports();
-            
-        $meta_validation_helper = new VCFF_Meta_Helper_Validation();
-        
-        $meta_validation_helper
-            ->Set_Form_Instance($form_instance)
-            ->Check();
-        // Create new meta helper
-        $form_meta_helper = new VCFF_Meta_Helper_AJAX();
-        // Retrieve the json data
-        $json_data = $form_meta_helper
-            ->Set_Form_Instance($form_instance)
-            ->Get_JSON_Data();
-        // Encode the meta fields and return
-        echo json_encode(array(
-            'result' => 'success',
-            'data' => $json_data
-        )); wp_die();
-    }
-    
+
     public function Save_Post($post_id, $post) {
         // If this is not the post type we are looking for
         if ($post->post_type != 'vcff_form') { return; }
@@ -250,21 +196,38 @@ class VCFF_Meta_Admin {
             // Insert a new uuid
             update_post_meta($_POST['post_ID'], 'form_uuid', $form_uuid);
         }
-        // Retrieve a new form instance helper
-        $form_instance_helper = new VCFF_Forms_Helper_Instance(); 
-        // Generate a new form instance
-        $form_instance = $form_instance_helper
-            ->Set_Form_UUID($form_uuid)
-            ->Set_Form_Contents($_POST['content'])
-            ->Generate();
+        // PREPARE PHASE
+        $form_prepare_helper = new VCFF_Forms_Helper_Prepare();
+        // Get the form instance
+        $form_instance = $form_prepare_helper
+            ->Get_Form(array(
+                'uuid' => $form_uuid,
+                'contents' => $_POST['content'],
+            ));
         // If the form instance could not be created
         if (!$form_instance) { die('could not create form instance'); }
-        // Complete setting up the form instance
-        $form_instance_helper
-            ->Add_Fields()
-            ->Add_Containers()
-            ->Add_Meta($_POST)
-            ->Add_Supports();
+        // Create a new cache helper
+        $form_cache_helper = new VCFF_Forms_Helper_Cache();
+        // Cache the submitted form
+        $form_instance = $form_cache_helper
+            ->Set_Form_Instance($form_instance)
+            ->Retrieve();  
+        // POPULATE PHASE
+        $form_populate_helper = new VCFF_Forms_Helper_Populate();
+        // Run the populate helper
+        $form_populate_helper
+            ->Set_Form_Instance($form_instance)
+            ->Populate(array(
+                'meta_values' => $_POST
+            ));
+        // CALCULATE PHASE
+        $form_calculate_helper = new VCFF_Forms_Helper_Calculate();
+        // Initiate the calculate helper
+        $form_calculate_helper
+            ->Set_Form_Instance($form_instance)
+            ->Calculate(array(
+                'validation' => false
+            ));
         // Create a new meta store helper
         $form_store_helper = new VCFF_Meta_Helper_Store();
         // Save the updated meta

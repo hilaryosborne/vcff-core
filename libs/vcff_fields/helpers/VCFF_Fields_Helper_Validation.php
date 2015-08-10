@@ -81,7 +81,7 @@ class VCFF_Fields_Helper_Validation {
 			// If this field has a custom validation method
 			if (method_exists($field_instance,'Before_Validation')) { $field_instance->Pre_Validation(); }
             // Do any actions
-            $field_instance->Do_Action('before_validation');
+            $field_instance->Do_Action('before_validation',array());
             // Retrieve the validation result
             do_action('vcff_pre_field_validation', $field_instance);
         }
@@ -101,7 +101,7 @@ class VCFF_Fields_Helper_Validation {
             // If this field has a custom validation method
 			if (method_exists($field_instance,'Do_Validation')) { $field_instance->Do_Validation(); }
             // Do any actions
-            $field_instance->Do_Action('validation');
+            $field_instance->Do_Action('validation',array());
             // Retrieve the validation result
             do_action('vcff_do_field_validation', $field_instance );
 		}
@@ -119,7 +119,7 @@ class VCFF_Fields_Helper_Validation {
 			// If this field has a custom validation method
 			if (method_exists($field_instance,'After_Validation')) { $field_instance->Post_Validation(); }
             // Do any actions
-            $field_instance->Do_Action('after_validation');
+            $field_instance->Do_Action('after_validation',array());
             // Retrieve the validation result
             do_action('vcff_post_field_validation', $field_instance);
 		}

@@ -4,20 +4,71 @@ class VCFF_Item {
     
     public $_actions;
     
-    public function Add_Action($action,$function,$priority = 10,$accepted_args = 1) {
-        
+    public $_filters;
+    
+    public function Add_Action($action,$function,$priority = 10) {
+        // Add to the actions
+        $this->_actions[$action][] = array(
+            'function' => $function,
+            'priority' => $priority
+        );
+        // Return for chaining
+        return $this;
     }
 
-    public function Do_Action($action,$args) {
-    
+    public function Do_Action($action,$args=array()) {
+        // Retrieve the list of actions
+        $actions = $this->_actions;
+        // If there are no actions, return out
+        if (!is_array($actions) || !isset($actions[$action])) { return; }
+        // Retrieve the list of actions
+        $selected_actions = $actions[$action];
+        // Sort the actions
+        usort($selected_actions,function($a,$b){
+            // If the priorities are the same
+            if ($a['priority'] == $b['priority']) { return 0; }
+            // Otherwise return the difference
+            return ($a['priority'] < $b['priority']) ? -1 : 1;
+        });
+        // Loop through each action
+        foreach ($selected_actions as $k => $_action) {
+            // Call the action function
+            call_user_func($_action['function'], $args);
+        }
+        // Return for chaining
+        return $this;
     }
     
-    public function Add_Filter($action,$function,$priority = 10,$accepted_args = 1) {
-        
+    public function Add_Filter($filter,$function,$priority = 10) {
+        // Add to the actions
+        $this->_filters[$filter][] = array(
+            'function' => $function,
+            'priority' => $priority
+        );
+        // Return for chaining
+        return $this;
     }
 
-    public function Apply_Filters($action,$value,$args) {
-    
+    public function Apply_Filters($filter,$value,$args) {
+        // Retrieve the list of actions
+        $filters = $this->_filters;
+        // If there are no actions, return out
+        if (!is_array($filters) || !isset($filters[$filter])) { return $value; }
+        // Retrieve the list of actions
+        $selected_filters = $filters[$filter];
+        // Sort the actions
+        usort($selected_filters,function($a,$b){
+            // If the priorities are the same
+            if ($a['priority'] == $b['priority']) { return 0; }
+            // Otherwise return the difference
+            return ($a['priority'] < $b['priority']) ? -1 : 1;
+        });
+        // Loop through each action
+        foreach ($selected_actions as $k => $_action) {
+            // Call the action function
+            $value = call_user_func($_action['function'], $value, $args);
+        }
+        // Return the value
         return $value;
     }
 

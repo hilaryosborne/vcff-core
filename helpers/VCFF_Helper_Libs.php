@@ -37,13 +37,6 @@ class VCFF_Helper_Libs extends VCFF_Helper {
         $libs = $vcff->libs;
         // If there are no libs, return out
         if (!$libs || !is_array($libs) || count($libs) == 0) { return $this; }
-        // Loop through each lib
-        foreach ($libs as $code => $instance) {
-            // If the instance does not have a public scripts load
-            if (!method_exists($instance,'Load_Public_Scripts')) { continue; }
-            // Load all public scripts
-            $instance->Load_Public_Scripts();
-        }
         // Add the enqueue scripts action
         add_action('wp_enqueue_scripts',function() {
             // Retrieve the vcff library
@@ -106,13 +99,6 @@ class VCFF_Helper_Libs extends VCFF_Helper {
         $libs = $vcff->libs;
         // If there are no libs, return out
         if (!$libs || !is_array($libs) || count($libs) == 0) { return $this; }
-        // Loop through each lib
-        foreach ($libs as $code => $instance) {
-            // If the instance does not have a public scripts load
-            if (!method_exists($instance,'Load_Admin_Scripts')) { continue; }
-            // Load all public scripts
-            $instance->Load_Admin_Scripts();
-        }
         // Add the enqueue scripts action
         add_action('admin_enqueue_scripts',function() {
             // Retrieve the vcff library

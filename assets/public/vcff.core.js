@@ -1,8 +1,3 @@
-if (typeof VCFF_Field_Hooks == 'undefined') {
-    var VCFF_Field_Hooks = [];
-}
-
-
 !function($) {
 
     var VCFF = function(vcff_form){
@@ -104,7 +99,7 @@ if (typeof VCFF_Field_Hooks == 'undefined') {
                 // Pre form submission actions
                 vcff_do_action('do_form_check_conditions',{'form':vcff_form});
                 // Fire the apply to form function
-                _self.Apply_Updates(result_json.form);
+                _self.Apply_Updates(result_json);
                 // If the submission was not successfull
                 if (result_json.result != 'success') {
                     // Pre form submission actions
@@ -152,20 +147,20 @@ if (typeof VCFF_Field_Hooks == 'undefined') {
                 // Set the is submitted to false
                 _is_submitted = false;
                 // Fire the apply to form function
-                _self.Apply_Updates(result_json.form);
+                _self.Apply_Updates(result_json);
                 // Pre form submission actions
                 vcff_do_action('do_form_submission',{'form':vcff_form,'json':result_json});
                 // Pre form standard submission actions
                 vcff_do_action('do_form_standard_submission',{'form':vcff_form,'json':result_json});
                 // If the submission was not successfull
-                if (result_json.form.form.result != 'passed') {
+                if (result_json.data.form.result != 'passed') {
                     // Pre form submission actions
                     vcff_do_action('form_submission_failed',{'form':vcff_form,'json':result_json});
                     // Pre form standard submission actions
                     vcff_do_action('form_ajax_submission_failed',{'form':vcff_form,'json':result_json});
                 }
                 // If the form was successfull
-				if (result_json.form.form.result == 'passed') { $(vcff_form).unbind('submit').submit(); }
+				if (result_json.data.form.result == 'passed') { $(vcff_form).unbind('submit').submit(); }
                 // Pre form submission actions
                 vcff_do_action('after_form_submission',{'form':vcff_form,'json':result_json});
                 // Pre form standard submission actions
@@ -176,6 +171,7 @@ if (typeof VCFF_Field_Hooks == 'undefined') {
         };
    
 		_self.Submit_Form_AJAX = function() {
+            
             _is_submitted = true;
             // Pre form submission actions
             vcff_do_action('before_form_submission',{'form':vcff_form});
@@ -195,7 +191,7 @@ if (typeof VCFF_Field_Hooks == 'undefined') {
                 'form_data':base64.encode(serialised_fields)
             },function(result_json){ 
                 // If the result completely failed
-                if (typeof result_json != "object") { 
+                if (typeof result_json != "object") {  console.log('BAH');
                     // Pre form submission actions
                     vcff_do_action('form_submission_error',{'form':vcff_form,'json':result_json});
                     // Pre form standard submission actions
@@ -209,178 +205,136 @@ if (typeof VCFF_Field_Hooks == 'undefined') {
                 
                 _is_submitted = false;
                 // Fire the apply to form function
-                _self.Apply_Updates(result_json.form);
+                _self.Apply_Updates(result_json);
                 // Pre form submission actions
                 vcff_do_action('do_form_submission',{'form':vcff_form,'json':result_json});
                 // Pre form standard submission actions
                 vcff_do_action('do_form_ajax_submission',{'form':vcff_form,'json':result_json});
                 // If the form was successfull
                 // If the submission was not successfull
-                if (result_json.form.form.result != 'passed') {
+                if (result_json.data.form.result != 'passed') {
                     // Pre form submission actions
                     vcff_do_action('form_submission_failed',{'form':vcff_form,'json':result_json});
                     // Pre form standard submission actions
                     vcff_do_action('form_ajax_submission_failed',{'form':vcff_form,'json':result_json});
                 } 
-                else { $(vcff_form).get(0).reset(); }
+                else { 
+                    // Pre form submission actions
+                    vcff_do_action('form_submission_passed',{'form':vcff_form,'json':result_json});
+                    // Pre form standard submission actions
+                    vcff_do_action('form_ajax_submission_passed',{'form':vcff_form,'json':result_json});
+                    
+                    $(vcff_form).get(0).reset(); 
+                }
                 // Pre form submission actions
                 vcff_do_action('after_form_submission',{'form':vcff_form,'json':result_json});
                 // Pre form standard submission actions
                 vcff_do_action('after_form_ajax_submission',{'form':vcff_form,'json':result_json});
                 // Update the form with a new key
-                if (typeof result_json.form_key != "undefined") { $(vcff_form).find('[name="vcff_key"]').val(result_json.form_key); }
+                if (typeof result_json.form != "undefined" && typeof result_json.form.security_key != "undefined") { $(vcff_form).find('[name="vcff_key"]').val(result_json.form.security_key); }
                 // Reset the request object
                 _request = {};
             },'json');
         };
         
-        _self.Apply_Updates = function(data) {
-
-			if (typeof data.containers != "undefined" && data.containers != null) {
+        _self.Apply_Updates = function(json) {
+        
+			if (typeof json.data.containers != "undefined" && json.data.containers != null) {
 				// Retrieve the conditional data
-                var containers = data.containers; 
+                var containers = json.data.containers; 
 				// Loop through each of the returned fields
 				$.each(containers,function(container_name,container){
 					// Retrieve the field dom element
 					var container_obj = $(vcff_form).find('[data-vcff-container="'+container_name+'"]');
 					// If there is no field of this name
 					if ($(container_obj).length === 0) { return true; }
-                    
-                    var container_type = container.type;
-
 					// If there are conditions for this container
-					if (typeof container.conditions != "undefined") {
-						// Retrieve the conditions
-						var conditions = container.conditions;
+					if (typeof container.visibility != "undefined") {
                         // If the field is set to visible
-                        if (conditions.visibility == 'visible') {
+                        if (container.visibility == 'visible') {
                             // Show the field
                             $(container_obj).show();    
                         } // If the field is hidden, hide it
-                        else if (conditions.visibility == 'hidden') { $(container_obj).hide(); }
+                        else if (container.visibility == 'hidden') { $(container_obj).hide(); }
 					}
-                    
+                    // If the container has alerts
                     if (typeof container.alerts != 'undefined') {
-
+                        // Append any container alerts
                         $(container_obj).find('.container-alerts').show().html(container.alerts);
                     }
                     // Pre form standard submission actions
-                    vcff_do_action('container_do_refresh',{'form':vcff_form,'data':data,'container':container,'container_el':container_obj});
-                    
-                    if (typeof container.data != "undefined") {
-                    
-                        $.each(VCFF_Field_Hooks,function(i,hook){
-                        
-                            if (hook.type != container_type) { return true; }
-                            // Fire the callback
-                            hook.callback(container_obj,container.data); 
-                        });
-                    }
+                    vcff_do_action('container_do_refresh',{'form':vcff_form,'data':json.data,'container':container,'container_el':container_obj});
 				});
 			} 
 
-			if (typeof data.fields != "undefined" && data.fields != null) { 
+			if (typeof json.data.fields != "undefined" && json.data.fields != null) { 
 				// Retrieve the conditional data
-                var fields = data.fields; 
+                var fields = json.data.fields; 
 				// Loop through each of the returned fields
 				$.each(fields,function(machine_code,field){ 
 					// Retrieve the field dom element
 					var field_obj = $(vcff_form).find('[data-vcff-field-name="'+machine_code+'"]');  
 					// If there is no field of this name
-					if ($(field_obj).length === 0) { console.log(machine_code); return true; }
+					if ($(field_obj).length === 0) { return true; }
 					// If there are conditions for this container
-					if (typeof field.conditions != "undefined") {
-						// Retrieve the conditions
-						var conditions = field.conditions;
+					if (typeof field.visibility != "undefined") {
                         // If the field is set to visible
-                        if (conditions.visibility == 'visible') {
+                        if (field.visibility == 'visible') {
                             // Show the field
                             $(field_obj).show();    
                         } // If the field is hidden, hide it
-                        else if (conditions.visibility == 'hidden') { $(field_obj).hide(); }
+                        else if (field.visibility == 'hidden') { $(field_obj).hide(); }
 					}
-					// If there are conditions for this container
-					if (typeof field.validation != "undefined") {
-						// Retrieve the conditions
-						var validation = field.validation;
-                        // If the field is set to visible
-                        if (validation.result != 'passed') { }
-					}
-                    
+					// If the field has alerts
                     if (typeof field.alerts != 'undefined') {
-
+                        // Append any field alerts
                         $(field_obj).find('.field-alerts').show().html(field.alerts);
                     }
-                    
-                    var field_type = field.type;
                     // Pre form standard submission actions
-                    vcff_do_action('field_do_refresh',{'form':vcff_form,'data':data,'field':field,'field_el':field_obj});
-                    
-                    if (typeof field.data != "undefined") {
-                    
-                        $.each(VCFF_Field_Hooks,function(i,hook){
-                        
-                            if (hook.type != field_type) { return true; }
-                            // Fire the callback
-                            hook.callback(field_obj,field.data); 
-                        });
+                    vcff_do_action('field_do_refresh',{'form':vcff_form,'data':json.data,'field':field,'field_el':field_obj});
+				});
+			}
+            
+            if (typeof json.data.supports != "undefined" && json.data.supports != null) { 
+				// Retrieve the conditional data
+                var supports = json.data.supports; 
+				// Loop through each of the returned support
+				$.each(supports,function(machine_code,support){ 
+					// Retrieve the support dom element
+					var support_obj = $(vcff_form).find('[data-vcff-support-name="'+machine_code+'"]');  
+					// If there is no support of this name
+					if ($(support_obj).length === 0) { return true; }
+					// If there are conditions for this container
+					if (typeof support.visibility != "undefined") {
+                        // If the support is set to visible
+                        if (support.visibility == 'visible') {
+                            // Show the support
+                            $(support_obj).show();    
+                        } // If the support is hidden, hide it
+                        else if (support.visibility == 'hidden') { $(support_obj).hide(); }
+					}
+					// If the support has alerts
+                    if (typeof support.alerts != 'undefined') {
+                        // Append any support alerts
+                        $(support_obj).find('.support-alerts').show().html(support.alerts);
                     }
-                    
+                    // Pre form standard submission actions
+                    vcff_do_action('support_do_refresh',{'form':vcff_form,'data':json.data,'support':support,'support_el':support_obj});
 				});
 			}
 			
-			if (typeof data.form != "undefined" && data.form != null) {
-
-                var form = data.form;
-
+			if (typeof json.data.form != "undefined" && json.data.form != null) {
+                
+                var form = json.data.form;
+                // If the form has alerts
 				if (typeof form.alerts != 'undefined') {
-					
+					// Append to the standard form alerts panel
                     $(vcff_form).find('.form-alerts').show().html(form.alerts);
-                    
+                    // Append to any custom alerts panel
                     $(vcff_form).find('.form-alerts-panel').show().html(form.alerts);
 				}
-                
-                if (typeof form.ajax != 'undefined') {
-
-                    if (typeof form.ajax.html != 'undefined') {
-                        
-                        $(vcff_form).hide().after(form.ajax.html);
-                    }
-                }
-                
-                if (typeof form.redirects != 'undefined') {
-					
-                    var redirect_url = form.redirects[0];
-                    
-                    var redirect_method = form.redirects[1];
-                    
-                    var redirect_params = form.redirects[2];
-                    
-                    if (redirect_method == 'get') {
-                    
-                        window.location = redirect_url;
-                    } 
-                    else if (redirect_method == 'post') {
-                        
-                        var form_obj = $('<form>');
-
-                        $(form_obj).attr('action',redirect_url).attr('method','post');
-
-                        $.each(redirect_params,function(machine_code,field_data){
-                        
-                            var field_obj = $('<input>');
-                            
-                            $(field_obj).attr('type','hidden').attr('name',machine_code).attr('value',field_data);
-                            
-                            $(form_obj).append(field_obj);
-                        });
-
-                        $('body').append(form_obj);
-
-                        $(form_obj).submit();
-                    }
-				}
-				
+                // Pre form standard submission actions
+                vcff_do_action('form_update',{'form':vcff_form,'data':json.data});
 			}
             
         };

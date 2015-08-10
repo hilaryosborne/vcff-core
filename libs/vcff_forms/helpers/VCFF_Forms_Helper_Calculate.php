@@ -23,7 +23,7 @@ class VCFF_Forms_Helper_Calculate extends VCFF_Helper {
         // Retrieve the form instance
         $form_instance = $this->form_instance;
         // Do any form actions on create
-        $form_instance->Do_Action('form_before_calculate',array('helper' => $this));
+        $form_instance->Do_Action('before_calculate',array('helper' => $this));
         // Retrieve the validation result
         do_action('vcff_form_before_calculate', $form_instance);
         // Create the Instance
@@ -31,9 +31,9 @@ class VCFF_Forms_Helper_Calculate extends VCFF_Helper {
         $this->_Calculate_Conditions();
         $this->_Calculate_Validation();
         // Do any form actions on create
-        $form_instance->Do_Action('form_calculate',array('helper' => $this));
+        $form_instance->Do_Action('calculate',array('helper' => $this));
         // Do any form actions on create
-        $form_instance->Do_Action('form_after_calculate',array('helper' => $this));
+        $form_instance->Do_Action('after_calculate',array('helper' => $this));
         // Retrieve the validation result
         do_action('vcff_form_after_calculate', $form_instance);
     }
@@ -52,7 +52,7 @@ class VCFF_Forms_Helper_Calculate extends VCFF_Helper {
             ->Set_Form_Instance($form_instance)
             ->Filter();
         // Do any form actions on create
-        $form_instance->Do_Action('form_calculate_filtering',array('helper' => $this));
+        $form_instance->Do_Action('calculate_filtering',array('helper' => $this));
         // Retrieve the validation result
         do_action('vcff_form_filtering', $form_instance);
     }
@@ -91,7 +91,7 @@ class VCFF_Forms_Helper_Calculate extends VCFF_Helper {
 			->Set_Form_Instance($form_instance)
 			->Check();
         // Do any form actions on create
-        $form_instance->Do_Action('form_calculate_conditions',array('helper' => $this));
+        $form_instance->Do_Action('calculate_conditions',array('helper' => $this));
         // Retrieve the validation result
         do_action('vcff_form_after_conditional', $form_instance);
     }
@@ -111,6 +111,12 @@ class VCFF_Forms_Helper_Calculate extends VCFF_Helper {
 		$fields_validation_helper
 			->Set_Form_Instance($form_instance)
 			->Check(); 
+        // Create a field validation helper
+        $supports_validation_helper = new VCFF_Supports_Helper_Validation();
+		// Check the fields
+		$supports_validation_helper
+			->Set_Form_Instance($form_instance)
+			->Check(); 
 		// Create a containers validation helper
 		$containers_validation_helper = new VCFF_Containers_Helper_Validation();
 		// Check the container
@@ -124,7 +130,7 @@ class VCFF_Forms_Helper_Calculate extends VCFF_Helper {
             ->Set_Form_Instance($form_instance)
             ->Check();
         // Do any form actions on create
-        $form_instance->Do_Action('form_calculate_validation',array('helper' => $this));
+        $form_instance->Do_Action('calculate_validation',array('helper' => $this));
         // Retrieve the validation result
         do_action('vcff_form_after_validation', $form_instance);
         

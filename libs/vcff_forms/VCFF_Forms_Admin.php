@@ -3,7 +3,6 @@
 class VCFF_Forms_Admin {
 
     public function __construct() {
-        add_action('wp_ajax_form_get_field_list', array($this,'AJAX_Get_Field_List'));
         add_filter('vcff_meta_field_list',array($this,'_Filter_Add_Meta_Field_Type'), 15, 2);
         add_filter('vcff_meta_field_list',array($this,'_Filter_Add_Meta_Field_AJAX'), 15, 2);
     }
@@ -68,50 +67,6 @@ class VCFF_Forms_Admin {
         $edit_url = get_site_url(false,'index.php?page=vcff_preview_form&form_uuid='.$form_uuid);
 
         echo '<a href="'.$edit_url.'" class="button button-primary button-large">Preview Form</a>';
-    }
-    
-    public function AJAX_Get_Field_List() {
-        // Decode the form data
-        $form_data = base64_decode($_POST['form_data']);
-        // Parse the form data
-        parse_str($form_data,$output);
-        // Retrieve the form id
-        $post_id = $output['vcff_post_id'];
-        // Retrieve the form uuid
-        $form_uuid = vcff_get_uuid_by_form($output['vcff_form_id']);
-        // Retrieve a new form instance helper
-        $form_instance_helper = new VCFF_Forms_Helper_Instance();
-        // Generate a new form instance
-        $form_instance = $form_instance_helper
-            ->Set_Post_ID($post_id)
-            ->Set_Form_UUID($form_uuid)
-            ->Set_Form_Data($form_data)
-            ->Generate();
-        // If the form instance could not be created
-        if (!$form_instance) { die('could not create form instance'); }
-        // Complete setting up the form instance
-        $form_instance_helper
-            ->Add_Fields()
-            ->Add_Containers()
-            ->Add_Meta();
-        // Retrieve all of the form fields
-        $form_fields = $form_instance->fields;
-        // The var to store the fields
-        $form_fields_json = array();
-        // Loop through and get all of the fields
-        foreach ($form_fields as $machine_code => $field_instance) {
-            // Populate the field name
-            $form_fields_json[] = array(
-                'machine_code' => $machine_code
-            );
-        }
-        // Encode the meta fields and return
-        echo json_encode(array(
-            'result' => 'success',
-            'fields' => $form_fields_json
-        ));
-        // Die
-        wp_die();
     }
 }
 

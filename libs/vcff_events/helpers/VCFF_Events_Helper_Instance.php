@@ -32,6 +32,8 @@ class VCFF_Events_Helper_Instance extends VCFF_Helper {
         $action_instance->description = $action_data['description'];
         // Populate with raw data
         $action_instance->data = is_array($action_data) ? $action_data : array();
+        // Fire any on create action
+        $action_instance->Do_Action('instance_create');
         // Store the action instance
         $this->action_instance = $action_instance;
         // Populate with available triggers
@@ -91,6 +93,8 @@ class VCFF_Events_Helper_Instance extends VCFF_Helper {
                     $trigger_instance->value = $action_data['triggers'][$trigger_code];
                 }
             }
+            // Fire any on create action
+            $trigger_instance->Do_Action('instance_create');
         }
     }
     
@@ -143,6 +147,8 @@ class VCFF_Events_Helper_Instance extends VCFF_Helper {
                     $event_instance->value = $action_data['events'][$event_type];
                 }
             }
+            // Fire any on create action
+            $event_instance->Do_Action('instance_create');
         }
     }
 }

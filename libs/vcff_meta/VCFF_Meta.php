@@ -22,6 +22,10 @@ class VCFF_Meta {
         $this->_Load_Core();
         // Load the context classes
         $this->_Load_Context();
+        // Load the pages
+        $this->_Load_Pages();
+        // Load AJAX
+        $this->_Load_AJAX();
         // Fire the shortcode init action
         do_action('vcff_meta_init',$this);
         // Include the admin class
@@ -33,66 +37,135 @@ class VCFF_Meta {
     }
 
     protected function _Load_Helpers() {
+        // Retrieve the context director
+        $dir = untrailingslashit(plugin_dir_path(__FILE__));
         // Load each of the form shortcodes
-        foreach (new DirectoryIterator(VCFF_META_DIR.'/helpers') as $FileInfo) {
+        foreach (new DirectoryIterator($dir.'/helpers') as $FileInfo) {
             // If this is a directory dot
             if($FileInfo->isDot()) { continue; }
             // If this is a directory
             if($FileInfo->isDir()) { continue; }
+            // If this is not false
+            if (stripos($FileInfo->getFilename(),'.tpl') !== false) { continue; } 
             // Include the file
-            require_once(VCFF_META_DIR.'/helpers/'.$FileInfo->getFilename());
+            require_once($FileInfo->getPathname());
         }
         // Fire the shortcode init action
         do_action('vcff_meta_helper_init',$this);
     }
 
     protected function _Load_Core() {
+        // Retrieve the context director
+        $dir = untrailingslashit(plugin_dir_path(__FILE__));
         // Load each of the form shortcodes
-        foreach (new DirectoryIterator(VCFF_META_DIR.'/core') as $FileInfo) {
+        foreach (new DirectoryIterator($dir.'/core') as $FileInfo) {
             // If this is a directory dot
             if($FileInfo->isDot()) { continue; }
             // If this is a directory
             if($FileInfo->isDir()) { continue; }
             // If this is not false
-            if (stripos($FileInfo->getFilename(),'.tpl') !== false) { continue; }
+            if (stripos($FileInfo->getFilename(),'.tpl') !== false) { continue; } 
             // Include the file
-            require_once(VCFF_META_DIR.'/core/'.$FileInfo->getFilename());
+            require_once($FileInfo->getPathname());
         }
         // Fire the shortcode init action
         do_action('vcff_meta_core_init',$this);
     }
 
     protected function _Load_Context() {
-        // Load each of the form shortcodes
-        foreach (new DirectoryIterator(VCFF_META_DIR.'/context') as $FileInfo) {
+        // Retrieve the context director
+        $dir = untrailingslashit(plugin_dir_path(__FILE__));
+        // Load each of the field shortcodes
+        foreach (new DirectoryIterator($dir.'/context') as $FileInfo) { 
             // If this is a directory dot
-            if($FileInfo->isDot()) { continue; }
+            if ($FileInfo->isDot()) { continue; }
             // If this is a directory
-            if($FileInfo->isDir()) { continue; }
-            // If this is not false
-            if (stripos($FileInfo->getFilename(),'.tpl') !== false) { continue; }
-            // Include the file
-            require_once(VCFF_META_DIR.'/context/'.$FileInfo->getFilename());
-            // If this is not false
-            if (stripos($FileInfo->getFilename(),'_Item') !== false) { continue; }
-            // Retrieve the classname
-            $context_classname = $FileInfo->getBasename('.php');
-            
-            vcff_map_meta_field($context_classname);
+            if ($FileInfo->isDir()) { 
+                // Load each of the field shortcodes
+                foreach (new DirectoryIterator($FileInfo->getPathname()) as $_FileInfo) {
+                    // If this is a directory dot
+                    if ($_FileInfo->isDot()) { continue; }
+                    // If this is a directory
+                    if ($_FileInfo->isDir()) { continue; }
+                    // If this is not false
+                    if (stripos($_FileInfo->getFilename(),'.tpl') !== false) { continue; } 
+                    // Include the file
+                    require_once($_FileInfo->getPathname());
+                }
+            } // Otherwise this is just a file
+            else {
+                // If this is not false
+                if (stripos($FileInfo->getFilename(),'.tpl') !== false) { continue; } 
+                // Include the file
+                require_once($FileInfo->getPathname());
+            }
         }
         // Fire the shortcode init action
         do_action('vcff_meta_context_init',$this);
     }
     
-    public function Load_Admin_Scripts() {
-        // Register the vcff admin css
-        vcff_admin_enqueue_script('vcff-admin-meta', VCFF_META_URL . '/assets/admin/vcff.admin.meta.js', array('jquery'), '20120608', 'all');
-        // Register the vcff admin css
-        vcff_admin_enqueue_style('vcff-admin-meta', VCFF_META_URL . '/assets/admin/vcff.admin.meta.css', array(), '20120608', 'all');
+    protected function _Load_Pages() { 
+        // Retrieve the context director
+        $dir = untrailingslashit(plugin_dir_path(__FILE__));
+        // Load each of the field shortcodes
+        foreach (new DirectoryIterator($dir.'/pages') as $FileInfo) { 
+            // If this is a directory dot
+            if ($FileInfo->isDot()) { continue; }
+            // If this is a directory
+            if ($FileInfo->isDir()) { 
+                // Load each of the field shortcodes
+                foreach (new DirectoryIterator($FileInfo->getPathname()) as $_FileInfo) {
+                    // If this is a directory dot
+                    if ($_FileInfo->isDot()) { continue; }
+                    // If this is a directory
+                    if ($_FileInfo->isDir()) { continue; }
+                    // If this is not false
+                    if (stripos($_FileInfo->getFilename(),'.tpl') !== false || stripos($FileInfo->getFilename(),'.txt') !== false) { continue; } 
+                    // Include the file
+                    require_once($_FileInfo->getPathname());
+                }
+            } // Otherwise this is just a file
+            else {
+                // If this is not false
+                if (stripos($FileInfo->getFilename(),'.tpl') !== false || stripos($FileInfo->getFilename(),'.txt') !== false) { continue; } 
+                // Include the file
+                require_once($FileInfo->getPathname());
+            }
+        }
+        // Fire the shortcode init action
+        do_action('vcff_meta_pages_init',$this);
     }
-
-    public function Load_Public_Scripts() {
-
+    
+    protected function _Load_AJAX() {
+        // Retrieve the context director
+        $dir = untrailingslashit(plugin_dir_path(__FILE__));
+        // Load each of the field shortcodes
+        foreach (new DirectoryIterator($dir.'/ajax') as $FileInfo) { 
+            // If this is a directory dot
+            if ($FileInfo->isDot()) { continue; }
+            // If this is a directory
+            if ($FileInfo->isDir()) { 
+                // Load each of the field shortcodes
+                foreach (new DirectoryIterator($FileInfo->getPathname()) as $_FileInfo) {
+                    // If this is a directory dot
+                    if ($_FileInfo->isDot()) { continue; }
+                    // If this is a directory
+                    if ($_FileInfo->isDir()) { continue; }
+                    // If this is not false
+                    if (stripos($_FileInfo->getFilename(),'.tpl') !== false || stripos($FileInfo->getFilename(),'.txt') !== false) { continue; } 
+                    // Include the file
+                    require_once($_FileInfo->getPathname());
+                }
+            } // Otherwise this is just a file
+            else {
+                // If this is not false
+                if (stripos($FileInfo->getFilename(),'.tpl') !== false || stripos($FileInfo->getFilename(),'.txt') !== false) { continue; } 
+                // Include the file
+                require_once($FileInfo->getPathname());
+            }
+        }
+        // Fire the shortcode init action
+        do_action('vcff_meta_ajax_init',$this);
     }
 }
 
@@ -101,3 +174,8 @@ $vcff_meta = new VCFF_Meta();
 vcff_register_library('vcff_meta',$vcff_meta);
 
 $vcff_meta->Init();
+
+// Register the vcff admin css
+vcff_admin_enqueue_script('vcff-admin-meta', VCFF_META_URL . '/assets/admin/vcff.admin.meta.js', array('jquery'), '20120608', 'all');
+// Register the vcff admin css
+vcff_admin_enqueue_style('vcff-admin-meta', VCFF_META_URL . '/assets/admin/vcff.admin.meta.css', array(), '20120608', 'all');

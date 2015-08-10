@@ -13,11 +13,22 @@ class VCFF_Support_Item extends VCFF_Item {
      */
     public $form_instance;
     
+    public $container_instance;
+    
+    public $is_hidden = false;
+
+    public $is_valid = true;
+    
     /**
     * CONTEXT DATA
     * The class which handles vc integration
     */
     public $context;
+    
+    public function Is_Valid() {
+
+        return $this->is_valid;
+    }
     
     public function Is_Visible() { 
         // If the field is attached to a container

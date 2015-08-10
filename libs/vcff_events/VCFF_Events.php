@@ -19,14 +19,14 @@ class VCFF_Events {
         require_once(VCFF_EVENTS_DIR.'/functions.php');
         // Load helper classes
         $this->_Load_Helpers();
-		// Load the core classes
-        $this->_Load_Core();
-        // Load the actions
-        $this->_Load_Actions();
-        // Load the trigger classes
-        $this->_Load_Triggers();
         // Load the core classes
-        $this->_Load_Events();
+        $this->_Load_Core();
+        // Load the context classes
+        $this->_Load_Context();
+        // Load the pages
+        $this->_Load_Pages();
+        // Load AJAX
+        $this->_Load_AJAX();
         // Load the meta fields
         $this->_Load_Meta();
         // Fire the shortcode init action
@@ -40,30 +40,36 @@ class VCFF_Events {
     }
 
     protected function _Load_Helpers() {
+        // Retrieve the context director
+        $dir = untrailingslashit( plugin_dir_path(__FILE__ ) );
         // Load each of the form shortcodes
-        foreach (new DirectoryIterator(VCFF_EVENTS_DIR.'/helpers') as $FileInfo) {
+        foreach (new DirectoryIterator($dir.'/helpers') as $FileInfo) {
             // If this is a directory dot
             if($FileInfo->isDot()) { continue; }
             // If this is a directory
             if($FileInfo->isDir()) { continue; }
+            // If this is not false
+            if (stripos($FileInfo->getFilename(),'.tpl') !== false) { continue; } 
             // Include the file
-            require_once(VCFF_EVENTS_DIR.'/helpers/'.$FileInfo->getFilename());
+            require_once($FileInfo->getPathname());
         }
         // Fire the shortcode init action
         do_action('vcff_events_helper_init',$this);
     }
 	
 	protected function _Load_Core() {
+        // Retrieve the context director
+        $dir = untrailingslashit( plugin_dir_path(__FILE__ ) );
         // Load each of the form shortcodes
-        foreach (new DirectoryIterator(VCFF_EVENTS_DIR.'/core') as $FileInfo) {
+        foreach (new DirectoryIterator($dir.'/core') as $FileInfo) {
             // If this is a directory dot
             if($FileInfo->isDot()) { continue; }
             // If this is a directory
             if($FileInfo->isDir()) { continue; }
             // If this is not false
-            if (stripos($FileInfo->getFilename(),'.tpl') !== false) { continue; }
+            if (stripos($FileInfo->getFilename(),'.tpl') !== false) { continue; } 
             // Include the file
-            require_once(VCFF_EVENTS_DIR.'/core/'.$FileInfo->getFilename());
+            require_once($FileInfo->getPathname());
         }
         // Fire the shortcode init action
         do_action('vcff_events_core_init',$this);
@@ -83,81 +89,100 @@ class VCFF_Events {
         });
     }
     
-    protected function _Load_Actions() {
-        // Load each of the form shortcodes
-        foreach (new DirectoryIterator(VCFF_EVENTS_DIR.'/context/actions') as $FileInfo) {
+    protected function _Load_Context() {
+        // Retrieve the context director
+        $dir = untrailingslashit( plugin_dir_path(__FILE__ ) );
+        // Load each of the field shortcodes
+        foreach (new DirectoryIterator($dir.'/context') as $FileInfo) { 
             // If this is a directory dot
-            if($FileInfo->isDot()) { continue; }
+            if ($FileInfo->isDot()) { continue; }
             // If this is a directory
-            if($FileInfo->isDir()) { continue; }
-            // If this is not false
-            if (stripos($FileInfo->getFilename(),'.tpl') !== false) { continue; }
-            // Include the file
-            require_once(VCFF_EVENTS_DIR.'/context/actions/'.$FileInfo->getFilename());
-            // If this is not false
-            if (stripos($FileInfo->getFilename(),'_Item') !== false) { continue; }
-            // Retrieve the classname
-            $context_classname = $FileInfo->getBasename('.php');
-            // Retrieve the form code
-            vcff_map_action($context_classname);
+            if ($FileInfo->isDir()) { 
+                // Load each of the field shortcodes
+                foreach (new DirectoryIterator($FileInfo->getPathname()) as $_FileInfo) {
+                    // If this is a directory dot
+                    if ($_FileInfo->isDot()) { continue; }
+                    // If this is a directory
+                    if ($_FileInfo->isDir()) { continue; }
+                    // If this is not false
+                    if (stripos($_FileInfo->getFilename(),'.tpl') !== false) { continue; } 
+                    // Include the file
+                    require_once($_FileInfo->getPathname());
+                }
+            } // Otherwise this is just a file
+            else {
+                // If this is not false
+                if (stripos($FileInfo->getFilename(),'.tpl') !== false) { continue; } 
+                // Include the file
+                require_once($FileInfo->getPathname());
+            }
         }
         // Fire the shortcode init action
-        do_action('vcff_events_actions_init',$this);
+        do_action('vcff_events_context_init',$this);
     }
     
-    protected function _Load_Triggers() {
-        // Load each of the form shortcodes
-        foreach (new DirectoryIterator(VCFF_EVENTS_DIR.'/context/triggers') as $FileInfo) {
+    protected function _Load_Pages() { 
+        // Retrieve the context director
+        $dir = untrailingslashit(plugin_dir_path(__FILE__));
+        // Load each of the field shortcodes
+        foreach (new DirectoryIterator($dir.'/pages') as $FileInfo) { 
             // If this is a directory dot
-            if($FileInfo->isDot()) { continue; }
+            if ($FileInfo->isDot()) { continue; }
             // If this is a directory
-            if($FileInfo->isDir()) { continue; }
-            // If this is not false
-            if (stripos($FileInfo->getFilename(),'.tpl') !== false) { continue; }
-            // Include the file
-            require_once(VCFF_EVENTS_DIR.'/context/triggers/'.$FileInfo->getFilename());
-            // If this is not false
-            if (stripos($FileInfo->getFilename(),'_Item') !== false) { continue; }
-            // Retrieve the classname
-            $context_classname = $FileInfo->getBasename('.php');
-            // Retrieve the form code
-            vcff_map_trigger($context_classname); 
+            if ($FileInfo->isDir()) { 
+                // Load each of the field shortcodes
+                foreach (new DirectoryIterator($FileInfo->getPathname()) as $_FileInfo) {
+                    // If this is a directory dot
+                    if ($_FileInfo->isDot()) { continue; }
+                    // If this is a directory
+                    if ($_FileInfo->isDir()) { continue; }
+                    // If this is not false
+                    if (stripos($_FileInfo->getFilename(),'.tpl') !== false || stripos($FileInfo->getFilename(),'.txt') !== false) { continue; } 
+                    // Include the file
+                    require_once($_FileInfo->getPathname());
+                }
+            } // Otherwise this is just a file
+            else {
+                // If this is not false
+                if (stripos($FileInfo->getFilename(),'.tpl') !== false || stripos($FileInfo->getFilename(),'.txt') !== false) { continue; } 
+                // Include the file
+                require_once($FileInfo->getPathname());
+            }
         }
         // Fire the shortcode init action
-        do_action('vcff_events_triggers_init',$this);
+        do_action('vcff_events_pages_init',$this);
     }
     
-    protected function _Load_Events() { 
-        // Load each of the form shortcodes
-        foreach (new DirectoryIterator(VCFF_EVENTS_DIR.'/context/events') as $FileInfo) {
+    protected function _Load_AJAX() {
+        // Retrieve the context director
+        $dir = untrailingslashit(plugin_dir_path(__FILE__));
+        // Load each of the field shortcodes
+        foreach (new DirectoryIterator($dir.'/ajax') as $FileInfo) { 
             // If this is a directory dot
-            if($FileInfo->isDot()) { continue; }
+            if ($FileInfo->isDot()) { continue; }
             // If this is a directory
-            if($FileInfo->isDir()) { continue; }
-            // If this is not false
-            if (stripos($FileInfo->getFilename(),'.tpl') !== false) { continue; }
-            // Include the file
-            require_once(VCFF_EVENTS_DIR.'/context/events/'.$FileInfo->getFilename());
-            // If this is not false
-            if (stripos($FileInfo->getFilename(),'_Item') !== false) { continue; }
-            // Retrieve the classname
-            $context_classname = $FileInfo->getBasename('.php');
-            // Retrieve the form code
-            vcff_map_event($context_classname);
+            if ($FileInfo->isDir()) { 
+                // Load each of the field shortcodes
+                foreach (new DirectoryIterator($FileInfo->getPathname()) as $_FileInfo) {
+                    // If this is a directory dot
+                    if ($_FileInfo->isDot()) { continue; }
+                    // If this is a directory
+                    if ($_FileInfo->isDir()) { continue; }
+                    // If this is not false
+                    if (stripos($_FileInfo->getFilename(),'.tpl') !== false || stripos($FileInfo->getFilename(),'.txt') !== false) { continue; } 
+                    // Include the file
+                    require_once($_FileInfo->getPathname());
+                }
+            } // Otherwise this is just a file
+            else {
+                // If this is not false
+                if (stripos($FileInfo->getFilename(),'.tpl') !== false || stripos($FileInfo->getFilename(),'.txt') !== false) { continue; } 
+                // Include the file
+                require_once($FileInfo->getPathname());
+            }
         }
         // Fire the shortcode init action
-        do_action('vcff_events_events_init',$this);
-    }
-    
-    public function Load_Admin_Scripts() {
-        // Register the vcff admin css
-        vcff_admin_enqueue_script('vcff_events_list', VCFF_EVENTS_URL.'/assets/admin/vcff_events_list.js',array('vcff-core'));
-        // Register the vcff admin css
-        vcff_admin_enqueue_script('vcff_events_form', VCFF_EVENTS_URL.'/assets/admin/vcff_events_form.js',array('vcff-core'));
-    }
-
-    public function Load_Public_Scripts() {
-
+        do_action('vcff_events_ajax_init',$this);
     }
 
 }
@@ -167,3 +192,8 @@ $vcff_events = new VCFF_Events();
 vcff_register_library('vcff_events',$vcff_events);
 
 $vcff_events->Init();
+
+// Register the vcff admin css
+vcff_admin_enqueue_script('vcff_events_list', VCFF_EVENTS_URL.'/assets/admin/vcff_events_list.js',array('vcff-core'));
+// Register the vcff admin css
+vcff_admin_enqueue_script('vcff_events_form', VCFF_EVENTS_URL.'/assets/admin/vcff_events_form.js',array('vcff-core'));

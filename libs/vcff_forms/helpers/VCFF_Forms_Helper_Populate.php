@@ -27,7 +27,7 @@ class VCFF_Forms_Helper_Populate extends VCFF_Helper {
         // Retrieve the form instance
         $form_instance = $this->form_instance;
         // Do any form actions on create
-        $form_instance->Do_Action('form_before_populate',array('helper' => $this));
+        $form_instance->Do_Action('before_populate',array('helper' => $this));
         // Retrieve the validation result
         do_action('vcff_form_before_populate', $form_instance);
         // Create the Instance
@@ -37,9 +37,9 @@ class VCFF_Forms_Helper_Populate extends VCFF_Helper {
         $this->_Add_Events();
         $this->_Add_Meta();
         // Do any form actions on create
-        $form_instance->Do_Action('form_populate',array('helper' => $this));
+        $form_instance->Do_Action('populate',array('helper' => $this));
         // Do any form actions on create
-        $form_instance->Do_Action('form_after_populate',array('helper' => $this));
+        $form_instance->Do_Action('after_populate',array('helper' => $this));
         // Retrieve the validation result
         do_action('vcff_form_after_populate', $form_instance);
     }
@@ -59,7 +59,7 @@ class VCFF_Forms_Helper_Populate extends VCFF_Helper {
 			->Set_Form_Data(isset($params['fields_values']) && is_array($params['fields_values']) ? $params['fields_values'] : $form_instance->form_data)
 			->Populate();
 		// Do any form actions on create
-        $form_instance->Do_Action('form_populate_fields',array('helper' => $this));
+        $form_instance->Do_Action('populate_fields',array('helper' => $this));
 	}
 
     protected function _Add_Supports() {
@@ -78,7 +78,7 @@ class VCFF_Forms_Helper_Populate extends VCFF_Helper {
         // Return for chaining
         return $this;
 		// Do any form actions on create
-        $form_instance->Do_Action('form_populate_supports',array('helper' => $this));
+        $form_instance->Do_Action('populate_supports',array('helper' => $this));
 	}
     
     protected function _Add_Containers() {
@@ -95,7 +95,7 @@ class VCFF_Forms_Helper_Populate extends VCFF_Helper {
 			->Set_Form_Instance($form_instance)
 			->Populate();
 		// Do any form actions on create
-        $form_instance->Do_Action('form_populate_containers',array('helper' => $this));
+        $form_instance->Do_Action('populate_containers',array('helper' => $this));
 	}
     
     protected function _Add_Events() {
@@ -112,7 +112,7 @@ class VCFF_Forms_Helper_Populate extends VCFF_Helper {
             ->Set_Form_Instance($form_instance)
             ->Populate();
 		// Do any form actions on create
-        $form_instance->Do_Action('form_populate_events',array('helper' => $this));
+        $form_instance->Do_Action('populate_events',array('helper' => $this));
 	}
     
     protected function _Add_Meta() {
@@ -130,6 +130,6 @@ class VCFF_Forms_Helper_Populate extends VCFF_Helper {
 			->Set_Field_Data(isset($params['meta_values']) && is_array($params['meta_values']) ? $params['meta_values'] : null)
 			->Populate();
 		// Do any form actions on create
-        $form_instance->Do_Action('form_populate_meta',array('helper' => $this));
+        $form_instance->Do_Action('populate_meta',array('helper' => $this));
 	}
 }

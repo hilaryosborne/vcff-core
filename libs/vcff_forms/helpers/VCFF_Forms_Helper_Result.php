@@ -19,7 +19,7 @@ class VCFF_Forms_Helper_Result extends VCFF_Helper {
         // Retrieve the form instance
         $form_instance = $this->form_instance;
         // Do any form actions on create
-        $form_instance->Do_Action('form_before_result',array('helper' => $this));
+        $form_instance->Do_Action('before_result',array('helper' => $this));
         // Retrieve the validation result
         do_action('vcff_form_before_result', $form_instance);
         // Create the Instance
@@ -29,9 +29,9 @@ class VCFF_Forms_Helper_Result extends VCFF_Helper {
         } // Otherwise if this is a standard response
         else { $this->_For_Standard(); }
         // Do any form actions on create
-        $form_instance->Do_Action('form_result',array('helper' => $this));
+        $form_instance->Do_Action('result',array('helper' => $this));
         // Do any form actions on create
-        $form_instance->Do_Action('form_after_result',array('helper' => $this));
+        $form_instance->Do_Action('after_result',array('helper' => $this));
         // Retrieve the validation result
         do_action('vcff_form_after_result', $form_instance);
         // If we are not going to populate the fields
@@ -67,7 +67,7 @@ class VCFF_Forms_Helper_Result extends VCFF_Helper {
             ->Set_Form_Instance($form_instance)
             ->Build();
         // Pass the ajax through the filter
-        $_ajax = $form_instance->Apply_Filters('form_ajax',$_ajax,array('helper' => $this, '_ajax' => $_ajax));
+        $_ajax = $form_instance->Apply_Filters('ajax',$_ajax,array('helper' => $this));
          // Encode the meta fields and return
         echo json_encode(array(
             'result' => 'success',

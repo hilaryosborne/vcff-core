@@ -1,7 +1,7 @@
 <?php
 
 class VCFF_Standard_Form_Item extends VCFF_Form_Item {
-
+    
     public function Render() {
         // Convert attrs to vars
         extract(shortcode_atts(array(

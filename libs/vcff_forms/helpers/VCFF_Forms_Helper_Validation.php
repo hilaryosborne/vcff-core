@@ -26,7 +26,7 @@ class VCFF_Forms_Helper_Validation extends VCFF_Helper {
         // If this field has a custom validation method
         if (method_exists($form_instance,'Before_Validation')) { $form_instance->Pre_Validation(); }
         // Do any form native actions
-        $form_instance->Do_Action('form_before_validate');
+        $form_instance->Do_Action('before_validate',array());
         // Retrieve the validation result
         do_action('vcff_before_form_validation', $form_instance);
     }
@@ -37,7 +37,7 @@ class VCFF_Forms_Helper_Validation extends VCFF_Helper {
         // If this field has a custom validation method
         if (method_exists($form_instance,'Do_Validation')) { $form_instance->Do_Validation(); }
         // Do any form native actions
-        $form_instance->Do_Action('form_validate');
+        $form_instance->Do_Action('validate',array());
         // Retrieve the validation result
         do_action('vcff_do_form_validation', $form_instance );
 	}
@@ -48,7 +48,7 @@ class VCFF_Forms_Helper_Validation extends VCFF_Helper {
         // If this field has a custom validation method
         if (method_exists($form_instance,'After_Validation')) { $form_instance->Post_Validation(); }
         // Do any form native actions
-        $form_instance->Do_Action('form_after_validate');
+        $form_instance->Do_Action('after_validate',array());
         // Retrieve the validation result
         do_action('vcff_after_form_validation', $form_instance);
     }

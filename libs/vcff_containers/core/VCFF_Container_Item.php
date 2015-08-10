@@ -18,7 +18,9 @@ class VCFF_Container_Item extends VCFF_Item {
     public $container_type;
 
     public $fields = array();
-
+    
+    public $supports = array();
+    
     public $attributes;
     
     public $context;
@@ -29,7 +31,7 @@ class VCFF_Container_Item extends VCFF_Item {
 
     public $is_hidden = false;
 
-    public $is_valid = false;
+    public $is_valid = true;
 
     public function Is_Hidden() {
 
@@ -72,6 +74,16 @@ class VCFF_Container_Item extends VCFF_Item {
 		$field_instance->container_instance = $this;
 		
 		$this->fields[$machine_code] = $field_instance;
+		
+	}
+    
+    public function Add_Support($support_instance) {
+		
+		$machine_code = $support_instance->machine_code;
+		
+		$support_instance->container_instance = $this;
+		
+		$this->supports[$machine_code] = $support_instance;
 		
 	}
     
@@ -241,41 +253,51 @@ class VCFF_Container_Item extends VCFF_Item {
 	}
     
     public function Check_Container_Validation() {
-		// Retrieve the form instance
-		$form_instance = $this->form_instance;
-        // Validation result lists
-        $validation_fields_failed = array();
-        $validation_fields_passed = array();
+        // If there are no validation rules
+        if ($this->Is_Hidden()) { $this->is_valid = true; return; } 
+		// Check any fields
+		$this->_Check_Fields();
+        // Check any attached supports
+        $this->_Check_Supports();
+	}
+    
+    protected function _Check_Fields() {
         // Retrieve the form's fields
         $container_fields = $this->fields;
-        // If a list of form containers was returned
-        if (!$container_fields || !is_array($container_fields)) { 
-            // Update the form's validation status
-            $this->result_validation = array(
-                'result' => 'passed',
-                'fields_passed' => array(),
-                'fields_failed' => array()
-            );
-        }
+        // If there are no form fields
+		if (!$container_fields || !is_array($container_fields)) { return; }
+        // Set the invalid number
+        $invalid = 0;
         // Loop through each containers
-        foreach ($container_fields as $k => $field_instance) {
-            // If the field passed validation
-            if ($field_instance->Is_Valid()) {
-                // Add the field to the field passed list
-                $validation_fields_passed[$k] = $field_instance;
-            } // If the field validation failed
-            else {
-                // Add the field to the failed field list
-                $validation_fields_failed[$k] = $field_instance;
-            } 
+		foreach ($container_fields as $machine_code => $field_instance) {
+            // If the field is valid, move on
+            if ($field_instance->Is_Valid()) { continue; }
+            // Inc up the invalid field
+            $invalid++;
         }
-        // Set the container validation flag
-        $this->is_valid = count($validation_fields_failed) > 0 ? false : true;
-        // Update the form's validation status
-        $this->result_validation = array(
-            'result' => count($validation_fields_failed) > 0 ? 'failed' : 'passed',
-            'fields_passed' => $validation_fields_passed,
-            'fields_failed' => $validation_fields_failed
-        );
-	}
+        // If there are no invalid fields
+        if ($invalid == 0) { return; }
+        // Set the form valid flag to false
+        $this->is_valid = false;
+    }
+    
+    protected function _Check_Supports() {
+        // Retrieve the form's fields
+        $container_supports = $this->supports;
+        // If there are no form fields
+		if (!$container_supports || !is_array($container_supports)) { return; }
+        // Set the invalid number
+        $invalid = 0;
+        // Loop through each containers
+		foreach ($container_supports as $machine_code => $support_instance) {
+            // If the field is valid, move on
+            if ($support_instance->Is_Valid()) { continue; }
+            // Inc up the invalid field
+            $invalid++;
+        }
+        // If there are no invalid fields
+        if ($invalid == 0) { return; }
+        // Set the form valid flag to false
+        $this->is_valid = false;
+    }
 }

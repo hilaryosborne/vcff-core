@@ -1,0 +1,215 @@
+<?php
+
+class VCFF_Text_Input {
+    
+    static $field_type = 'vcff_field_text';
+    
+    static $field_title = 'Single Text Input';
+
+    static $item_class = 'VCFF_Text_Input_Item';
+    
+    static $is_context = true;
+    
+    static function Field_Settings() {
+        // Return the required meta fields
+        return array(
+            // Add any custom pages for this form type
+            'pages' => array(),
+            // Add any custom form groups
+            'groups' => array(),
+            // Add any custom form fields
+            'fields' => array()
+        );
+    }
+
+    static function VC_Params() {
+        // Return any visual composer params
+        return array(
+            'params' => array(
+                // CORE FIELD SETTINGS
+                array (
+                    "type" => "vcff_heading",
+                    "heading" => false,
+                    "param_name" => "field_heading",
+                    'html_title' => 'VCFF Fields',
+                    'html_description' => 'A form field provides a page element which users can import data into or make selections using to provide information for your form. Each field element requires at least a machine code and a set of labels explaining what the field is for to the user and administrator.',
+                    'help_url' => 'http://blah',
+                ),
+                array (
+                    "type" => "vcff_machine",
+                    "heading" => __ ( "Machine Code", VCFF_FORM ),
+                    "param_name" => "machine_code",
+                ), 
+                // CORE FIELD SETTINGS
+                array (
+                    "type" => "vcff_heading",
+                    "heading" => false,
+                    "param_name" => "label_heading",
+                    'html_title' => 'Field Labels',
+                    'html_description' => 'Field labels are used as headers to inform users of the purpose of the field within the form context. A data entry label will appear above the fields with in the form as a user is filling out a form. A data viewing label will appear while viewing data previously inputted into a field. For example viewing form submissions by either the reports extension or from an email event.',
+                ),
+                array (
+                    "type" => "textfield",
+                    "heading" => __ ( "Label (Data Entry)", VCFF_FORM ),
+                    "param_name" => "field_label",
+                    'value' => __('Enter a field label..'),
+                    'admin_label' => true,
+                ),
+                array (
+                    "type" => "textfield",
+                    "heading" => __ ( "Label (Data Viewing)", VCFF_FORM ),
+                    "param_name" => "view_label",
+                ),
+                // ADVANCED SETTING
+                array (
+                    "type" => "vcff_heading",
+                    "heading" => false,
+                    "param_name" => "advanced_label",
+                    'html_title' => 'Advanced Settings',
+                    'group' => 'Adv. Settings',
+                    'html_description' => 'Fields may have a set of advanced configurable options which allow you to better configure a field to behave differently within the form. Examples of these may be to add a placeholder text field or to add a default value. More advanced fields may have significantly more advanced settings. These are generally optional.',
+                ),
+                array (
+                    "type" => "textfield",
+                    "heading" => __ ( "Placeholder", VCFF_FORM ),
+                    "param_name" => "placeholder",
+                    'group' => 'Adv. Settings',
+                ),
+                array (
+                    "type" => "textfield",
+                    "heading" => __ ( "Default Value", VCFF_FORM ),
+                    "param_name" => "default_value",
+                    'group' => 'Adv. Settings',
+                ),
+                array (
+                    "type" => "vcff_heading",
+                    "heading" => false,
+                    "param_name" => "element_label",
+                    'html_title' => 'Element Settings',
+                    'group' => 'Adv. Settings',
+                    'html_description' => 'Use the following options to configure the field element. These options will help you add information such as element attributes or add a custom CSS class.',
+                ),
+                array (
+                    "type" => "textfield",
+                    "heading" => __ ( "Additional Attributes", VCFF_FORM ),
+                    "param_name" => "attributes",
+                    'group' => 'Adv. Settings',
+                ),
+                array (
+                    'type' => 'textfield',
+                    'heading' => __ ( 'Extra Class', VCFF_FORM ),
+                    'param_name' => 'extra_class',
+                    'group' => 'Adv. Settings',
+                ),
+                array (
+                    "type" => "vcff_heading",
+                    "heading" => false,
+                    "param_name" => "dynamic_pop_label",
+                    'html_title' => 'Dynamic Population',
+                    'group' => 'Adv. Settings',
+                    'html_description' => 'You can set this field to accept dynamic values from either POST, GET or REQUEST variables. This is useful if you have forms posting to each other or if you want to refill form fields via a URL link.',
+                ),
+                array (
+                    "type" => "vcff_url_vars",
+                    "heading" => false,
+                    "param_name" => "dynamically_populate",
+                    'group' => 'Adv. Settings',
+                ),
+                // FIELD CONDITIONAL PARAMETERS
+                array (
+                    'type' => 'vcff_conditional',
+                    'heading' => false,
+                    'param_name' => 'conditions',
+                    'group' => 'Adv. Logic'
+                ),
+                // FIELD VALIDATION PARAMETERS
+                array (
+                    'type' => 'vcff_validation',
+                    'heading' => false,
+                    'param_name' => 'validation',
+                    'group' => 'Adv. Logic',
+                    'validation_rules' => array(
+                        'required',
+                        'max_len',
+                        'exact_len',
+                        'alpha',
+                    )
+                ),
+                array (
+                    'type' => 'checkbox',
+                    'heading' => false,
+                    'param_name' => 'use_adv_validation',
+                    'group' => 'Adv. Logic',
+                    'value' => array('Use advanced GUMP validation rules' => 'yes')
+                ),
+                array (
+                    'type' => 'textfield',
+                    'heading' => 'Advanced Validation Rules',
+                    'description' => 'You may use any combination of the GUMP validation rules ie required|exact_len,15. For further information visit the <a href="https://github.com/Wixel/GUMP" target="GUMP">GUMP documentation</a>.',
+                    'param_name' => 'adv_validation',
+                    'group' => 'Adv. Logic',
+                    'dependency' => array(
+                        'element' => 'use_adv_validation',
+                        'value' => 'yes',
+                    )
+                ),
+                // FIELD FILTER PARAMETERS
+                array (
+                    'type' => 'vcff_filters',
+                    'heading' => false,
+                    'param_name' => 'filter',
+                    'group' => 'Adv. Logic',
+                    'filter_rules' => array(
+                        'sanitize_string',
+                        'sanitize_email',
+                        'basic_tags',
+                        'base64_encode'
+                    )
+                ),
+                array (
+                    'type' => 'checkbox',
+                    'heading' => false,
+                    'param_name' => 'use_adv_filter',
+                    'group' => 'Adv. Logic',
+                    'value' => array('Use advanced GUMP filter rules' => 'yes')
+                ),
+                array (
+                    'type' => 'textfield',
+                    'heading' => 'Advanced Filter Rules',
+                    'description' => 'You may use any combination of the GUMP filter rules ie trim|sanitize_string. For further information visit the <a href="https://github.com/Wixel/GUMP" target="GUMP">GUMP documentation</a>.',
+                    'param_name' => 'adv_filter',
+                    'group' => 'Adv. Logic',
+                    'dependency' => array(
+                        'element' => 'use_adv_filter',
+                        'value' => 'yes',
+                    )
+                ),
+                
+                // VC CSS EDITOR
+                array(
+                    'type' => 'css_editor',
+                    'heading' => __('CSS',VCFF_FORM),
+                    'param_name' => 'css',
+                    'group' => __('Design Options',VCFF_FORM),
+                ),
+            )
+        );
+    }
+
+    static function Field_Params() {
+        // Return any field params
+        return array(
+            'allowed_conditions' => array(
+                'IS' => 'Is',
+                'IS_NOT' => 'Is Not',
+                'GREATER_THAN' => 'Greater Than',
+                'LESS_THAN' => 'Less Than',
+                'CONTAINS' => 'Contains',
+                'STARTS_WITH' => 'Starts With',
+                'ENDS_WITH' => 'Ends With'
+            )
+        );
+    }
+}
+
+vcff_map_field('VCFF_Text_Input');

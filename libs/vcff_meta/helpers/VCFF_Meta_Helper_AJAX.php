@@ -53,7 +53,7 @@ class VCFF_Meta_Helper_AJAX {
                     // Retrieve the field intance
                     $field_instance = $field_data['instance'];
                     // If the field is not visible
-                    if ($field_instance->condition_check['result'] != 'visible') { continue; }
+                    if ($field_instance->Is_Hidden()) { continue; }
                     // Build the json data
                     $json_field = array(
                         'machine_code' => $field_data['machine_code'],
@@ -80,7 +80,7 @@ class VCFF_Meta_Helper_AJAX {
             }
             // Add the json page data to the pages array
             $json_data['pages'][] = $json_page;
-        }
+        } 
         // Return the json data
         return $json_data;
 	}

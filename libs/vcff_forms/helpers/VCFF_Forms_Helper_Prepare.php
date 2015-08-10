@@ -55,7 +55,7 @@ class VCFF_Forms_Helper_Prepare extends VCFF_Helper {
         $form_instance->form_attributes = isset($params['attributes']) ? $params['attributes'] : null ;
         $form_instance->context = $form_context;
         $form_instance->post_id = isset($params['post_id']) ? $params['post_id'] : null ;
-        $form_instance->post_data = isset($params['data']) ? $params['data'] : null ;
+        $form_instance->form_data = isset($params['data']) ? $params['data'] : null ;
         $form_instance->form_name = isset($params['name']) ? $params['name'] : null ; 
         $form_instance->form_content = isset($params['content']) ? stripslashes($params['content']) : null ;
         $form_instance->form_state = isset($params['state']) ? $params['state'] : null ;
@@ -79,7 +79,7 @@ class VCFF_Forms_Helper_Prepare extends VCFF_Helper {
         // Parse any fragments
         $form_instance->form_content = stripslashes(vcff_parse_fragment($form_instance->form_content));
         // Do any form actions on create
-        $form_instance->Do_Action('form_instance_create',array('helper' => $this));
+        $form_instance->Do_Action('instance_create',array('helper' => $this));
         // If this field has a custom validation method
         if (method_exists($form_instance,'On_Create')) { $form_instance->On_Create(); }
         // Retrieve the validation result
@@ -105,7 +105,7 @@ class VCFF_Forms_Helper_Prepare extends VCFF_Helper {
             if (!$security_check) { $this->error = true; }
         }
         // Do any form actions on create
-        $form_instance->Do_Action('form_instance_check',array('helper' => $this));
+        $form_instance->Do_Action('instance_check',array('helper' => $this));
     }
 
 }

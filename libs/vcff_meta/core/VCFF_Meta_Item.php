@@ -75,7 +75,7 @@ class VCFF_Meta_Item extends VCFF_Item {
      * Checks an individual field for display conditions
      * Assigns visible or hidden depending on outcome
      */
-    public function Check_Field_Conditions(){
+    public function Check_Field_Conditions() {
         // If there are no conditions
         if (!isset($this->data['field_dependancy'])) {
             // Update the is hidden
@@ -95,7 +95,7 @@ class VCFF_Meta_Item extends VCFF_Item {
             $this->condition_check = array(
                 'result' => 'visible'
             ); return;
-        }
+        } 
 		// Retrieve the form instance
 		$form_instance = $this->form_instance;
         // Retrieve the dependancy outcome
@@ -108,13 +108,13 @@ class VCFF_Meta_Item extends VCFF_Item {
         $conditions_failed = array();
         $conditions_passed = array();
         // Loop through each of the conditions
-        foreach ($dependancy_conditions as $k => $meta_condition) {
+        foreach ($dependancy_conditions as $k => $meta_condition) { 
             // Retrieve the rule params
             $condition_target_meta_field = $meta_condition[0];
             $condition_rule = $meta_condition[1];
             $condition_value = $meta_condition[2]; 
 			// If no target meta field was returned
-            if (!isset($form_instance->meta[$condition_target_meta_field])) { continue; }
+            if (!isset($form_instance->meta[$condition_target_meta_field])) { continue; } 
             // Retrieve the target meta field
             $target_meta_field = $form_instance->meta[$condition_target_meta_field]; 
             // Create the checking method name
@@ -122,10 +122,10 @@ class VCFF_Meta_Item extends VCFF_Item {
             // Check the method exists
             if (!method_exists($target_meta_field,$target_check_method)) { continue; }
             // Call the checking method
-            $check_result = call_user_func_array(array($target_meta_field, $target_check_method), array($condition_value));
+            $check_result = call_user_func_array(array($target_meta_field, $target_check_method), array($condition_value)); 
             // Increment the correct variable
             if ($check_result) { $conditions_passed[$k] = $meta_condition; } else { $conditions_failed[$k] = $meta_condition; }
-        } 
+        }   
         // If the field is to be show on passing conditions
         if ($dependancy_outcome == 'show') {
             // If we require all fields to pass
@@ -150,26 +150,11 @@ class VCFF_Meta_Item extends VCFF_Item {
             }
         }
         // If the field is not going to visible
-        if (!$field_visible) {
+        if (!$field_visible) { 
             // Update the is hidden
             $this->is_hidden = true;
-            // Set the field's conditions result
-            $this->condition_check = array(
-                'result' => 'hidden',
-                'conditions_passed' => $conditions_passed,
-                'conditions_failed' => $conditions_failed,
-            );
         }// Otherwise if the field is visible
-        else {
-            // Update the is hidden
-            $this->is_hidden = false;
-            // Set the field's conditions result
-            $this->condition_check = array(
-                'result' => 'visible',
-                'conditions_passed' => $conditions_passed,
-                'conditions_failed' => $conditions_failed,
-            );
-        }
+        else { $this->is_hidden = false; }
     }
     
     /**

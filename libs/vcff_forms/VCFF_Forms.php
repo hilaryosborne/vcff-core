@@ -193,17 +193,31 @@ class VCFF_Forms {
     
     protected function _Load_Pages() { 
         // Retrieve the context director
-        $dir = untrailingslashit( plugin_dir_path(__FILE__ ) );
-        // Load each of the form shortcodes
-        foreach (new DirectoryIterator($dir.'/pages') as $FileInfo) {
+        $dir = untrailingslashit(plugin_dir_path(__FILE__));
+        // Load each of the field shortcodes
+        foreach (new DirectoryIterator($dir.'/pages') as $FileInfo) { 
             // If this is a directory dot
-            if($FileInfo->isDot()) { continue; }
+            if ($FileInfo->isDot()) { continue; }
             // If this is a directory
-            if($FileInfo->isDir()) { continue; }
-            // If this is not false
-            if (stripos($FileInfo->getFilename(),'.tpl') !== false) { continue; } 
-            // Include the file
-            require_once($FileInfo->getPathname());
+            if ($FileInfo->isDir()) { 
+                // Load each of the field shortcodes
+                foreach (new DirectoryIterator($FileInfo->getPathname()) as $_FileInfo) {
+                    // If this is a directory dot
+                    if ($_FileInfo->isDot()) { continue; }
+                    // If this is a directory
+                    if ($_FileInfo->isDir()) { continue; }
+                    // If this is not false
+                    if (stripos($_FileInfo->getFilename(),'.tpl') !== false || stripos($FileInfo->getFilename(),'.txt') !== false) { continue; } 
+                    // Include the file
+                    require_once($_FileInfo->getPathname());
+                }
+            } // Otherwise this is just a file
+            else {
+                // If this is not false
+                if (stripos($FileInfo->getFilename(),'.tpl') !== false || stripos($FileInfo->getFilename(),'.txt') !== false) { continue; } 
+                // Include the file
+                require_once($FileInfo->getPathname());
+            }
         }
         // Fire the shortcode init action
         do_action('vcff_forms_pages_init',$this);
@@ -211,17 +225,31 @@ class VCFF_Forms {
     
     protected function _Load_AJAX() {
         // Retrieve the context director
-        $dir = untrailingslashit( plugin_dir_path(__FILE__ ) );
+        $dir = untrailingslashit(plugin_dir_path(__FILE__));
         // Load each of the field shortcodes
         foreach (new DirectoryIterator($dir.'/ajax') as $FileInfo) { 
             // If this is a directory dot
-            if($FileInfo->isDot()) { continue; }
+            if ($FileInfo->isDot()) { continue; }
             // If this is a directory
-            if($FileInfo->isDir()) { continue; }
-            // If this is not false
-            if (stripos($FileInfo->getFilename(),'.tpl') !== false) { continue; } 
-            // Include the file
-            require_once($FileInfo->getPathname());
+            if ($FileInfo->isDir()) { 
+                // Load each of the field shortcodes
+                foreach (new DirectoryIterator($FileInfo->getPathname()) as $_FileInfo) {
+                    // If this is a directory dot
+                    if ($_FileInfo->isDot()) { continue; }
+                    // If this is a directory
+                    if ($_FileInfo->isDir()) { continue; }
+                    // If this is not false
+                    if (stripos($_FileInfo->getFilename(),'.tpl') !== false || stripos($FileInfo->getFilename(),'.txt') !== false) { continue; } 
+                    // Include the file
+                    require_once($_FileInfo->getPathname());
+                }
+            } // Otherwise this is just a file
+            else {
+                // If this is not false
+                if (stripos($FileInfo->getFilename(),'.tpl') !== false || stripos($FileInfo->getFilename(),'.txt') !== false) { continue; } 
+                // Include the file
+                require_once($FileInfo->getPathname());
+            }
         }
         // Fire the shortcode init action
         do_action('vcff_forms_ajax_init',$this);
@@ -289,70 +317,6 @@ class VCFF_Forms {
         }
         // Fire the vc init action
         do_action('vcff_forms_vc_init',$this);
-    }
-
-    public function Load_Public_Scripts() {
-        // Retrieve the global vcff forms class
-        $vcff_forms = vcff_get_library('vcff_forms');
-        // Retrieve the list of contexts
-        $contexts = $vcff_forms->contexts;
-        // If a list of active fields were returned
-        if (!$contexts || !is_array($contexts)) { return; }
-        // Loop through each of the active fields
-        foreach ($contexts as $_type => $_context) {
-            // If this field has custom scripts which need registering
-            if ($_context['params']['public_scripts'] 
-                && is_array($_context['params']['public_scripts'])) {
-                // Loop through each of the scripts
-                $i=0; foreach ($_context['params']['public_scripts'] as $__k => $_script) {
-                    // Retrieve the script url
-                    $script_url = vcff_get_file_url($_script);
-                    // Queue the custom script
-                    vcff_front_enqueue_script( $_type.'_'.$i, $script_url, array('jquery')); $i++;
-                }
-            }
-            // If this field has custom styles which need registering
-            if ($_context['params']['public_styles'] 
-                && is_array($_context['params']['public_styles'] )) {
-                // Loop through each of the styles
-                $i=0; foreach ($_context['params']['public_styles']  as $__k => $_style) {
-                    // Retrieve the css url
-                    $style_url = vcff_get_file_url($_style);
-                    // Queue the custom script
-                    vcff_front_enqueue_style( $_type.'_'.$i, $style_url); $i++;
-                }
-            }
-        }
-    }
-
-    public function Load_Admin_Scripts() {
-        // Retrieve the global vcff forms class
-        $vcff_forms = vcff_get_library('vcff_forms');
-        // Retrieve the list of contexts
-        $contexts = $vcff_forms->contexts;
-        // If a list of active fields were returned
-        if (!$contexts || !is_array($contexts)) { return; }
-        // Loop through each of the active fields
-        foreach ($contexts as $_type => $_context) {
-            // If this field has custom scripts which need registering
-            if ($_context['params']['admin_scripts'] 
-                && is_array($_context['params']['admin_scripts'])) {
-                // Loop through each of the scripts
-                $i=0; foreach ($_context['params']['admin_scripts'] as $__k => $_script) {
-                    // Queue the custom script
-                    vcff_admin_enqueue_script( $_type.'_'.$i, $_script, array('jquery')); $i++;
-                }
-            }
-            // If this field has custom styles which need registering
-            if ($_context['params']['admin_styles'] 
-                && is_array($_context['params']['admin_styles'] )) {
-                // Loop through each of the styles
-                $i=0; foreach ($_context['params']['admin_styles']  as $__k => $_style) {
-                    // Queue the custom script
-                    vcff_admin_enqueue_style( $_type.'_'.$i, $_style); $i++;
-                }
-            }
-        }
     }
 
     public function Load_Shortcodes() {
