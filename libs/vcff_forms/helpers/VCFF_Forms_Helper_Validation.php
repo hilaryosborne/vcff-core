@@ -15,11 +15,7 @@ class VCFF_Forms_Helper_Validation extends VCFF_Helper {
         
         $this->_Pre_Validation();
         
-        $this->_Check_Standard_Validation();
-        
-        $this->_Check_Method_Validation();
-        
-        $this->_Check_Hook_Validation();
+        $this->_Check_Validation();
         
         $this->_Post_Validation();
     }
@@ -28,27 +24,21 @@ class VCFF_Forms_Helper_Validation extends VCFF_Helper {
         // Retrieve the form instance
 		$form_instance = $this->form_instance;
         // If this field has a custom validation method
-        if (method_exists($form_instance,'Pre_Validation')) { $form_instance->Pre_Validation(); }
+        if (method_exists($form_instance,'Before_Validation')) { $form_instance->Pre_Validation(); }
+        // Do any form native actions
+        $form_instance->Do_Action('form_before_validate');
         // Retrieve the validation result
-        do_action('vcff_pre_form_validation', $form_instance);
+        do_action('vcff_before_form_validation', $form_instance);
     }
     
-    protected function _Check_Standard_Validation() {
-        // Retrieve the form instance
-		$form_instance = $this->form_instance;
-    }
-    
-    protected function _Check_Method_Validation() {
+    protected function _Check_Validation() {
 		// Retrieve the form instance
 		$form_instance = $this->form_instance;
         // If this field has a custom validation method
         if (method_exists($form_instance,'Do_Validation')) { $form_instance->Do_Validation(); }
-	}
-    
-    protected function _Check_Hook_Validation() {
-		// Retrieve the form instance
-		$form_instance = $this->form_instance;
-		// Retrieve the validation result
+        // Do any form native actions
+        $form_instance->Do_Action('form_validate');
+        // Retrieve the validation result
         do_action('vcff_do_form_validation', $form_instance );
 	}
     
@@ -56,8 +46,10 @@ class VCFF_Forms_Helper_Validation extends VCFF_Helper {
         // Retrieve the form instance
         $form_instance = $this->form_instance;
         // If this field has a custom validation method
-        if (method_exists($form_instance,'Post_Validation')) { $form_instance->Post_Validation(); }
+        if (method_exists($form_instance,'After_Validation')) { $form_instance->Post_Validation(); }
+        // Do any form native actions
+        $form_instance->Do_Action('form_after_validate');
         // Retrieve the validation result
-        do_action('vcff_post_form_validation', $form_instance);
+        do_action('vcff_after_form_validation', $form_instance);
     }
 }

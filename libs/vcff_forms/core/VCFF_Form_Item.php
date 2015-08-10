@@ -34,7 +34,7 @@ class VCFF_Form_Item extends VCFF_Item {
     
     public $is_submission = false;
     
-    public $is_valid = false;
+    public $is_valid = true;
     
     public $use_events = true;
     

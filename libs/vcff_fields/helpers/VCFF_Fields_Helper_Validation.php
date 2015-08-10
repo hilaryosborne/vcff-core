@@ -20,15 +20,13 @@ class VCFF_Fields_Helper_Validation {
 	
 	public function Check() {
 		
-        $this->_Pre_Validation();
+        $this->_Before_Validation();
         
-        $this->_Check_Standard_Validation();
+		$this->_Check_Validation();
         
-        $this->_Check_Method_Validation();
+        $this->_After_Validation();
         
-		$this->_Check_Hook_Validation();
-        
-        $this->_Post_Validation();
+        $this->_Update_Form();
 	}
 	
     public function Get_Passed() {
@@ -71,7 +69,7 @@ class VCFF_Fields_Helper_Validation {
         return $qualifying_list;
     }
     
-    protected function _Pre_Validation() {
+    protected function _Before_Validation() {
         // Retrieve the form instance
 		$form_instance = $this->form_instance;
 		// Retrieve the form's fields
@@ -79,35 +77,17 @@ class VCFF_Fields_Helper_Validation {
 		// If there are no form fields
 		if (!$form_fields || !is_array($form_fields)) { return; }
 		// Loop through each containers
-		foreach ($form_fields as $_name => $field) {
-			// If this field has a condition result and the field is hidden
-			if ($field->Is_Hidden()) { continue; }
+		foreach ($form_fields as $machine_code => $field_instance) {
 			// If this field has a custom validation method
-			if (method_exists($field,'Pre_Validation')) { $field->Pre_Validation(); }
+			if (method_exists($field_instance,'Before_Validation')) { $field_instance->Pre_Validation(); }
+            // Do any actions
+            $field_instance->Do_Action('before_validation');
             // Retrieve the validation result
-            do_action('vcff_pre_field_validation', $field);
+            do_action('vcff_pre_field_validation', $field_instance);
         }
     }
     
-    protected function _Post_Validation() {
-        // Retrieve the form instance
-		$form_instance = $this->form_instance;
-		// Retrieve the form's fields
-        $form_fields = $form_instance->fields;
-		// If there are no form fields
-		if (!$form_fields || !is_array($form_fields)) { return; }
-		// Loop through each containers
-		foreach ($form_fields as $_name => $field) {
-			// If this field has a condition result and the field is hidden
-			if ($field->Is_Hidden()) { continue; }  
-			// If this field has a custom validation method
-			if (method_exists($field,'Post_Validation')) { $field->Post_Validation(); }
-            // Retrieve the validation result
-            do_action('vcff_post_field_validation', $field);
-		}
-    }
-    
-    protected function _Check_Standard_Validation() {
+    protected function _Check_Validation() {
 		// Retrieve the form instance
 		$form_instance = $this->form_instance;
 		// Retrieve the form's fields
@@ -116,43 +96,54 @@ class VCFF_Fields_Helper_Validation {
 		if (!$form_fields || !is_array($form_fields)) { return $this; }
 		// Loop through each containers
 		foreach ($form_fields as $machine_code => $field_instance) {
-			// Check the containers conditions
-			$field_instance->Check_Field_Validation();
+            // If this field has a custom validation method
+			if (method_exists($field_instance,'Check_Field_Validation')) { $field_instance->Check_Field_Validation(); }
+            // If this field has a custom validation method
+			if (method_exists($field_instance,'Do_Validation')) { $field_instance->Do_Validation(); }
+            // Do any actions
+            $field_instance->Do_Action('validation');
+            // Retrieve the validation result
+            do_action('vcff_do_field_validation', $field_instance );
 		}
 	} 
     
-	protected function _Check_Method_Validation() {
-		// Retrieve the form instance
+    protected function _After_Validation() {
+        // Retrieve the form instance
 		$form_instance = $this->form_instance;
 		// Retrieve the form's fields
         $form_fields = $form_instance->fields;
 		// If there are no form fields
 		if (!$form_fields || !is_array($form_fields)) { return; }
 		// Loop through each containers
-		foreach ($form_fields as $_name => $field) {
-			// If this field has a condition result and the field is hidden
-			if ($field->Is_Hidden()) { continue; }   
+		foreach ($form_fields as $machine_code => $field_instance) {
 			// If this field has a custom validation method
-			if (!method_exists($field,'Do_Validation')) { continue; }
-			// Retrieve the validation result
-			$field->Do_Validation();
+			if (method_exists($field_instance,'After_Validation')) { $field_instance->Post_Validation(); }
+            // Do any actions
+            $field_instance->Do_Action('after_validation');
+            // Retrieve the validation result
+            do_action('vcff_post_field_validation', $field_instance);
 		}
-	}
-    
-    protected function _Check_Hook_Validation() {
-		// Retrieve the form instance
+    }
+
+    protected function _Update_Form() {
+        // Retrieve the form instance
 		$form_instance = $this->form_instance;
 		// Retrieve the form's fields
         $form_fields = $form_instance->fields;
 		// If there are no form fields
 		if (!$form_fields || !is_array($form_fields)) { return; }
+        // Set the invalid number
+        $invalid = 0;
 		// Loop through each containers
-		foreach ($form_fields as $_name => $field) {
-			// If this field has a condition result and the field is hidden
-			if ($field->Is_Hidden()) { continue; }  
-			// Retrieve the validation result
-            do_action('vcff_do_field_validation', $field );
-		}
-	}
-	
+		foreach ($form_fields as $machine_code => $field_instance) {
+            // If the field is valid, move on
+            if ($field_instance->Is_Valid()) { continue; }
+            // Inc up the invalid field
+            $invalid++;
+        }
+        // If there are no invalid fields
+        if ($invalid == 0) { return; }
+        // Set the form valid flag to false
+        $form_instance->is_valid = false;
+    }
 }
