@@ -17,7 +17,7 @@ class VCFF_Fields_Helper_AJAX extends VCFF_Helper {
     
     public function Build($params = array()) {
         // Save the provided params
-        $this->params = array_merge($this->params,$params);
+        $this->params = array_merge($this->params,$params); 
         // Retrieve the form instance
         $form_instance = $this->form_instance;
         // Do any form actions on create
@@ -56,7 +56,7 @@ class VCFF_Fields_Helper_AJAX extends VCFF_Helper {
             // Populate the field type
             $_ajax['alerts'] = $field_instance->Get_Alerts_HTML();
             // Run the ajax data through any filters
-            $_ajax = $field_instance->Apply_Filters('field_ajax',array('helper' => $this, '_ajax' => $_ajax));
+            $_ajax = $field_instance->Apply_Filters('field_ajax',$_ajax,array('helper' => $this, '_ajax' => $_ajax));
             // Populate the ajax data
             $this->data[$machine_code] = $_ajax;
         }

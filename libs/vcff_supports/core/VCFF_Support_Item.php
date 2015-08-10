@@ -19,6 +19,17 @@ class VCFF_Support_Item extends VCFF_Item {
     */
     public $context;
     
+    public function Is_Visible() { 
+        // If the field is attached to a container
+        if ($this->container_instance && is_object($this->container_instance)) {
+            // Retrieve the container object
+            $field_container = $this->container_instance;
+            // Return the hidden value of the container
+            if ($field_container->Is_Hidden()) { return false; }
+        }
+        // Return the hidden flag
+        return $this->is_hidden ? false : true;
+    }
     
     public function Check_Conditions() { 
 		// Retrieve the form instance

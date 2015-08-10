@@ -18,6 +18,7 @@ class VCFF_AJAX_Submissions {
                 'post_id' => $output['vcff_post_id'],
                 'uuid' => vcff_get_uuid_by_form($output['vcff_form_id']),
                 'data' => $output,
+                'is_ajax' => true
             ));
         // If the form instance could not be created
         if (!$form_instance) { die('could not create form instance'); }
@@ -50,7 +51,7 @@ class VCFF_AJAX_Submissions {
         // Initiate the calculate helper
         $form_display_helper
             ->Set_Form_Instance($form_instance)
-            ->Display(array(
+            ->Result(array(
                 'exit_out' => true
             ));
     }

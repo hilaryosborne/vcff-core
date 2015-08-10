@@ -11,6 +11,15 @@ class VCFF_Item {
     public function Do_Action($action,$args) {
     
     }
+    
+    public function Add_Filter($action,$function,$priority = 10,$accepted_args = 1) {
+        
+    }
+
+    public function Apply_Filters($action,$value,$args) {
+    
+        return $value;
+    }
 
     // Add a form alert
     public function Add_Alert($message,$type) {
