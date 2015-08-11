@@ -47,20 +47,20 @@ class Trigger_Everytime_Item extends VCFF_Trigger_Item {
         $form_instance = $this->form_instance;
         // If this trigger requires a successful submission
         if ($this->_Get_Submission_Status() == 'submission') { 
-            // If this is not a submission
-            if (!$form_instance->Is_Submission()) { return false; }
+            // If the form did not validate
+            if (!in_array($form_instance->form_state,array('submission_ajax','submission_standard'))) { return false; } 
         }
         // If this trigger requires a successful submission
         if ($this->_Get_Submission_Status() == 'submission_success') { 
-            // If this is not a form submission
-            if (!$form_instance->Is_Submission()) { return false; } 
+            // If the form did not validate
+            if (!in_array($form_instance->form_state,array('submission_ajax','submission_standard'))) { return false; } 
             // If the form did not validate
             if (!$form_instance->Is_Valid()) { return false; } 
         }
         // If this trigger requires a successful submission
-        if ($this->_Get_Submission_Status() == 'submission_failed') { 
-            // If this is not a form submission
-            if (!$form_instance->Is_Submission() && !$form_instance->Is_Pre_Submission()) { return false; }
+        if ($this->_Get_Submission_Status() == 'submission_failed') {
+            // If the form did not validate
+            if (!in_array($form_instance->form_state,array('validation_check','submission_ajax','submission_standard'))) { return false; } 
             // If the form did not validate
             if ($form_instance->Is_Valid()) { return false; }  
         }

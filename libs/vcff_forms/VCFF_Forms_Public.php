@@ -8,16 +8,14 @@ class VCFF_Forms_Public {
     }
 
     public function Form_Submission() {
-        // Parse the form data
-        parse_str(base64_decode($_POST['form_data']),$output);
         // PREPARE PHASE
         $form_prepare_helper = new VCFF_Forms_Helper_Prepare();
         // Get the form instance
         $form_instance = $form_prepare_helper
             ->Get_Form(array(
-                'post_id' => $output['vcff_post_id'],
-                'uuid' => vcff_get_uuid_by_form($output['vcff_form_id']),
-                'data' => $output,
+                'post_id' => $_POST['vcff_post_id'],
+                'uuid' => $_POST['vcff_form_uuid'],
+                'data' => $_POST,
                 'state' => 'submission_standard',
                 'is_submission' => true
             ));
@@ -28,7 +26,9 @@ class VCFF_Forms_Public {
         // Run the populate helper
         $form_populate_helper
             ->Set_Form_Instance($form_instance)
-            ->Populate(array());
+            ->Populate(array(
+                'fields_values' => $_POST
+            ));
         // CALCULATE PHASE
         $form_calculate_helper = new VCFF_Forms_Helper_Calculate();
         // Initiate the calculate helper
@@ -52,7 +52,13 @@ class VCFF_Forms_Public {
         // Initiate the calculate helper
         $form_display_helper
             ->Set_Form_Instance($form_instance)
-            ->Display(array());
+            ->Result(array());
+        // Retrieve the global vcff forms class
+        $vcff_forms = vcff_get_library('vcff_forms');
+        // Create a simple form cache id
+        $form_cache_id = $form_instance->post_id ? $form_instance->post_id.'_'.$form_instance->form_uuid : $form_instance->form_uuid ;
+        // Add to the cached forms
+        $vcff_forms->cached_forms[$form_cache_id] = $form_instance;
     }
 }
 

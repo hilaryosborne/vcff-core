@@ -22,14 +22,14 @@ class VCFF_Forms_Helper_Result extends VCFF_Helper {
         $form_instance->Do_Action('before_result',array('helper' => $this));
         // Retrieve the validation result
         do_action('vcff_form_before_result', $form_instance);
+        // Do any form actions on create
+        $form_instance->Do_Action('result',array('helper' => $this));
         // Create the Instance
         if ($form_instance->is_ajax) {
             // Run the ajax response
             $this->_For_AJAX();
         } // Otherwise if this is a standard response
         else { $this->_For_Standard(); }
-        // Do any form actions on create
-        $form_instance->Do_Action('result',array('helper' => $this));
         // Do any form actions on create
         $form_instance->Do_Action('after_result',array('helper' => $this));
         // Retrieve the validation result
@@ -76,7 +76,10 @@ class VCFF_Forms_Helper_Result extends VCFF_Helper {
     }
     
     protected function _For_Standard() {
-    
+        // Retrieve the form instance
+        $form_instance = $this->form_instance;
+        // Do any form actions on create
+        $form_instance->Do_Action('result_standard',array('helper' => $this));
     }
     
 }

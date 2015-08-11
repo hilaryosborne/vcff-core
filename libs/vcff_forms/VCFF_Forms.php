@@ -17,6 +17,8 @@ class VCFF_Forms {
     // The list of contexts
     public $contexts = array();
 
+    public $cached_forms = array();
+
     public function Init() {
         // Fire the shortcode init action
         do_action('vcff_forms_before_init',$this);
@@ -359,51 +361,56 @@ class VCFF_Forms {
         if (!$form_unique_id) { return; }
         // Retrieve the form object
         $form_obj = vcff_get_form_by_uuid($form_unique_id);
+        // Retrieve the page id
+        $page_id = get_the_ID() ? get_the_ID() : false;
         // If no form unique id then return out
         if (!$form_obj || !is_object($form_obj)) { return; }
-        // PREPARE PHASE
-        $form_prepare_helper = new VCFF_Forms_Helper_Prepare();
-        // Get the form instance
-        $form_instance = $form_prepare_helper
-            ->Get_Form(array(
-                'post_id' => get_the_ID() ? get_the_ID() : false,
-                'uuid' => $form_unique_id,
-                'attributes' => $attributes,
-            ));
-        // If the form instance could not be created
-        if (!$form_instance) { die('could not create form instance'); }
-        // Create a new cache helper
-        $form_cache_helper = new VCFF_Forms_Helper_Cache();
-        // Cache the submitted form
-        $form_instance = $form_cache_helper
-            ->Set_Form_Instance($form_instance)
-            ->Retrieve();  
-        // POPULATE PHASE
-        $form_populate_helper = new VCFF_Forms_Helper_Populate();
-        // Run the populate helper
-        $form_populate_helper
-            ->Set_Form_Instance($form_instance)
-            ->Populate(array());
-        // CALCULATE PHASE
-        $form_calculate_helper = new VCFF_Forms_Helper_Calculate();
-        // Initiate the calculate helper
-        $form_calculate_helper
-            ->Set_Form_Instance($form_instance)
-            ->Calculate(array(
-                'validation' => $_POST ? true : false
-            ));
-        // REVIEW PHASE
-        $form_review_helper = new VCFF_Forms_Helper_Review();
-        // Initiate the calculate helper
-        $form_review_helper
-            ->Set_Form_Instance($form_instance)
-            ->Review(array());
-        // FINALIZE PHASE
-        $form_finalize_helper = new VCFF_Forms_Helper_Finalize();
-        // Initiate the calculate helper
-        $form_finalize_helper
-            ->Set_Form_Instance($form_instance)
-            ->Finalize(array());
+        // Create a simple form cache id
+        $form_cache_id = $page_id ? $page_id.'_'.$form_unique_id : $form_unique_id ;
+        // If there is a cached form
+        if (isset($this->cached_forms[$form_cache_id])) {
+            // Retrieve the form instance
+            $form_instance = $this->cached_forms[$form_cache_id];
+        } // Otherwise create a new one 
+        else {
+            // PREPARE PHASE
+            $form_prepare_helper = new VCFF_Forms_Helper_Prepare();
+            // Get the form instance
+            $form_instance = $form_prepare_helper
+                ->Get_Form(array(
+                    'post_id' => $page_id,
+                    'uuid' => $form_unique_id,
+                    'attributes' => $attributes,
+                ));
+            // If the form instance could not be created
+            if (!$form_instance) { die('could not create form instance'); } 
+            // POPULATE PHASE
+            $form_populate_helper = new VCFF_Forms_Helper_Populate();
+            // Run the populate helper
+            $form_populate_helper
+                ->Set_Form_Instance($form_instance)
+                ->Populate(array());
+            // CALCULATE PHASE
+            $form_calculate_helper = new VCFF_Forms_Helper_Calculate();
+            // Initiate the calculate helper
+            $form_calculate_helper
+                ->Set_Form_Instance($form_instance)
+                ->Calculate(array(
+                    'validation' => false
+                ));
+            // REVIEW PHASE
+            $form_review_helper = new VCFF_Forms_Helper_Review();
+            // Initiate the calculate helper
+            $form_review_helper
+                ->Set_Form_Instance($form_instance)
+                ->Review(array());
+            // FINALIZE PHASE
+            $form_finalize_helper = new VCFF_Forms_Helper_Finalize();
+            // Initiate the calculate helper
+            $form_finalize_helper
+                ->Set_Form_Instance($form_instance)
+                ->Finalize(array());
+        }
         // Populate the focused form
         $this->vcff_focused_form = $form_instance;
         // Set the focused post id

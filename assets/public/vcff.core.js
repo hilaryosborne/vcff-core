@@ -223,8 +223,6 @@
                     vcff_do_action('form_submission_passed',{'form':vcff_form,'json':result_json});
                     // Pre form standard submission actions
                     vcff_do_action('form_ajax_submission_passed',{'form':vcff_form,'json':result_json});
-                    
-                    $(vcff_form).get(0).reset(); 
                 }
                 // Pre form submission actions
                 vcff_do_action('after_form_submission',{'form':vcff_form,'json':result_json});

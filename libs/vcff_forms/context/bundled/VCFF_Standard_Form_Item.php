@@ -26,6 +26,8 @@ class VCFF_Standard_Form_Item extends VCFF_Form_Item {
         ob_end_clean();
         // Retrieve the output html
         $output_html = apply_filters('vcff_form_render_html',$output,$this);
+        // Retrieve the output html
+        $output_html = $this->Apply_Filters('render',$output_html,array());
         // Return the contents
         return $output_html;
     }

@@ -64,9 +64,9 @@ class VCFF_Item {
             return ($a['priority'] < $b['priority']) ? -1 : 1;
         });
         // Loop through each action
-        foreach ($selected_actions as $k => $_action) {
+        foreach ($selected_filters as $k => $_filter) {
             // Call the action function
-            $value = call_user_func($_action['function'], $value, $args);
+            $value = call_user_func($_filter['function'], $value, $args);
         }
         // Return the value
         return $value;

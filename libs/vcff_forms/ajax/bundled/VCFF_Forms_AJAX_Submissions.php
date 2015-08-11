@@ -17,6 +17,8 @@ class VCFF_Forms_AJAX_Submissions {
             ->Get_Form(array(
                 'post_id' => $output['vcff_post_id'],
                 'uuid' => vcff_get_uuid_by_form($output['vcff_form_id']),
+                'is_submission' => true,
+                'state' => 'submission_ajax',
                 'data' => $output,
                 'is_ajax' => true
             ));

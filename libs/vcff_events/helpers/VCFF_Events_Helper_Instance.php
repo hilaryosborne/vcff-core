@@ -33,13 +33,15 @@ class VCFF_Events_Helper_Instance extends VCFF_Helper {
         // Populate with raw data
         $action_instance->data = is_array($action_data) ? $action_data : array();
         // Fire any on create action
-        $action_instance->Do_Action('instance_create');
+        $action_instance->Do_Action('create');
         // Store the action instance
         $this->action_instance = $action_instance;
         // Populate with available triggers
         $this->_Get_Action_Triggers();
         // Populate with available events
         $this->_Get_Action_Events();
+        // Fire any on create action
+        $action_instance->Do_Action('after_create');
         // Return the action instance
         return $this->action_instance;
     }
@@ -94,7 +96,7 @@ class VCFF_Events_Helper_Instance extends VCFF_Helper {
                 }
             }
             // Fire any on create action
-            $trigger_instance->Do_Action('instance_create');
+            $trigger_instance->Do_Action('create');
         }
     }
     
@@ -148,7 +150,7 @@ class VCFF_Events_Helper_Instance extends VCFF_Helper {
                 }
             }
             // Fire any on create action
-            $event_instance->Do_Action('instance_create');
+            $event_instance->Do_Action('create');
         }
     }
 }

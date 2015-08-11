@@ -2,6 +2,8 @@
 
 class Event_Message_Full_Item extends VCFF_Event_Item {
 	
+    public $_html;
+    
 	public function Render() {
         // Retrieve any validation errors
         $validation_errors = $this->validation_errors;
@@ -50,8 +52,23 @@ class Event_Message_Full_Item extends VCFF_Event_Item {
         
         $content = vcff_curly_compile($this->form_instance,$this->Get_Message());
         
-        $form_instance->standard['html'] = $content;
+        $this->_html = $content; 
+    
+        $form_instance->Add_Filter('ajax',array($this,'_AJAX_Filter'));
         
-        $form_instance->ajax['html'] = $content;
+        $form_instance->Add_Filter('render',array($this,'_Standard_Filter'));
     }
+    
+    public function _AJAX_Filter($value,$args) {
+        
+        $value['events']['full_message'][] = $this->_html;
+        
+        return $value;
+    }
+    
+    public function _Standard_Filter($value,$args) {
+    
+        return $this->_html;
+    }
+    
 }

@@ -146,19 +146,17 @@ class VCFF_Action_Item extends VCFF_Item {
         
         return $js_assets;
     }
-    
-    
-    
-    public function Check() {
+  
+    public function Check() { 
         // Retrieve the trigger instance
         $trigger_instance = $this->Get_Selected_Trigger_Instance();
         // If no trigger instance was returned
-        if (!is_object($trigger_instance)) { return false; }
+        if (!is_object($trigger_instance)) { return false; }  
         // Return the result
         return $trigger_instance->Check() ? true : false ;
     }
     
-    public function Trigger() {
+    public function Trigger() { 
         // Retrieve the trigger instance
         $event_instance = $this->Get_Selected_Event_Instance();
         // If no trigger instance was returned
