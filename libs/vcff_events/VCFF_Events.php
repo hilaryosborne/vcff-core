@@ -17,18 +17,12 @@ class VCFF_Events {
         do_action('vcff_events_before_init',$this);
         // Include the admin class
         require_once(VCFF_EVENTS_DIR.'/functions.php');
-        // Load helper classes
-        $this->_Load_Helpers();
-        // Load the core classes
-        $this->_Load_Core();
-        // Load the context classes
-        $this->_Load_Context();
-        // Load the pages
-        $this->_Load_Pages();
-        // Load AJAX
-        $this->_Load_AJAX();
-        // Load the meta fields
-        $this->_Load_Meta();
+        // Initalize core logic
+        add_action('vcff_init_core',array($this,'__Init_Core'),15);
+        // Initalize context logic
+        add_action('vcff_init_context',array($this,'__Init_Context'),15);
+        // Initalize misc logic
+        add_action('vcff_init_misc',array($this,'__Init_Misc'),15);
         // Fire the shortcode init action
         do_action('vcff_events_init',$this);
         // Include the admin class
@@ -37,6 +31,27 @@ class VCFF_Events {
         require_once(VCFF_EVENTS_DIR.'/VCFF_Events_Public.php');
         // Fire the shortcode init action
         do_action('vcff_events_after_init',$this);
+    }
+
+    public function __Init_Core() {
+        // Load helper classes
+        $this->_Load_Helpers();
+        // Load the core classes
+        $this->_Load_Core(); 
+    }
+
+    public function __Init_Context() {
+        // Load the context classes
+        $this->_Load_Context();
+    }
+    
+    public function __Init_Misc() {
+        // Load the meta fields
+        $this->_Load_Meta();
+        // Load the pages
+        $this->_Load_Pages();
+        // Load AJAX
+        $this->_Load_AJAX();
     }
 
     protected function _Load_Helpers() {

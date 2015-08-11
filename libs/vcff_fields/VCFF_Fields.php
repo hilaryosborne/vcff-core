@@ -16,16 +16,12 @@ class VCFF_Fields {
         do_action('vcff_field_before_init',$this);
         // Include the admin class
         require_once(VCFF_FIELDS_DIR.'/functions.php');
-        // Load helper classes
-        $this->_Load_Helpers();
-        // Load the core classes
-        $this->_Load_Core();
-        // Load the context classes
-        $this->_Load_Context();
-        // Load the pages
-        $this->_Load_Pages();
-        // Load AJAX
-        $this->_Load_AJAX();
+        // Initalize core logic
+        add_action('vcff_init_core',array($this,'__Init_Core'),1);
+        // Initalize context logic
+        add_action('vcff_init_context',array($this,'__Init_Context'),1);
+        // Initalize misc logic
+        add_action('vcff_init_misc',array($this,'__Init_Misc'),1);
         // Fire the shortcode init action
         do_action('vcff_field_init',$this);
         // Include the admin class
@@ -34,6 +30,25 @@ class VCFF_Fields {
         require_once(VCFF_FIELDS_DIR.'/VCFF_Fields_Public.php');
         // Fire the shortcode init action
         do_action('vcff_field_after_init',$this);
+    }
+    
+    public function __Init_Core() {
+        // Load helper classes
+        $this->_Load_Helpers();
+        // Load the core classes
+        $this->_Load_Core(); 
+    }
+
+    public function __Init_Context() {
+        // Load the context classes
+        $this->_Load_Context();
+    }
+    
+    public function __Init_Misc() {
+        // Load the pages
+        $this->_Load_Pages();
+        // Load AJAX
+        $this->_Load_AJAX();
     }
     
     protected function _Load_Helpers() {

@@ -47,6 +47,34 @@ class VCFF {
         // Include the core vcff functions
         require_once(VCFF_DIR.'/functions.php');
     }
+    
+    public function Load_Core() {
+        // Load each of the form shortcodes
+        foreach (new DirectoryIterator(VCFF_DIR.'/core') as $FileInfo) {
+            // If this is a directory dot
+            if($FileInfo->isDot()) { continue; }
+            // If this is a directory
+            if($FileInfo->isDir()) { continue; }
+            // Include the file
+            require_once(VCFF_DIR.'/core/'.$FileInfo->getFilename());
+        }
+        // Return for chaining
+        return $this;
+    }
+
+    public function Load_Helpers() {
+        // Load each of the form shortcodes
+        foreach (new DirectoryIterator(VCFF_DIR.'/helpers') as $FileInfo) {
+            // If this is a directory dot
+            if($FileInfo->isDot()) { continue; }
+            // If this is a directory
+            if($FileInfo->isDir()) { continue; } 
+            // Include the file
+            require_once(VCFF_DIR.'/helpers/'.$FileInfo->getFilename());
+        }
+        // Return for chaining
+        return $this;
+    }
 
     public function Load_Vendors() {
         // Include the VCFF Meta handling library
@@ -97,35 +125,7 @@ class VCFF {
         // return the lib object
         return $this->libs[$code];
     }
-    
-    public function Load_Core() {
-        // Load each of the form shortcodes
-        foreach (new DirectoryIterator(VCFF_DIR.'/core') as $FileInfo) {
-            // If this is a directory dot
-            if($FileInfo->isDot()) { continue; }
-            // If this is a directory
-            if($FileInfo->isDir()) { continue; }
-            // Include the file
-            require_once(VCFF_DIR.'/core/'.$FileInfo->getFilename());
-        }
-        // Return for chaining
-        return $this;
-    }
 
-    public function Load_Helpers() {
-        // Load each of the form shortcodes
-        foreach (new DirectoryIterator(VCFF_DIR.'/helpers') as $FileInfo) {
-            // If this is a directory dot
-            if($FileInfo->isDot()) { continue; }
-            // If this is a directory
-            if($FileInfo->isDir()) { continue; } 
-            // Include the file
-            require_once(VCFF_DIR.'/helpers/'.$FileInfo->getFilename());
-        }
-        // Return for chaining
-        return $this;
-    }
-    
     public function Init() {
         
         do_action('vcff_init');
@@ -151,11 +151,22 @@ vcff_register_library('vcff', $vcff);
 
 $vcff->Init();
 
-$vcff_helper_libs = new VCFF_Helper_Libs();
+add_action('vc_before_init',function(){
 
-$vcff_helper_libs
-    ->Map_Visual_Composer()
-    ->Load_Scripts_Public()
-    ->Load_Scripts_Admin()
-    ->Load_Shortcodes()
-    ->Handle_Submissions();
+    do_action('vcff_init_core');
+    
+    do_action('vcff_init_context');
+    
+    do_action('vcff_init_misc');
+
+    $vcff_helper_libs = new VCFF_Helper_Libs();
+
+    $vcff_helper_libs
+        ->Map_Visual_Composer()
+        ->Load_Scripts_Public()
+        ->Load_Scripts_Admin()
+        ->Load_Shortcodes()
+        ->Handle_Submissions();
+});
+
+

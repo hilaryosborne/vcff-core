@@ -16,8 +16,8 @@ class VCFF_Fragments {
         do_action('vcff_fragments_before_init',$this);
 		// Include the admin class
         require_once(VCFF_FRAGMENTS_DIR.'/functions.php'); 
-        // Load the custom post type
-        $this->_Load_Post_Type();
+        // Initalize core logic
+        add_action('vcff_init_core',array($this,'__Init_Core'),15);
         // Action to register the page
         add_action('admin_menu', array($this,'Register_Pages'));
         // Fire the shortcode init action
@@ -30,6 +30,11 @@ class VCFF_Fragments {
         do_action('vcff_fragments_after_init',$this);
         // Add the css to scripts
         add_action('wp_print_scripts', array($this,'Inject_CSS'));
+    }
+    
+    public function __Init_Core() {
+        // Load the custom post type
+        $this->_Load_Post_Type();
     }
  
     public function Register_Pages() {
