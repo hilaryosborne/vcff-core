@@ -20,8 +20,12 @@ class VCFF_Fragments {
         add_action('vcff_init_core',array($this,'__Init_Core'),15);
         // Action to register the page
         add_action('admin_menu', array($this,'Register_Pages'));
-        // Fire the shortcode init action
-        do_action('vcff_fragments_init',$this);
+        // Initalize core logic
+        add_action('vcff_init_core',array($this,'__Init_Core'));
+        // Initalize context logic
+        add_action('vcff_init_context',array($this,'__Init_Context'));
+        // Initalize misc logic
+        add_action('vcff_init_misc',array($this,'__Init_Misc'));
         // Include the admin class
         require_once(VCFF_FRAGMENTS_DIR.'/VCFF_Fragments_Admin.php');
         // Otherwise if this is being viewed by the client 
@@ -35,6 +39,18 @@ class VCFF_Fragments {
     public function __Init_Core() {
         // Load the custom post type
         $this->_Load_Post_Type();
+        // Fire the shortcode init action
+        do_action('vcff_fragments_init_core',$this);
+    }
+    
+    public function __Init_Context() {
+        // Fire the shortcode init action
+        do_action('vcff_fragments_init_context',$this);
+    }
+    
+    public function __Init_Misc() {
+        // Fire the shortcode init action
+        do_action('vcff_fragments_init_misc',$this);
     }
  
     public function Register_Pages() {

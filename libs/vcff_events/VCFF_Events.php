@@ -38,11 +38,15 @@ class VCFF_Events {
         $this->_Load_Helpers();
         // Load the core classes
         $this->_Load_Core(); 
+        // Fire the shortcode init action
+        do_action('vcff_events_init_core',$this);
     }
 
     public function __Init_Context() {
         // Load the context classes
         $this->_Load_Context();
+        // Fire the shortcode init action
+        do_action('vcff_events_init_context',$this);
     }
     
     public function __Init_Misc() {
@@ -52,6 +56,8 @@ class VCFF_Events {
         $this->_Load_Pages();
         // Load AJAX
         $this->_Load_AJAX();
+        // Fire the shortcode init action
+        do_action('vcff_events_init_misc',$this);
     }
 
     protected function _Load_Helpers() {
