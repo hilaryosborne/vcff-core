@@ -9,7 +9,7 @@ class VCFF_Standard_Form_Item extends VCFF_Form_Item {
             'extra_class'=>'',
         ), $this->form_attributes));
 
-        $form_content = $this->form_content;
+        $form_content = $this->form_render;
         // Retrieve the output html
         $form_content = apply_filters('vcff_form_item_content',$form_content,$this); 
         // Load the form content

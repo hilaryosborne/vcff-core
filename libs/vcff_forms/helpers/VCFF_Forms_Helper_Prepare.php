@@ -76,6 +76,8 @@ class VCFF_Forms_Helper_Prepare extends VCFF_Helper {
                 $form_instance->wp_object_form = $wp_post; 
             }
         } 
+        // We need to save the original for rendering
+        $form_instance->form_render = $form_instance->form_content ;
         // Parse any fragments
         $form_instance->form_content = stripslashes(vcff_parse_fragment($form_instance->form_content));
         // Do any form actions on create

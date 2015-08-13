@@ -143,7 +143,7 @@ class VCFF_Fragments {
 
     public function Load_Shortcodes() { 
         // Add the render function
-        add_shortcode('vcff_fragment', function($attr,$content,$shortcode) {  
+        add_shortcode('vcff_fragment', function($attr,$content,$shortcode) {
             // Retrieve the fragment post            
             $post = vcff_get_fragment_by_uuid($attr['fragment_uuid']);
             // If no fragment id was found

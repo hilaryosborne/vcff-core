@@ -9,7 +9,7 @@ function vcff_parse_fragment($text) {
     $_shortcodes = $blq_parser
         ->Set_Ends('[',']')
         ->Parse()
-        ->Get_Flattened();
+        ->Get_Flattened(); 
     // If no shortcodes were returned
     if (!$_shortcodes || !is_array($_shortcodes)) { return; }
     // Loop through each shortcode
