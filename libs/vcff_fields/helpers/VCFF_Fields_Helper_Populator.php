@@ -88,15 +88,13 @@ class VCFF_Fields_Helper_Populator {
 		// Get the field value
         $this->_Get_Field_Value($field_instance);
         // If the field has a sanitize method
-        if (method_exists($field_instance,'On_Sanitize')) {
-            // Call the sanitize method
-            $field_instance->On_Sanitize();
-        }
+        if (method_exists($field_instance,'On_Sanitize')) { $field_instance->On_Sanitize(); }
         // If the field has a sanitize method
-        if (method_exists($field_instance,'On_Create')) {
-            // Call the sanitize method
-            $field_instance->On_Create();
-        }
+        if (method_exists($field_instance,'On_Create')) { $field_instance->On_Create(); }
+        // Do any create actions
+        $field_instance->Do_Action('create');
+        // Do a wordpress hook
+        do_action('vcff_field_create',$field_instance);
 		// Return the generated field instance
 		return $field_instance;
 	}
@@ -112,6 +110,8 @@ class VCFF_Fields_Helper_Populator {
         $this->_Get_Dynamic_Field_Value($field_instance);
         // Populate with any default value
         $this->_Get_Default_Field_Value($field_instance);
+        // Do any create actions
+        $field_instance->Do_Action('populate_value');
         // Retrieve the validation result
         do_action('vcff_post_field_value', $field_instance);
         // If this field has a custom validation method
@@ -128,6 +128,8 @@ class VCFF_Fields_Helper_Populator {
 		if (!is_array($form_data) || !isset($form_data[$field_instance->machine_code])) { return; }
         // Run the data through the field specific processor or store raw data
         $field_instance->posted_value = $form_data[$field_instance->machine_code];
+        // Do any create actions
+        $field_instance->Do_Action('populate_value_posted');
     }
 	
     protected function _Get_Dynamic_Field_Value($field_instance) {
@@ -161,7 +163,9 @@ class VCFF_Fields_Helper_Populator {
                 elseif (strtolower($rule_method) == 'request' && isset($_GET[$rule_key])) {
                     // Run the data through the field specific processor or store raw data
                     $field_instance->posted_value = $_REQUEST[$rule_key];
-                }   
+                } 
+                // Do any create actions
+                $field_instance->Do_Action('populate_value_dynamic');
             }
         }
         // Apply the hook
@@ -177,5 +181,7 @@ class VCFF_Fields_Helper_Populator {
         if (!isset($attributes['default_value']) || !$attributes['default_value']) { return; }
         // Run the data through the field specific processor or store raw data
         $field_instance->posted_value = $attributes['default_value'];
+        // Do any create actions
+        $field_instance->Do_Action('populate_value_default');
     }
 }

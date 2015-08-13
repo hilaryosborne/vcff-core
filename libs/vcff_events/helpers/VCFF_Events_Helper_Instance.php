@@ -32,8 +32,12 @@ class VCFF_Events_Helper_Instance extends VCFF_Helper {
         $action_instance->description = $action_data['description'];
         // Populate with raw data
         $action_instance->data = is_array($action_data) ? $action_data : array();
+        // If the field has a sanitize method
+        if (method_exists($action_instance,'On_Create')) { $action_instance->On_Create(); }
         // Fire any on create action
         $action_instance->Do_Action('create');
+        // Do a wordpress hook
+        do_action('vcff_action_create',$action_instance);
         // Store the action instance
         $this->action_instance = $action_instance;
         // Populate with available triggers
@@ -82,6 +86,14 @@ class VCFF_Events_Helper_Instance extends VCFF_Helper {
             $trigger_instance->context = $trigger_context;
             // Populate with the action instance
             $trigger_instance->action_instance = $action_instance;
+            // If the field has a sanitize method
+            if (method_exists($trigger_instance,'On_Create')) { $trigger_instance->On_Create(); }
+            // Fire any on create action
+            $trigger_instance->Do_Action('create');
+            // Do a wordpress hook
+            do_action('vcff_trigger_create',$trigger_instance);
+            // If the field has a sanitize method
+            if (method_exists($trigger_instance,'Is_Compatible') && !$trigger_instance->Is_Compatible()) { continue; }
             // Add to the action instance
             $action_instance->triggers[$trigger_code] = $trigger_instance; 
             // If this is the selected trigger
@@ -96,7 +108,9 @@ class VCFF_Events_Helper_Instance extends VCFF_Helper {
                 }
             }
             // Fire any on create action
-            $trigger_instance->Do_Action('create');
+            $trigger_instance->Do_Action('after_create');
+            // Do a wordpress hook
+            do_action('vcff_trigger_after_create',$trigger_instance);
         }
     }
     
@@ -136,6 +150,14 @@ class VCFF_Events_Helper_Instance extends VCFF_Helper {
             $event_instance->context = $event_context;
             // Populate with the action instance
             $event_instance->action_instance = $action_instance;
+            // If the field has a sanitize method
+            if (method_exists($event_instance,'On_Create')) { $event_instance->On_Create(); }
+            // Fire any on create action
+            $event_instance->Do_Action('create');
+            // Do a wordpress hook
+            do_action('vcff_event_create',$event_instance);
+            // If the field has a sanitize method
+            if (method_exists($event_instance,'Is_Compatible') && !$event_instance->Is_Compatible()) { continue; }
             // Add to the action instance
             $action_instance->events[$event_type] = $event_instance;
             // If this is the selected trigger
@@ -150,7 +172,9 @@ class VCFF_Events_Helper_Instance extends VCFF_Helper {
                 }
             }
             // Fire any on create action
-            $event_instance->Do_Action('create');
+            $event_instance->Do_Action('after_create');
+            // Do a wordpress hook
+            do_action('vcff_event_after_create',$event_instance);
         }
     }
 }

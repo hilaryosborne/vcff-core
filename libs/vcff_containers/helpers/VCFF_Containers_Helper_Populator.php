@@ -29,7 +29,7 @@ class VCFF_Containers_Helper_Populator extends VCFF_Helper {
         // Populate the instance property
         $this->container_instance = $container_instance;
 		// Populate the container form
-		$container_instance->form = $this->form_instance;
+		$container_instance->form_instance = $this->form_instance;
 		// Populate the container fields
 		$container_instance->machine_code = $machine_code;
         // Populate the container fields
@@ -44,6 +44,12 @@ class VCFF_Containers_Helper_Populator extends VCFF_Helper {
         $this->_Add_Child_Fields();
         // Add any child supports
         $this->_Add_Child_Supports();
+        // If the field has a sanitize method
+        if (method_exists($container_instance,'On_Create')) { $container_instance->On_Create(); }
+        // Do any create actions
+        $container_instance->Do_Action('create');
+        // Do a wordpress hook
+        do_action('vcff_container_create',$container_instance);
 		// Return the generated field instance
 		return $container_instance;
 	}
@@ -71,6 +77,10 @@ class VCFF_Containers_Helper_Populator extends VCFF_Helper {
             if (!$field_instance) { continue; }
             // Add the field instance to the container
             $container_instance->Add_Field($field_instance);
+            // Do any create actions
+            $container_instance->Do_Action('add_field',array('field_instance' => $field_instance));
+            // Do a wordpress hook
+            do_action('vcff_container_add_field',$container_instance,$field_instance);
         } 
     }
     
@@ -97,6 +107,10 @@ class VCFF_Containers_Helper_Populator extends VCFF_Helper {
             if (!$support_instance) { continue; } 
             // Add the field instance to the container
             $container_instance->Add_Support($support_instance);
+            // Do any create actions
+            $container_instance->Do_Action('add_support',array('support_instance' => $support_instance));
+            // Do a wordpress hook
+            do_action('vcff_container_add_support',$container_instance,$support_instance);
         } 
     }
     

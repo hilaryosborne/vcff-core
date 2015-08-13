@@ -291,18 +291,20 @@ class VCFF_Field_Item extends VCFF_Item {
         return $this->posted_value;
     }
     
-    public function Get_TEXT_Value() {
+    public function Get_TEXT_Value($use_label=true) {
     
         if (is_array($this->posted_value)) { return implode(',',$this->posted_value); }
     
-        return $this->Get_Label().' : '.$this->posted_value;
+        return $use_label ? $this->Get_Label().' : '.$this->posted_value : $this->posted_value;
     }
     
-    public function Get_HTML_Value() {
-
+    public function Get_HTML_Value($use_label=true) {
+        
+        $field_value = is_array($this->posted_value) ? json_encode($this->posted_value) : $this->posted_value ;
+        
         $html = '<div class="posted-field">';
-        $html .= '<div class="field-label"><strong>'.$this->Get_Label().'</strong></div>';
-        $html .= '<div class="field-value">'.is_array($this->posted_value) ? json_encode($this->posted_value) : $this->posted_value.'</div>';
+        if ($use_label) { $html .= '<div class="field-label"><strong>'.$this->Get_Label().'</strong></div>'; }
+        $html .= '<div class="field-value">'.$field_value.'</div>';
         $html .= '</div>';
         
         return $html;

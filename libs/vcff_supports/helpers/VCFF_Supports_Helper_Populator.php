@@ -32,6 +32,12 @@ class VCFF_Supports_Helper_Populator extends VCFF_Helper {
 		$support_instance->context = $_data['context'];
 		// Populate the field list
 		$support_instance->attributes = $_data['attributes'];
+        // If the field has a sanitize method
+        if (method_exists($support_instance,'On_Create')) { $support_instance->On_Create(); }
+        // Do any create actions
+        $support_instance->Do_Action('create');
+        // Do a wordpress hook
+        do_action('vcff_support_create',$support_instance);
 		// Return the generated field instance
 		return $support_instance;
 	}

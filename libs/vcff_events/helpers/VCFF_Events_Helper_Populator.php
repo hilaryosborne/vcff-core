@@ -33,6 +33,8 @@ class VCFF_Events_Helper_Populator extends VCFF_Helper {
             $action_instance = $events_helper_instance
                 ->Set_Form_Instance($form_instance)
                 ->Build($meta_item_data);
+            // If the field has a sanitize method
+            if (method_exists($action_instance,'Is_Compatible') && !$action_instance->Is_Compatible()) { continue; }
             // Add the event to the form instance
             $form_instance->Add_Event($action_instance);
         } 
