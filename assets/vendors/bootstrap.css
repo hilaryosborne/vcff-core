@@ -1720,7 +1720,7 @@ fieldset[disabled] .bootstrap .form-control {
   background-color: #eeeeee;
   opacity: 1;
 }
-textarea.bootstrap .form-control {
+.bootstrap textarea.form-control {
   height: auto;
 }
 .bootstrap input[type="search"] {
