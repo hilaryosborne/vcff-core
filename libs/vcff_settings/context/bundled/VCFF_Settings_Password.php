@@ -13,3 +13,5 @@ class VCFF_Settings_Password {
         return array();
     }
 }
+
+vcff_map_setting('VCFF_Settings_Password');

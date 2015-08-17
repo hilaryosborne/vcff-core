@@ -13,3 +13,5 @@ class VCFF_Settings_Checkbox {
         return array();
     }
 }
+
+vcff_map_setting('VCFF_Settings_Checkbox');

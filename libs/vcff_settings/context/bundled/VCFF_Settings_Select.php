@@ -17,3 +17,5 @@ class VCFF_Settings_Select {
         );
     }
 }
+
+vcff_map_setting('VCFF_Settings_Select');
