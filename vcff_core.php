@@ -48,7 +48,7 @@ class VCFF {
         require_once(VCFF_DIR.'/functions.php');
     }
     
-    public function Load_Core() {
+    public function Load_Core() { 
         // Load each of the form shortcodes
         foreach (new DirectoryIterator(VCFF_DIR.'/core') as $FileInfo) {
             // If this is a directory dot
@@ -62,7 +62,7 @@ class VCFF {
         return $this;
     }
 
-    public function Load_Helpers() {
+    public function Load_Helpers() { 
         // Load each of the form shortcodes
         foreach (new DirectoryIterator(VCFF_DIR.'/helpers') as $FileInfo) {
             // If this is a directory dot
@@ -87,7 +87,7 @@ class VCFF {
         return $this;
     }
 
-    public function Load_Libs() {
+    public function Load_Libs() { 
         // Include the VCFF Meta handling library
         require_once(VCFF_DIR.'/libs/vcff_meta/VCFF_Meta.php');
         // Include the VCFF Meta handling library

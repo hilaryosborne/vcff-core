@@ -295,6 +295,26 @@ class BLQ_Element {
 
     public $tag_close;
     
+    public function Get_Children_Flattened() {
+        
+        $children = $this->children;
+        
+        if (!$children || !is_array($children) || count($children) == 0) { return array(); }
+        
+        $_children = array();
+        
+        foreach ($children as $k => $el) {
+            // If this is not a tag
+            if (!$el->is_tag || !$el->tag) { continue; }
+            
+            $_children[] = $el;
+            
+            $_children = array_merge($_children,$el->Get_Children_Flattened());
+        } 
+        
+        return $_children;
+    }
+    
     public function Add_Char($var) {
         
         $this->string .= $var;

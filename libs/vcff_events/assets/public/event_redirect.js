@@ -1,26 +1,20 @@
 !function($) {
     
-    vcff_add_action('after_form_check_conditions',function(args){
+    vcff_add_action('event_do_refresh',function(args){
         new Event_Redirect(args);
     },10);
     
-    vcff_add_action('after_form_submission',function(args){
-        new Event_Redirect(args);
-    },10);
-    
-    var Event_Redirect = function(args) {
+    var Event_Redirect = function(args) { 
         
         var _form_el = args.form;
         
-        var _json = args.json;
+        var _event = args.event;
         
-        var _data = _json.data;
+        var _event_data = args.event_data;
         
-        if (typeof _data.events == "undefined") { return false; }
+        if (typeof _event != "redirect") { return false; }
         
-        if (typeof _data.events.redirect == "undefined") { return false; }
-        
-        var _redirect = _data.events.redirect;
+        var _redirect = _event_data;
 
         if (_redirect.method.toLowerCase() == 'get') {
 

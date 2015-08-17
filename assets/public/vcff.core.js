@@ -320,6 +320,16 @@
                     vcff_do_action('support_do_refresh',{'form':vcff_form,'data':json.data,'support':support,'support_el':support_obj});
 				});
 			}
+            
+            if (typeof json.data.events != "undefined" && json.data.events != null) { 
+				// Retrieve the conditional data
+                var events = json.data.events; 
+				// Loop through each of the returned fields
+				$.each(events,function(type,event_data){ 
+                    // Pre form standard submission actions
+                    vcff_do_action('event_do_refresh',{'form':vcff_form,'data':json.data,'event':type,'event_data':event_data});
+				});
+			}
 			
 			if (typeof json.data.form != "undefined" && json.data.form != null) {
                 

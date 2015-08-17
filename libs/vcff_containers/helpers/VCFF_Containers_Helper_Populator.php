@@ -38,6 +38,8 @@ class VCFF_Containers_Helper_Populator extends VCFF_Helper {
 		$container_instance->context = $container_data['context'];
 		// Populate the field list
 		$container_instance->attributes = $container_data['attributes'];
+        // Populate the field list
+		$container_instance->children = $container_data['children'];
         // Populate the handler object
 		$container_instance->el = $container_data['el'];
         // Add any child fields
@@ -60,9 +62,9 @@ class VCFF_Containers_Helper_Populator extends VCFF_Helper {
         // Retrieve the container instance
         $container_instance = $this->container_instance;
         // Retrieve the container's children
-        $children = $container_instance->el->children;
+        $children = $container_instance->children;
         // If no shortcodes were returned
-        if (!$children || !is_array($children)) { return $container_instance; }
+        if (!$children || !is_array($children)) { return $container_instance; } 
         // Loop through each shortcode
         foreach ($children as $k => $el) {
             // If this is not a tag
@@ -81,7 +83,7 @@ class VCFF_Containers_Helper_Populator extends VCFF_Helper {
             $container_instance->Do_Action('add_field',array('field_instance' => $field_instance));
             // Do a wordpress hook
             do_action('vcff_container_add_field',$container_instance,$field_instance);
-        } 
+        }
     }
     
     protected function _Add_Child_Supports() {
@@ -90,7 +92,7 @@ class VCFF_Containers_Helper_Populator extends VCFF_Helper {
         // Retrieve the container instance
         $container_instance = $this->container_instance;
         // Retrieve the container's children
-        $children = $container_instance->el->children;
+        $children = $container_instance->children;
         // If no shortcodes were returned
         if (!$children || !is_array($children)) { return $container_instance; }
         // Loop through each shortcode
@@ -118,7 +120,7 @@ class VCFF_Containers_Helper_Populator extends VCFF_Helper {
         // Retrieve the form instance
 		$form_instance = $this->form_instance;
 		// Retrieve the field data
-		$containers_data = vcff_parse_container_data($form_instance->form_content); 
+		$containers_data = vcff_parse_container_data($form_instance->form_content);
 		// If an error has been detected, return out
 		if (!$containers_data || !is_array($containers_data)) { return; }
 		// Retrieve the form instance

@@ -28,7 +28,8 @@ class VCFF_Loading_Alert {
                     "heading" => __ ( "Display as", VCFF_FORM ),
                     "param_name" => "display",
                     'value' => array(
-                        __('Hovering') => 'hovering',
+                       __('Select a display mode') => '',
+                       __('Hovering') => 'hovering',
                         __('Stationary') => 'stationary'
                     )
                 ),

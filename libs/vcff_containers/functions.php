@@ -58,6 +58,7 @@ function vcff_parse_container_data($text) {
             'type' => $_shortcode,
             'name' => $machine_code,
             'el' => $el,
+            'children' => $el->Get_Children_Flattened(),
             'context' => $_context,
             'attributes' => $_attributes
         );

@@ -137,7 +137,9 @@ class VCFF_Fields_Helper_Validation {
 		// Loop through each containers
 		foreach ($form_fields as $machine_code => $field_instance) {
             // If the field is valid, move on
-            if ($field_instance->Is_Valid()) { continue; }
+            if ($field_instance->Is_Hidden()) { continue; }
+            // If the field is valid, move on
+            if ($field_instance->Is_Valid()) { continue; } //echo $machine_code;
             // Inc up the invalid field
             $invalid++;
         }

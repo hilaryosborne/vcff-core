@@ -96,7 +96,7 @@ class VCFF_Forms_Helper_Calculate extends VCFF_Helper {
         do_action('vcff_form_after_conditional', $form_instance);
     }
     
-    protected function _Calculate_Validation() {
+    protected function _Calculate_Validation() { 
         // Retrieve the params
         $params = $this->params;
         // If we are not going to populate the fields
@@ -116,13 +116,13 @@ class VCFF_Forms_Helper_Calculate extends VCFF_Helper {
 		// Check the fields
 		$supports_validation_helper
 			->Set_Form_Instance($form_instance)
-			->Check(); 
+			->Check();
 		// Create a containers validation helper
 		$containers_validation_helper = new VCFF_Containers_Helper_Validation();
 		// Check the container
 		$containers_validation_helper
 			->Set_Form_Instance($form_instance)
-			->Check(); 
+			->Check();
         // Create a new helper instance
         $form_validation_helper = new VCFF_Forms_Helper_Validation();
         // Execute the helper

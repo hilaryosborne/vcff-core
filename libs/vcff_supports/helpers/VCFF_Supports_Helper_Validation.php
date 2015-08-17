@@ -135,6 +135,8 @@ class VCFF_Supports_Helper_Validation {
 		// Loop through each containers
 		foreach ($form_supports as $machine_code => $support_instance) {
             // If the support is valid, move on
+            if ($support_instance->Is_Hidden()) { continue; }
+            // If the support is valid, move on
             if ($support_instance->Is_Valid()) { continue; }
             // Inc up the invalid support
             $invalid++;

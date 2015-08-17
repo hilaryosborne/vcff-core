@@ -130,6 +130,8 @@ class VCFF_Containers_Helper_Validation extends VCFF_Helper {
 		// Loop through each of the form's containers
 		foreach ($form_containers as $k => $container_instance) {
             // If the field is valid, move on
+            if ($container_instance->Is_Hidden()) { continue; }
+            // If the field is valid, move on
             if ($container_instance->Is_Valid()) { continue; }
             // Inc up the invalid field
             $invalid++;

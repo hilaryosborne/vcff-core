@@ -1,10 +1,6 @@
 !function($) {
     
-    vcff_add_action('after_form_check_conditions',function(args){
-        new Event_Clear(args);
-    },10);
-    
-    vcff_add_action('after_form_submission',function(args){
+    vcff_add_action('event_do_refresh',function(args){
         new Event_Clear(args);
     },10);
     
@@ -12,13 +8,11 @@
     
         var _form_el = args.form;
         
-        var _json = args.json;
+        var _event = args.event;
         
-        var _data = _json.data;
+        var _event_data = args.event_data;
         
-        if (typeof _data.events == "undefined") { return false; }
-        
-        if (typeof _data.events.clear == "undefined") { return false; }
+        if (typeof _event != "clear") { return false; }
         
         $(_form_el).get(0).reset();
     }

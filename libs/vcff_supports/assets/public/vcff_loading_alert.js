@@ -1,7 +1,7 @@
 
 var $ = window.jQuery;
 
-$(document).ready(function(){
+$(document).ready(function(){ console.log('asdasd');
 
     $('.form-loading-alert').each(function(){
         
@@ -10,7 +10,7 @@ $(document).ready(function(){
         $(alert_obj).hide();
         
         if ($(this).hasClass('for-error')) {
-
+            
             vcff_add_action('form_submission_failed',function(args){
                 Display_Alert(args.form);
             });
@@ -43,11 +43,11 @@ $(document).ready(function(){
             });
         }
 
-        var Display_Alert = function(vcff_form) {
+        var Display_Alert = function() { 
             $(alert_obj).show();
         };
 
-        var Hide_Alert = function(vcff_form) {
+        var Hide_Alert = function() {
             $(alert_obj).hide();
         };
 
