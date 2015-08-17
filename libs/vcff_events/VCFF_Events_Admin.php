@@ -4,8 +4,6 @@ class VCFF_Events_Admin {
 
     public function __construct() {
         
-        $this->_Load_Pages(); 
-        
         add_action('admin_init',function(){
             add_action('wp_ajax_vcff_action_list',array($this,'AJAX_Action_List'));
             add_action('wp_ajax_vcff_action_list_ordering',array($this,'AJAX_Action_List_Ordering'));
@@ -28,19 +26,6 @@ class VCFF_Events_Admin {
         
     }
     
-    protected function _Load_Pages() { 
-        // Load each of the form shortcodes
-        foreach (new DirectoryIterator(VCFF_EVENTS_DIR.'/pages') as $FileInfo) {
-            // If this is a directory dot
-            if($FileInfo->isDot()) { continue; }
-            // If this is a directory
-            if($FileInfo->isDir()) { continue; }
-            // If this is not false
-            if (stripos($FileInfo->getFilename(),'.tpl') !== false) { continue; }
-            // Include the file
-            require_once(VCFF_EVENTS_DIR.'/pages/'.$FileInfo->getFilename());
-        }
-    }
     
     public function _Filter_Add_Meta_Pages($meta_pages, $form_instance) {
 

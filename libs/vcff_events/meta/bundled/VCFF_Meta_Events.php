@@ -14,6 +14,8 @@ class VCFF_Meta_Events {
     }
 }
 
+vcff_map_meta_field('VCFF_Meta_Events');
+
 // Register the vcff admin css
 vcff_admin_enqueue_script('events_wizard', VCFF_EVENTS_URL.'/assets/admin/events_wizard.js', array('vcff-core'));
 // Register the vcff admin css
