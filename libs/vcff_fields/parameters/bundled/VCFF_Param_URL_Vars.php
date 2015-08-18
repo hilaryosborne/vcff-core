@@ -34,3 +34,5 @@ class VCFF_Param_URL_Vars {
         return $output;
     }
 }
+
+new VCFF_Param_URL_Vars();

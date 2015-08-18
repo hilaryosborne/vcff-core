@@ -22,3 +22,5 @@ class VCFF_Param_Machine {
         return $output;
     }
 }
+
+new VCFF_Param_Machine();

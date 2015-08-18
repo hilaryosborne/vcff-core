@@ -39,6 +39,8 @@ class VCFF_Param_Validation {
 
 }
 
+new VCFF_Param_Validation();
+
 class VCFF_PARAM_VAL {
     
     static function Get_Rules($shortcode) {

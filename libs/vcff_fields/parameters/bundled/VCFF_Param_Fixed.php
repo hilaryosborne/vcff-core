@@ -30,3 +30,5 @@ class VCFF_Param_Fixed {
     }
 
 }
+
+new VCFF_Param_Fixed();

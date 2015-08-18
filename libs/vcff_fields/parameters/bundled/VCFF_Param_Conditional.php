@@ -136,3 +136,5 @@ class VCFF_Param_Conditional {
     }
 
 }
+
+new VCFF_Param_Conditional();

@@ -24,3 +24,5 @@ class VCFF_Param_Heading {
         return $output;
     }
 }
+
+new VCFF_Param_Heading();

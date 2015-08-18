@@ -41,6 +41,7 @@ class VCFF_Param_Filters {
 
 }
 
+new VCFF_Param_Filters();
 
 class VCFF_PARAM_FILTER {
     
