@@ -1,5 +1,5 @@
 !function($) {
-
+    
     var VCFF = function(vcff_form){
         
         var _self = this;
@@ -10,10 +10,12 @@
         
         vcff_do_action('form_setup',{'form':vcff_form,'form_obj':_self});
         
+        var _first_check = true;
+        
         _self.Setup_Events = function() {
             
             if ($(vcff_form).find('.form-alerts-panel').length > 0) {
-            
+                
                 $(vcff_form).find('.form-alerts').remove();
             }
             
@@ -71,7 +73,7 @@
             $(vcff_form).find('.container-alerts').empty();
             $(vcff_form).find('.field-alerts').empty();
         };
-    
+
         _self.Check_Conditions = function() {
             // If the request can be cancelled
             if (typeof _request.abort != 'undefined') { _request.abort(); }
@@ -256,7 +258,7 @@
                         else if (container.visibility == 'hidden') { $(container_obj).hide(); }
 					}
                     // If the container has alerts
-                    if (typeof container.alerts != 'undefined') {
+                    if (typeof container.alerts != 'undefined' && container.alerts) {
                         // Append any container alerts
                         $(container_obj).find('.container-alerts').show().html(container.alerts);
                     }
@@ -284,7 +286,7 @@
                         else if (field.visibility == 'hidden') { $(field_obj).hide(); }
 					}
 					// If the field has alerts
-                    if (typeof field.alerts != 'undefined') {
+                    if (typeof field.alerts != 'undefined' && field.alerts) {
                         // Append any field alerts
                         $(field_obj).find('.field-alerts').show().html(field.alerts);
                     }
@@ -312,7 +314,7 @@
                         else if (support.visibility == 'hidden') { $(support_obj).hide(); }
 					}
 					// If the support has alerts
-                    if (typeof support.alerts != 'undefined') {
+                    if (typeof support.alerts != 'undefined' && support.alerts) {
                         // Append any support alerts
                         $(support_obj).find('.support-alerts').show().html(support.alerts);
                     }
@@ -335,7 +337,7 @@
                 
                 var form = json.data.form;
                 // If the form has alerts
-				if (typeof form.alerts != 'undefined') {
+				if (typeof form.alerts != 'undefined' && form.alerts) {
 					// Append to the standard form alerts panel
                     $(vcff_form).find('.form-alerts').show().html(form.alerts);
                     // Append to any custom alerts panel

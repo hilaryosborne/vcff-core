@@ -1,7 +1,7 @@
 
 var $ = window.jQuery;
 
-$(document).ready(function(){ console.log('asdasd');
+$(document).ready(function(){ 
 
     $('.form-loading-alert').each(function(){
         
