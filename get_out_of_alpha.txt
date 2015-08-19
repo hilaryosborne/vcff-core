@@ -13,3 +13,5 @@ find icons for form elements in visual composer
 
 
 
+Add origin URL field
+Fix flood/XSS attack feature
