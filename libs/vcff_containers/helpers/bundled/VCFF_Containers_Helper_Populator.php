@@ -30,21 +30,15 @@ class VCFF_Containers_Helper_Populator extends VCFF_Helper {
         $this->container_instance = $container_instance;
 		// Populate the container form
 		$container_instance->form_instance = $this->form_instance;
-		// Populate the container fields
 		$container_instance->machine_code = $machine_code;
-        // Populate the container fields
 		$container_instance->container_type = $container_data['context']['type'];
-		// Populate the handler object
 		$container_instance->context = $container_data['context'];
-		// Populate the field list
 		$container_instance->attributes = $container_data['attributes'];
-        // Populate the field list
-		$container_instance->children = $container_data['children'];
         // Populate the handler object
 		$container_instance->el = $container_data['el'];
+		$container_instance->el_children = $container_data['children'];
         // Add any child fields
         $this->_Add_Child_Fields();
-        // Add any child supports
         $this->_Add_Child_Supports();
         // If the field has a sanitize method
         if (method_exists($container_instance,'On_Create')) { $container_instance->On_Create(); }
@@ -62,11 +56,11 @@ class VCFF_Containers_Helper_Populator extends VCFF_Helper {
         // Retrieve the container instance
         $container_instance = $this->container_instance;
         // Retrieve the container's children
-        $children = $container_instance->children;
+        $el_children = $container_instance->el_children;
         // If no shortcodes were returned
-        if (!$children || !is_array($children)) { return $container_instance; } 
+        if (!$el_children || !is_array($children)) { return $container_instance; } 
         // Loop through each shortcode
-        foreach ($children as $k => $el) {
+        foreach ($el_children as $k => $el) {
             // If this is not a tag
             if (!$el->is_tag || !$el->tag) { continue; }
             // Retrieve the attributes
@@ -91,12 +85,12 @@ class VCFF_Containers_Helper_Populator extends VCFF_Helper {
 		$form_instance = $this->form_instance;
         // Retrieve the container instance
         $container_instance = $this->container_instance;
-        // Retrieve the container's children
-        $children = $container_instance->children;
+        // Retrieve the container's el_children
+        $el_children = $container_instance->el_children;
         // If no shortcodes were returned
-        if (!$children || !is_array($children)) { return $container_instance; }
+        if (!$el_children || !is_array($el_children)) { return $container_instance; }
         // Loop through each shortcode
-        foreach ($children as $k => $el) {
+        foreach ($el_children as $k => $el) {
             // If this is not a tag
             if (!$el->is_tag || !$el->tag) { continue; }
             // Retrieve the attributes

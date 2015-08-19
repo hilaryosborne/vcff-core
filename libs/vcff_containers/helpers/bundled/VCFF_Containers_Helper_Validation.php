@@ -89,8 +89,6 @@ class VCFF_Containers_Helper_Validation extends VCFF_Helper {
 		if (!$form_containers || !is_array($form_containers)) { return; }
 		// Loop through each of the form's containers
 		foreach ($form_containers as $k => $container_instance) {
-			// If this field has a custom validation method
-			if (method_exists($container_instance,'Check_Container_Validation')) { $container_instance->Check_Container_Validation(); }
             // If this field has a custom validation method
 			if (method_exists($container_instance,'Do_Validation')) { $container_instance->Do_Validation(); }
             // Do any actions

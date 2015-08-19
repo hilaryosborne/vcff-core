@@ -19,13 +19,9 @@ class VCFF_Helper_Libs extends VCFF_Helper {
         global $vcff;
         // Register the vcff admin css
         vcff_front_enqueue_script('jquery', array('jquery'));
-        // Register the vcff admin css
         vcff_front_enqueue_script('base64', VCFF_URL.'/assets/vendors/base64.js', array(), '20120608', 'all');
-        // Register the vcff admin css
         vcff_front_enqueue_script('json', VCFF_URL.'/assets/vendors/json.js', array(), '20120608', 'all');
-        // Register the vcff admin css
         vcff_front_enqueue_script('vcff-actions', VCFF_URL.'/assets/public/vcff.actions.js', array(), '20120608', 'all');
-        // Register the vcff admin css
         vcff_front_enqueue_script('vcff-core', VCFF_URL.'/assets/public/vcff.core.js', array('jquery','vcff-actions','base64','json'), '20120608', 'all');
         
         add_action('wp_print_scripts',function(){
@@ -69,23 +65,15 @@ class VCFF_Helper_Libs extends VCFF_Helper {
         vcff_admin_enqueue_script('jquery', array('jquery'));
         vcff_admin_enqueue_script('jquery-ui-core', array('jquery'));
         vcff_admin_enqueue_script('jquery-ui-tabs', array('jquery'));
-        // Register the vcff admin css
         vcff_admin_enqueue_script('handlebars', VCFF_URL.'/assets/vendors/handlebars.js', array(), '20120608', 'all');
-        // Register the vcff admin css
         vcff_admin_enqueue_script('vcff-actions', VCFF_URL.'/assets/public/vcff.actions.js', array(), '20120608', 'all');
-        // Register the vcff admin css
         vcff_admin_enqueue_script('base64', VCFF_URL.'/assets/vendors/base64.js', array(), '20120608', 'all');
-        // Register the vcff admin css
         vcff_admin_enqueue_script('json', VCFF_URL.'/assets/vendors/json.js', array(), '20120608', 'all');
-        // Register the vcff admin css
         vcff_admin_enqueue_script('vcff-core', VCFF_URL.'/assets/public/vcff.core.js', array('jquery','vcff-actions','base64','json'), '20120608', 'all');
-        // Register the vcff admin css
-        vcff_admin_enqueue_style('bootstrap', VCFF_URL.'/assets/vendors/bootstrap.css', array(), '20120608', 'all');
-        // Register the vcff admin css
         vcff_admin_enqueue_script('bootstrap', VCFF_URL.'/assets/vendors/bootstrap.js', array('vcff-core'), '20120608', 'all');
-        // Register the vcff admin css
         vcff_admin_enqueue_script('vcff-admin', VCFF_URL.'/assets/admin/vcff.admin.js', array('vcff-core'), '20120608', 'all');
-        // Register the vcff admin css
+        vcff_admin_enqueue_style('bootstrap', VCFF_URL.'/assets/vendors/bootstrap.css', array(), '20120608', 'all');
+        
         vcff_admin_enqueue_style('vcff-admin', VCFF_URL.'/assets/admin/vcff.admin.css', array(), '20120608', 'all');
         
         add_action('wp_print_scripts',function(){

@@ -76,7 +76,7 @@ var Modify_Event_Form = function(_id) {
         // Post the data to the webservice
         $.post(ajaxurl,{
             // Target the events form
-            'action':'vcff_event_modify',
+            'action':'vcff_events_form',
             // The action id 
             'action_id':_id,
             // Encode the data using base64
@@ -120,9 +120,11 @@ var Modify_Event_Form = function(_id) {
             // Post the data to the webservice
             $.post(ajaxurl,{
                 // Target the events form
-                'action':'vcff_event_save',
+                'action':'vcff_events_ajax_form',
                 // The action id 
-                'action_id':_id,
+                'ajax_action':'save',
+                // The action id 
+                'ajax_code':$('#post_id').val(),
                 // Encode the data using base64
                 'form_data':base64.encode(post_form)
             }, // Handle the response

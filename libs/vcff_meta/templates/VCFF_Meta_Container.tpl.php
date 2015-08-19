@@ -4,9 +4,13 @@
         <strong>Form Framework</strong>
     </h3>
     <div class="inside">
+        <div class="alert alert-setup-meta alert-warning text-center" role="alert">
+            <h4>Getting things ready</h4>
+            <p>Please wait while we retrieve your form's settings</p>
+        </div>
         <?php do_action('vcff_meta_container_pre_content',$this); ?>
         <input type="hidden" name="vcff_form_uuid" value="<?php echo $form_instance->Get_UUID(); ?>" >
-        <div class="vcff-tabs">
+        <div class="vcff-tabs" style="display:none;">
             <ul class="vcff-tab-nav">
                 <?php do_action('vcff_meta_container_tabs_content',$this); ?>
             </ul>

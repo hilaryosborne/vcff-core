@@ -1,0 +1,15 @@
+remove all admin and public controlers DONE
+move Import/Export to reports plugin DONE
+standardise all shortcode headings, fields etc for VC
+remove excessive code notes
+
+compress all css to individual css
+
+add welcome page
+add license page
+
+populate inpage documentation
+find icons for form elements in visual composer
+
+
+

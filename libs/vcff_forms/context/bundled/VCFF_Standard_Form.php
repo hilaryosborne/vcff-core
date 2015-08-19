@@ -99,41 +99,61 @@ class VCFF_Standard_Form {
     
     static function Form_Params() {
         // Return any form params
-        return array(
-            'tags' => array(       
-                array('Custom Form Tag','custom_form','custom_form',function($form_instance){ })
-            )
-        );
+        return array();
     }
 }
-/**
-add_filter('vcff_settings_page_list',function($page_list, $form_instance){
-    
-    $page_list['form_settings'] = array(
-        'id' => 'form_settings',
-        'title' => 'Form Settings',
-        'weight' => 1,
-        'description' => 'This page contains the general settings',
-        'icon' => '',
-    );
-    
-    return $page_list;
-},10,2);
 
-add_filter('vcff_settings_group_list',function($group_list, $form_instance){
-
-    $group_list['form_settings'] = array(
-        'id' => 'form_settings',
-        'page_id' => 'general_settings',
-        'title' => 'General Settings',
+add_filter('vcff_meta_field_list',function($meta_fields,$form_instance){
+    // Retrieve the global vcff forms class
+    $vcff_forms = vcff_get_library('vcff_forms');
+    // Retrieve the form class
+    $form_context = $vcff_forms->contexts;
+    // If no context could be found
+    if (!$form_context || !is_array($form_context)) { return; }
+    // Storage var
+    $contexts_list = array();
+    // Loop through each form context
+    foreach ($form_context as $type => $context) {
+        // Populate the context list
+        $contexts_list[$type] = $context['title'];
+    }
+    // Create the form type field
+    $meta_fields[] = array(
+        'machine_code' => 'form_type',
+        'field_label' => 'Form Type',
+        'field_type' => 'select',
+        'validation' => array(
+            'required' => true
+        ),
+        'default_value' => 'vcff_standard_form',
         'weight' => 1,
-        'description' => 'This page contains the general settings',
-        'icon' => '',
+        'values' => $contexts_list
     );
-    
-    return $group_list;
-},10,2);
-**/
+
+    return $meta_fields;
+}, 15, 2);
+
+add_filter('vcff_meta_field_list',function($meta_fields,$form_instance){
+    // Create the form type field
+    $meta_fields[] = array(
+        'machine_code' => 'use_ajax',
+        'field_label' => 'Submit Via AJAX',
+        'field_type' => 'select',
+        'validation' => array(
+            'required' => true
+        ),   
+        'required' => true,
+        'weight' => 2,
+        'default_value' => 'yes',
+        'values' => array(
+            'yes' => 'Yes, Use AJAX Submission',
+            'no' => 'No, Use Standard Submission'
+        )
+    );
+
+    return $meta_fields;
+}, 15, 2);
+
 add_filter('vcff_settings_field_list',function($field_list, $form_instance){
     
     $field_list['form_attributes'] = array(

@@ -24,10 +24,6 @@ class VCFF_Supports {
         add_action('vcff_init_misc',array($this,'__Init_Misc'),5);
         // Fire the shortcode init action
         do_action('vcff_supports_init',$this);
-        // Include the admin class
-        require_once(VCFF_SUPPORTS_DIR.'/VCFF_Supports_Admin.php');
-        // If being viewed as an admin
-        require_once(VCFF_SUPPORTS_DIR.'/VCFF_Supports_Public.php');
         // Fire the shortcode init action
         do_action('vcff_supports_after_init',$this);
     }

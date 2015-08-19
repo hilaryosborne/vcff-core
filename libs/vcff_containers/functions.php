@@ -1,23 +1,16 @@
 <?php
 
 function vcff_map_container($class) {
-    // Retrieve the global vcff forms class
+    
     $vcff_containers = vcff_get_library('vcff_containers');
-    // Retrieve the form code
-    $container_type = $class::$container_type;
-    $container_title = $class::$container_title;
-    $container_base_class = $class;
-    $container_item_class = $class::$item_class;
-    $container_vc = $class::VC_Params();
-    $container_params = $class::Container_Params();
-    // Add the form to our list of available forms
-    $vcff_containers->contexts[$container_type] = array(
-        'type' => $container_type,
-        'title' => $container_title,
-        'class_base' => $container_base_class,
-        'class_item' => $container_item_class,
-        'vc' => $container_vc,
-        'params' => $container_params
+
+    $vcff_containers->contexts[$class::$container_type] = array(
+        'type' => $class::$container_type,
+        'title' => $class::$container_title,
+        'class_base' => $class,
+        'class_item' => $class::$item_class,
+        'vc' => $class::VC_Params(),
+        'params' => $class::Container_Params()
     );
 }
 

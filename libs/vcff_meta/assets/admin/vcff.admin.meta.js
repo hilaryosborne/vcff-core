@@ -256,6 +256,9 @@
             // Form load actions
             vcff_do_action('meta_refresh_after',{});
             
+            $(vcff_meta_container).find('.alert-setup-meta').hide();
+            $(vcff_meta_container_tabs).show();
+            
         },'json');
 
     };

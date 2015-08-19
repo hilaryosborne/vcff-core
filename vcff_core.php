@@ -4,10 +4,9 @@
 * Plugin Name: VC Form Framework - Core
 * Plugin URI: http://theblockquote.com/
 * Description: The visual composer form framework
-* Version: 0.8.6
+* Version: 0.9.0
 * Author: Hilary Osborne - BlockQuote
 * Author URI: http://theblockquote.com/
-* License: License GNU General Public License version 2 or later;
 * Copyright 2015 theblockquote
 */
 
@@ -79,9 +78,7 @@ class VCFF {
     public function Load_Vendors() {
         // Include the VCFF Meta handling library
         require_once(VCFF_DIR.'/vendors/blq_parser/BLQ_Parser.php');
-        // Include the VCFF Meta handling library
         require_once(VCFF_DIR.'/vendors/gump/GUMP.php');
-        // Include the VCFF Meta handling library
         require_once(VCFF_DIR.'/vendors/phpmailer/PHPMailerAutoload.php');
         // Return for chaining
         return $this;
@@ -90,21 +87,13 @@ class VCFF {
     public function Load_Libs() { 
         // Include the VCFF Meta handling library
         require_once(VCFF_DIR.'/libs/vcff_meta/VCFF_Meta.php');
-        // Include the VCFF Meta handling library
         require_once(VCFF_DIR.'/libs/vcff_events/VCFF_Events.php');
-        // Include the VCFF Meta handling library
         require_once(VCFF_DIR.'/libs/vcff_fields/VCFF_Fields.php');
-        // Include the VCFF Meta handling library
         require_once(VCFF_DIR.'/libs/vcff_containers/VCFF_Containers.php');
-        // Include the VCFF Meta handling library
         require_once(VCFF_DIR.'/libs/vcff_supports/VCFF_Supports.php');
-        // Include the VCFF Meta handling library
         require_once(VCFF_DIR.'/libs/vcff_fragments/VCFF_Fragments.php');
-        // Include the VCFF Meta handling library
         require_once(VCFF_DIR.'/libs/vcff_forms/VCFF_Forms.php');
-        // Include the VCFF Meta handling library
         require_once(VCFF_DIR.'/libs/vcff_curly/VCFF_Curly.php');
-        // Include the VCFF Meta handling library
         require_once(VCFF_DIR.'/libs/vcff_settings/VCFF_Settings.php');
         // Return for chaining
         return $this;

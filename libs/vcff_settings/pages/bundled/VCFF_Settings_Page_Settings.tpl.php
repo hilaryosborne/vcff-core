@@ -9,8 +9,12 @@
     <?php do_action('vcff_settings_form_post_header',$this); ?>
     
     <div class="row">
-    <form id="VCFF_SETTINGS" method="post" action="" class="form-horizontal">
-        
+    <form id="VCFF_SETTINGS" method="post" action="" autocomplete="false" class="form-horizontal">
+        <!-- AUTOFILL DISABLE WORKAROUND -->
+        <input type="text" name="prevent_autofill" id="prevent_autofill" value="" style="display:none;" />
+        <input type="password" name="password_fake" id="password_fake" value="" style="display:none;" />
+        <!-- END OF AUTOFILL DISABLE WORKAROUND -->
+
         <div class="col-md-9">
             <div class="form-alerts">
                 <?php echo $this->Get_Alerts_HTML(); ?>

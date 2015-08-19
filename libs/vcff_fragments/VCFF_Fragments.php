@@ -27,11 +27,11 @@ class VCFF_Fragments {
         // Initalize misc logic
         add_action('vcff_init_misc',array($this,'__Init_Misc'));
         // Include the admin class
-        require_once(VCFF_FRAGMENTS_DIR.'/VCFF_Fragments_Admin.php');
-        // Otherwise if this is being viewed by the client 
-        require_once(VCFF_FRAGMENTS_DIR.'/VCFF_Fragments_Public.php');
+        add_action('save_post', array($this,'_Hook_Save_Post'));
         // Fire the shortcode init action
         do_action('vcff_fragments_after_init',$this);
+        add_filter('vcff_field_pre_parse', array($this, '_Hook_Field_Pre_Parse'));
+        add_filter('vcff_container_pre_parse', array($this, '_Hook_Container_Pre_Parse'));
         // Add the css to scripts
         add_action('wp_print_scripts', array($this,'Inject_CSS'));
     }
@@ -238,6 +238,26 @@ class VCFF_Fragments {
         }
         // Echo the style
         echo '</style>';
+    }
+    
+    public function _Hook_Save_Post($post_id) {
+        // Attempt to retrieve the uuid
+        $fragment_uuid = get_post_meta($post_id, 'fragment_uuid', true); 
+        // If the post does not have a uuid
+        if (!$fragment_uuid) {
+            // Update the fragment with a new uuid
+            update_post_meta($post_id, 'fragment_uuid', uniqid(), true);
+        }
+    }
+    
+    public function _Hook_Field_Pre_Parse($text) {
+    
+        return vcff_parse_fragment($text);
+    }
+    
+    public function _Hook_Container_Pre_Parse($text) {
+    
+        return vcff_parse_fragment($text);
     }
 
 }

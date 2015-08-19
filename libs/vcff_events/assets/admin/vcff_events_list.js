@@ -18,8 +18,7 @@ var Event_List = function(meta_box) {
         // Post the data to the webservice
         $.post(ajaxurl,{
             // Target the events form
-            'action':'vcff_event_list',
-            // Encode the data using base64
+            'action':'vcff_events_list',
             'form_data':base64.encode(post_form)
         }, // Handle the response
         function(response){ 
@@ -137,11 +136,15 @@ var Event_Action_Bulk = function(_meta_el,_meta_obj) {
     // Post the data to the webservice
     $.post(ajaxurl,{
         // Target the events form
-        'action':'vcff_event_list_bulk',
+        'action':'vcff_events_ajax_list',
+        // The action id 
+        'ajax_code':$('#post_id').val(),
+        // The bulk action
+        'ajax_action':'bulk',
+        // The action id 
+        'bulk_action':$('.bulk-type').val(),
         // The action id 
         'event_list':_event_ids,
-        // The bulk action
-        'bulk_action':$(_meta_el).find('.bulk-type').val(),
         // Encode the data using base64
         'form_data':base64.encode(post_form)
     }, // Handle the response
@@ -183,7 +186,11 @@ var Event_Action_Delete = function(_id,_item_el,_meta_el) {
     // Post the data to the webservice
     $.post(ajaxurl,{
         // Target the events form
-        'action':'vcff_event_list_delete',
+        'action':'vcff_events_ajax_list',
+        // The action id 
+        'ajax_code':$('#post_id').val(),
+        // The bulk action
+        'ajax_action':'delete',
         // The action id 
         'action_id':_id,
         // Encode the data using base64
@@ -253,7 +260,11 @@ var Event_Action_Move_Up = function(_id,_item_el,_meta_el) {
         // Post the data to the webservice
         $.post(ajaxurl,{
             // Target the events form
-            'action':'vcff_event_list_move',
+            'action':'vcff_events_ajax_list',
+            // The action id 
+            'ajax_code':$('#post_id').val(),
+            // The bulk action
+            'ajax_action':'move',
             // The action id 
             'event_list':_event_ids,
             // Encode the data using base64
@@ -303,7 +314,11 @@ var Event_Action_Move_Down = function(_id,_item_el,_meta_el) {
         // Post the data to the webservice
         $.post(ajaxurl,{
             // Target the events form
-            'action':'vcff_event_list_move',
+            'action':'vcff_events_ajax_list',
+            // The action id 
+            'ajax_code':$('#post_id').val(),
+            // The bulk action
+            'ajax_action':'move',
             // The action id 
             'event_list':_event_ids,
             // Encode the data using base64

@@ -13,29 +13,45 @@ class VCFF_Loading_Alert {
         return array(
             'params' =>  array(
                 array (
+                    "type" => "vcff_heading",
+                    "heading" => false,
+                    "param_name" => "support_heading",
+                    'html_title' => 'VCFF Supports',
+                    'html_description' => 'You can set this field to accept dynamic values from either POST, GET or REQUEST variables. This is useful if you have forms posting to each other or if you want to refill form fields via a URL link.',
+                    'help_url' => 'http://blah',
+                ),
+                array (
                     "type" => "vcff_machine",
                     "heading" => __ ( "Machine Code", VCFF_FORM ),
                     "param_name" => "machine_code",
                 ), 
                 array (
+                    "type" => "vcff_heading",
+                    "heading" => false,
+                    "param_name" => "button_heading",
+                    'html_title' => 'Button Configuration',
+                    'html_description' => 'You can set this field to accept dynamic values from either POST, GET or REQUEST variables. This is useful if you have forms posting to each other or if you want to refill form fields via a URL link.',
+                    'help_url' => 'http://blah',
+                ),
+                array (
                     "type" => "textfield",
-                    "heading" => __ ( "Loading Message", VCFF_FORM ),
+                    "heading" => __ ( "Message text", VCFF_FORM ),
                     "param_name" => "loading_msg",
                     'admin_label' => true
                 ),
                 array (
                     "type" => "dropdown",
-                    "heading" => __ ( "Display as", VCFF_FORM ),
+                    "heading" => __ ( "Display message as a...", VCFF_FORM ),
                     "param_name" => "display",
                     'value' => array(
-                       __('Select a display mode') => '',
-                       __('Hovering') => 'hovering',
-                        __('Stationary') => 'stationary'
+                        __('Select a display mode') => '',
+                        __('Hovering/Floating Message') => 'hovering',
+                        __('Stationary/Fixed Message') => 'stationary'
                     )
                 ),
                 array (
                     "type" => "checkbox",
-                    "heading" => __ ( "Use during", VCFF_FORM ),
+                    "heading" => __ ( "When to show the message", VCFF_FORM ),
                     "param_name" => "usage",
                     'value' => array(
                         __('Checking Conditions') => 'conditions',
@@ -44,15 +60,17 @@ class VCFF_Loading_Alert {
                     )
                 ),
                 array (
+                    "type" => "vcff_heading",
+                    "heading" => false,
+                    "param_name" => "el_heading",
+                    'html_title' => 'Element Configuration',
+                    'html_description' => 'You can set this field to accept dynamic values from either POST, GET or REQUEST variables. This is useful if you have forms posting to each other or if you want to refill form fields via a URL link.',
+                    'help_url' => 'http://blah',
+                ),
+                array (
                     'type' => 'textfield',
                     'heading' => __ ( 'Extra Class', VCFF_FORM ),
                     'param_name' => 'extra_class',
-                ),
-                array(
-                    'type' => 'css_editor',
-                    'heading' => __('CSS',VCFF_FORM),
-                    'param_name' => 'css',
-                    'group' => __('Design Options',VCFF_FORM),
                 ),
                 // FIELD CONDITIONAL PARAMETERS
                 array (
@@ -60,7 +78,13 @@ class VCFF_Loading_Alert {
                     'heading' => false,
                     'param_name' => 'conditions',
                     'group' => 'Adv. Logic'
-                )
+                ),
+                array(
+                    'type' => 'css_editor',
+                    'heading' => __('CSS',VCFF_FORM),
+                    'param_name' => 'css',
+                    'group' => __('Design Options',VCFF_FORM),
+                ),
             )
         );
     }

@@ -1,14 +1,21 @@
 <?php
 
-class VCFF_Events_Page_Event_Form extends VCFF_Page {
-    
-    public $form_instance;
-    
-    public $action_instance;
+class VCFF_Events_AJAX_Form {
     
     public function __construct() {
-        
-        add_action('wp_ajax_vcff_events_form',array($this,'_Render'));
+
+        add_action('wp_ajax_vcff_events_ajax_form', array($this,'_Process'));
+    }
+    
+    public function _Process() { 
+        // Retrieve the flag action
+        $ajax_action = $_REQUEST['ajax_action'];
+        // Retrieve the flag action
+        $ajax_code = $_REQUEST['ajax_code'];
+        // Determine which action to take
+        switch ($ajax_action) {
+            case 'save' : $this->_AJAX_Save(); break;
+        }
     }
     
     protected function _Build_Form_Instance() {
@@ -84,30 +91,55 @@ class VCFF_Events_Page_Event_Form extends VCFF_Page {
         }
     }
     
-    public function _Render() {
+    public function _AJAX_Save() {
         // Retrieve the form instance
         $this->_Build_Form_Instance();
+        // Decode the form data
+        $_FORM = array();
+        // Parse the form data
+        parse_str(base64_decode($_POST['form_data']),$_FORM);
         // Populate the form instance
         $form_instance = $this->form_instance;
-        // Populate the form instance
-        $action_instance = $this->action_instance;
-        // Retrieve the context director
-        $tmp_dir = untrailingslashit( plugin_dir_path(__FILE__ ) );
-        // Start gathering content
-        ob_start();
-        // Retrieve the context director
-        $dir = untrailingslashit( plugin_dir_path(__FILE__ ) );
-        // Include the template file
-        include(vcff_get_file_dir($dir.'/'.get_class($this).".tpl.php"));
-        // Get contents
-        $output = ob_get_contents();
-        // Clean up
-        ob_end_clean();
-        // Return the contents
-        echo $output;
-        
-        exit();
+        // Create a new validation helper
+        $events_validation_helper = new VCFF_Events_Helper_Validation(); 
+        // Create a new instance helper
+        $events_helper_instance = new VCFF_Events_Helper_Instance();
+        // Create an instance instance from the posted data
+        $this->action_instance = $events_helper_instance
+            ->Set_Form_Instance($this->form_instance)
+            ->Build($_FORM['event_action']); 
+        // Update the update flag
+        $this->action_instance->is_update = true;
+        // Check the action instance
+        $events_validation_helper
+            ->Set_Action_Instance($this->action_instance)
+            ->Check();
+        // If the action instance is not valid
+        if (!$this->action_instance->Is_Valid()) {
+            // Add the error message
+            $this->action_instance->Add_Alert('There was a problem updating the action','danger');
+            // Return the event code
+            echo json_encode(array(
+                'result' => 'failed',
+                'alerts' => $this->action_instance->Get_Alerts_HTML(),
+                'data' => array(
+                    'form' => $this->action_instance->Render()
+                )
+            )); wp_die();
+        }
+        // Create a new list helper
+        $events_store_helper = new VCFF_Events_Helper_Store();
+        // Retrieve the ajax data
+        $events_store_helper
+            ->Set_Action_Instance($this->action_instance)
+            ->Store();
+        // Return the event code
+        echo json_encode(array(
+            'result' => 'success',
+            'alerts' => $this->action_instance->Get_Alerts_HTML()
+        )); wp_die();
     }
+    
 }
 
-new VCFF_Events_Page_Event_Form();
+new VCFF_Events_AJAX_Form();

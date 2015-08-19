@@ -24,10 +24,6 @@ class VCFF_Containers {
         add_action('vcff_init_misc',array($this,'__Init_Misc'),10);
         // Fire the shortcode init action
         do_action('vcff_container_init',$this);
-        // Include the admin class
-        require_once(VCFF_CONTAINERS_DIR.'/VCFF_Containers_Admin.php');
-        // Otherwise if this is being viewed by the client 
-        require_once(VCFF_CONTAINERS_DIR.'/VCFF_Containers_Public.php');
         // Fire the shortcode init action
         do_action('vcff_container_after_init',$this);
     }
