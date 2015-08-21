@@ -35,7 +35,7 @@ class VCFF_Forms_AJAX_Validation {
         $form_calculate_helper
             ->Set_Form_Instance($form_instance)
             ->Calculate(array(
-                'origin' => false
+                //'origin' => false
             ));
         // REVIEW PHASE
         $form_review_helper = new VCFF_Forms_Helper_Review();

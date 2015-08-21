@@ -46,6 +46,7 @@ class VCFF_Forms_Helper_Result extends VCFF_Helper {
         // Add the form values to the ajax array
         $_ajax['form'] = array(
             'result' => $form_instance->Is_Valid() ? 'passed' : 'failed',
+            'origin_key' => $form_instance->Gen_Origin_Key(),
             'alerts' => $form_instance->Get_Alerts_HTML(),
         ); 
         // Create a new fields ajax helper

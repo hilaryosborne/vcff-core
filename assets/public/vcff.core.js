@@ -230,8 +230,6 @@
                 vcff_do_action('after_form_submission',{'form':vcff_form,'json':result_json});
                 // Pre form standard submission actions
                 vcff_do_action('after_form_ajax_submission',{'form':vcff_form,'json':result_json});
-                // Update the form with a new key
-                if (typeof result_json.form != "undefined" && typeof result_json.form.security_key != "undefined") { $(vcff_form).find('[name="vcff_key"]').val(result_json.form.security_key); }
                 // Reset the request object
                 _request = {};
             },'json');
@@ -343,9 +341,18 @@
                     // Append to any custom alerts panel
                     $(vcff_form).find('.form-alerts-panel').show().html(form.alerts);
 				}
+                
+                // Update the form with a new key
+                if (typeof form.origin_key != "undefined") { 
+                    
+                    $(vcff_form).find('[name="vcff_origin_key"]').val(form.origin_key); 
+                }
                 // Pre form standard submission actions
                 vcff_do_action('form_update',{'form':vcff_form,'data':json.data});
 			}
+            
+            
+            
             
         };
     
