@@ -7,7 +7,8 @@ class VCFF_Forms_Helper_Calculate extends VCFF_Helper {
     protected $params = array(
         'filter' => true,
         'conditions' => true,
-        'validation' => true
+        'validation' => true,
+        'origin' => true,
     );
 
     public function Set_Form_Instance($form_instance) {
@@ -29,6 +30,7 @@ class VCFF_Forms_Helper_Calculate extends VCFF_Helper {
         // Create the Instance
         $this->_Calculate_Filtering();
         $this->_Calculate_Conditions();
+        $this->_Calculate_Origin();
         $this->_Calculate_Validation();
         // Do any form actions on create
         $form_instance->Do_Action('calculate',array('helper' => $this));
@@ -134,6 +136,54 @@ class VCFF_Forms_Helper_Calculate extends VCFF_Helper {
         // Retrieve the validation result
         do_action('vcff_form_after_validation', $form_instance);
         
+    }
+    
+    protected function _Calculate_Origin() {
+        // Retrieve the params
+        $params = $this->params;
+        // If we are not going to populate the fields
+        if (!$params['origin']) { return; }
+        // Retrieve the form instance
+        $form_instance = $this->form_instance;
+        // If the form is not valid, return out
+        if (!$form_instance->Is_Valid()) { return; }
+        // Retrieve the supplied form data
+        $form_data = $form_instance->form_data;
+        // Retrieve the origin key
+        $form_origin_key = $form_data['vcff_origin_key'];
+        // If there is no origin key
+        if (!$form_origin_key) { return $this->_Calculate_Origin_Error(); }
+        // Retrieve the list of form keys
+        $form_keys = $_SESSION['vcff_origin_keys'];
+        // If the origin key was not found in the saved keys
+        if (!isset($form_keys[$form_origin_key])) {
+            // Return the origin error
+            return $this->_Calculate_Origin_Error();
+        }
+        // Retrieve the origin key type
+        $form_origin_type = $form_keys[$form_origin_key];
+        // If the origin key was not found in the saved keys
+        if ($form_origin_type != $form_instance->form_type) {
+            // Return the origin error
+            return $this->_Calculate_Origin_Error();
+        }
+        // Do the action, if the form is invalid, it won't have passed
+        $form_instance->Do_Action('origin_check');
+        // If the form is not valid, return out
+        if (!$form_instance->Is_Valid()) { return; }
+        // At this point, the form has passed
+        // We have to remove the origin entry
+        unset($_SESSION['vcff_origin_keys'][$form_origin_key]);
+    }
+    
+    protected function _Calculate_Origin_Error() {
+        // Retrieve the form instance
+        $form_instance = $this->form_instance;
+        // Set the form to being invalid
+        $form_instance->is_valid = false;
+        $form_instance->Add_Alert('The origin key was invalid','danger');
+        // Return out
+        return;
     }
     
 }

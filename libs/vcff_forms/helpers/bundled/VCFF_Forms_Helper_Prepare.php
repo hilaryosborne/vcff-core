@@ -56,6 +56,7 @@ class VCFF_Forms_Helper_Prepare extends VCFF_Helper {
         $form_instance->context = $form_context;
         $form_instance->post_id = isset($params['post_id']) ? $params['post_id'] : null ;
         $form_instance->form_data = isset($params['data']) ? $params['data'] : null ;
+        $form_instance->form_referrer = isset($params['vcff_referrer']) ? $params['vcff_referrer'] : null ;
         $form_instance->form_name = isset($params['name']) ? $params['name'] : null ; 
         $form_instance->form_content = isset($params['content']) ? stripslashes($params['content']) : null ;
         $form_instance->form_state = isset($params['state']) ? $params['state'] : null ;
@@ -95,17 +96,6 @@ class VCFF_Forms_Helper_Prepare extends VCFF_Helper {
     protected function _Check_Instance() {
         // Retrieve the form instance
         $form_instance = $this->form_instance;
-        // If the form is being submitted
-        if ($form_instance->is_submission) {
-            // Create a new form security helper
-            $form_security_helper = new VCFF_Forms_Helper_Security();
-            // Check the submission key
-            $security_check = $form_security_helper
-                ->Set_Form_Instance($form_instance)
-                ->Check();
-            // If there was an error
-            if (!$security_check) { $this->error = true; }
-        }
         // Do any form actions on create
         $form_instance->Do_Action('instance_check',array('helper' => $this));
     }

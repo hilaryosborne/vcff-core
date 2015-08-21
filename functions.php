@@ -47,6 +47,18 @@ function vcff_admin_enqueue_script($handle, $src=false, $deps=false, $ver=false,
     $vcff->admin_scripts['scripts'][] = array($handle, $src, $deps, $ver, $in_footer);
 }
 
+function vcff_url() {
+    $pageURL = 'http';
+    if ($_SERVER["HTTPS"] == "on") {$pageURL .= "s";}
+    $pageURL .= "://";
+    if ($_SERVER["SERVER_PORT"] != "80") {
+        $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+    } else {
+        $pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+    }
+    return $pageURL;
+}
+
 function vcff_custom_css_fix($post_id) {
 
     $shortcodes_custom_css = get_post_meta($post_id, '_wpb_shortcodes_custom_css', true);

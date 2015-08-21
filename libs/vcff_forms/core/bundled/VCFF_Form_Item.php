@@ -18,6 +18,8 @@ class VCFF_Form_Item extends VCFF_Item {
     
     public $context;
     
+    public $form_referrer;
+    
     public $meta = array();
     
     public $events = array();
@@ -91,6 +93,11 @@ class VCFF_Form_Item extends VCFF_Item {
         return $this->form_uuid;
     }
     
+    public function Get_Post_ID() {
+    
+        return $this->post_id;
+    }
+    
     public function Get_Type() {
         
         return $this->form_type;
@@ -100,30 +107,25 @@ class VCFF_Form_Item extends VCFF_Item {
     
         return $this->form_name;
     }
-    
-    public function Set_Security_Key($key) {
-    
-        $this->security_key = $key;
-        
-        return $this;
+
+    public function Gen_Origin_Key() {
+        // Generate a unique form key
+        $origin_key = md5(rand(0,100).time().rand(0,100));
+        // Add the key to the session
+        $_SESSION['vcff_origin_keys'][$origin_key] = $this->form_type;
+        // Return the origin key
+        return $origin_key;
     }
     
-    public function Get_Security_Key() {
-        
-        return $this->security_key;
+    public function Gen_Referrer() {
+        // Generate a unique form key
+        $referrer_url = vcff_url();
+        // Pass through a filter
+        $referrer_url = $this->Apply_Filters('generate_referrer',$referrer_url,array());
+        // Return the origin key
+        return $referrer_url;
     }
-    
-    public function Issue_Security_Key() {
-    
-        $form_security_helper = new VCFF_Forms_Helper_Security();
-        
-        $form_security_helper
-            ->Set_Form_Instance($this)
-            ->Issue_Key();
-            
-        return $this->security_key;
-    }
-    
+
 	/**
 	* NEW METHODS
 	*/
@@ -370,25 +372,6 @@ class VCFF_Form_Item extends VCFF_Item {
             ->Update();
         // Return out
         return $this; 
-    }
-    
-    public function Get_Curly_Tags() {
-        
-        return array();
-    }
-
-    public function Add_Redirect($url,$method,$params) {
-        // Add the alert message
-        $this->redirects = array($url,$method,$params);
-        // Return for chaining
-        return $this;
-    }
-
-    public function Get_Redirects() {
-        // If no alerts exist, return out
-        if (!isset($this->redirects)) { return; }
-        // Otherwise return the alerts
-        return $this->redirects;
     }
 
 }
