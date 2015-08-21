@@ -23,14 +23,13 @@
             
                 $(vcff_form).submit(function(e){
                     e.preventDefault();
-
                     if (!_is_submitted) {
                         _self.Pre_Send();
                         _self.Submit_Form_AJAX();
                     }
                 });
-            
-            } else {
+            } 
+            else {
 
                 $(vcff_form).submit(function(e){
                     e.preventDefault();
@@ -39,7 +38,6 @@
                         _self.Submit_Form_Standard();
                     }
                 });
-
             }
         
             $(vcff_form).find('.check-change').change(function(){ 
@@ -350,10 +348,7 @@
                 // Pre form standard submission actions
                 vcff_do_action('form_update',{'form':vcff_form,'data':json.data});
 			}
-            
-            
-            
-            
+
         };
     
         _self.Setup_Events();
@@ -368,6 +363,18 @@
             vcff.Check_Conditions();
         });
         
+        
+        
     });
 
 }(window.jQuery);
+
+var CaptchaCallback = function() {
+    console.log('asdasd');
+    var $ = window.jQuery;
+    
+    $('.recaptcha-field').each(function(){
+        var site_key = $(this).attr('data-sitekey');
+        grecaptcha.render($(this).get(0), {'sitekey' : site_key});
+    });
+}

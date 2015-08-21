@@ -40,7 +40,7 @@ class VCFF_reCAPTCHA_Field_Item extends VCFF_Field_Item {
     
     public function Post_Value() { 
         // Retrieve the form data
-        $form_data = $this->form_instance->post_data; 
+        $form_data = $this->form_instance->form_data;  
         // Retrieve the posted value
         $this->posted_value = $form_data['g-recaptcha-response'];
     }
@@ -48,6 +48,10 @@ class VCFF_reCAPTCHA_Field_Item extends VCFF_Field_Item {
     public function Do_Validation() { 
         // Retrieve the posted value
         $posted_value = $this->posted_value;
+        // Retrieve the form instance
+        $form_instance = $this->form_instance;
+        // If this is not a submission, return out
+        if (!$form_instance->Is_Submission()) { return; }
         // If posted value is not an array
         if (!$posted_value) { 
             // Add an alert for this field

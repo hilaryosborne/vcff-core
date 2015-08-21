@@ -86,7 +86,9 @@ class VCFF_reCAPTCHA_Field {
 }
 
 // Register the vcff admin css
-vcff_front_enqueue_script('recaptcha', 'https://www.google.com/recaptcha/api.js');
+add_action('wp_footer', function(){
+    echo '<script src="//www.google.com/recaptcha/api.js?onload=CaptchaCallback&render=explicit" async defer></script>';
+},100);
 
 add_filter('vcff_settings_group_list',function($group_list, $form_instance){
     
@@ -99,7 +101,6 @@ add_filter('vcff_settings_group_list',function($group_list, $form_instance){
     );
     
     return $group_list;
-    
 },0,2);
 
 add_filter('vcff_settings_field_list',function($field_list, $form_instance){
@@ -123,7 +124,6 @@ add_filter('vcff_settings_field_list',function($field_list, $form_instance){
     );
     
     return $field_list;
-    
 },0,2);
 
 vcff_map_field('VCFF_reCAPTCHA_Field');
