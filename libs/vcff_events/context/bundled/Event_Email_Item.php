@@ -316,53 +316,53 @@ add_filter('vcff_settings_field_list',function($field_list, $form_instance){
     
     $field_list[] = array(
         'machine_code' => 'mailer_is_smtp',
-        'field_label' => 'Use SMTP',
-        'field_group' => 'phpmailer_fields',
+        'label' => 'Use SMTP',
+        'group' => 'phpmailer_fields',
         'weight' => 1,
-        'field_type' => 'checkbox',
+        'type' => 'checkbox',
         'checkbox_value' => 'yes',
-        'field_dependancy' => false
+        'dependancy' => false
     );
     
     $field_list[] = array(
         'machine_code' => 'mailer_host',
-        'field_label' => 'Host',
-        'field_group' => 'phpmailer_fields',
+        'label' => 'Host',
+        'group' => 'phpmailer_fields',
         'weight' => 2,
-        'field_type' => 'textfield'
+        'type' => 'textfield'
     );
     
     $field_list[] = array(
         'machine_code' => 'mailer_smtp_auth',
-        'field_label' => 'Enable SMTP Auth',
-        'field_group' => 'phpmailer_fields',
+        'label' => 'Enable SMTP Auth',
+        'group' => 'phpmailer_fields',
         'checkbox_value' => 'yes',
         'weight' => 3,
-        'field_type' => 'checkbox'
+        'type' => 'checkbox'
     );
     
     $field_list[] = array(
         'machine_code' => 'mailer_username',
-        'field_label' => 'SMTP Username',
-        'field_group' => 'phpmailer_fields',
+        'label' => 'SMTP Username',
+        'group' => 'phpmailer_fields',
         'weight' => 4,
-        'field_type' => 'textfield'
+        'type' => 'textfield'
     );
     
     $field_list[] = array(
         'machine_code' => 'mailer_password',
-        'field_label' => 'SMTP Password',
-        'field_group' => 'phpmailer_fields',
+        'label' => 'SMTP Password',
+        'group' => 'phpmailer_fields',
         'weight' => 5,
-        'field_type' => 'password'
+        'type' => 'password'
     );
     
     $field_list[] = array(
         'machine_code' => 'mailer_secure',
-        'field_label' => 'Encryption',
-        'field_group' => 'phpmailer_fields',
+        'label' => 'Encryption',
+        'group' => 'phpmailer_fields',
         'weight' => 6,
-        'field_type' => 'select',
+        'type' => 'select',
         'values' => array(
             '' => 'Select Encryption Type',
             'tls' => 'TLS',
@@ -372,10 +372,10 @@ add_filter('vcff_settings_field_list',function($field_list, $form_instance){
     
     $field_list[] = array(
         'machine_code' => 'mailer_port',
-        'field_label' => 'TCP Port',
-        'field_group' => 'phpmailer_fields',
+        'label' => 'TCP Port',
+        'group' => 'phpmailer_fields',
         'weight' => 7,
-        'field_type' => 'textfield'
+        'type' => 'textfield'
     );
     
     return $field_list;

@@ -1,107 +1,36 @@
 <?php
 
-class VCFF_Standard_Form {
-
-    static $form_type = 'vcff_standard_form';
-    
-    static $form_title = 'Standard Form';
-    
-    static $item_class = 'VCFF_Standard_Form_Item';
-    
-    static function Form_Meta() {
-        // Return the required meta fields
-        return array(
-            // Add any custom pages for this form type
-            'pages' => array(),
-            // Add any custom form groups
-            'groups' => array(),
-            // Add any custom form fields
-            'fields' => array(
-            
-                array(
-                    'machine_code' => 'form_attributes',
-                    'field_label' => 'Form Attributes',
-                    'weight' => 2,
-                    'field_type' => 'textfield',
-                    'field_dependancy' => false,
-                ),
-                
-                array(
-                    'machine_code' => 'form_extra_class',
-                    'field_label' => 'Extra Form Classes',
-                    'field_type' => 'textfield',
-                    'weight' => 5,
-                    'field_dependancy' => array(
-                        'outcome' => 'show',
-                        'requires' => 'all',
-                        'conditions' => array(
-                            array('form_attributes','is','hello')
-                        )
+vcff_map_form(array(
+    'type' => 'vcff_standard_form',
+    'title' => 'Standard Form',
+    'class' => 'VCFF_Standard_Form_Item',
+    'meta' => array(
+        'pages' => array(),
+        'groups' => array(),
+        'fields' => array(
+            array(
+                'machine_code' => 'form_attributes',
+                'label' => 'Form Attributes',
+                'weight' => 2,
+                'type' => 'textfield',
+                'dependancy' => false,
+            ),
+            array(
+                'machine_code' => 'form_extra_class',
+                'label' => 'Extra Form Classes',
+                'type' => 'textfield',
+                'weight' => 5,
+                'dependancy' => array(
+                    'outcome' => 'show',
+                    'requires' => 'all',
+                    'conditions' => array(
+                        array('form_attributes','is','hello')
                     )
                 )
             )
-        );
-    }
-    
-    static function Form_Settings() {
-        // Return the required meta fields
-        return array(
-            // Add any custom pages for this form type
-            'pages' => array(
-            
-                array(
-                    'id' => 'general_settings',
-                    'title' => 'General Settings',
-                    'weight' => 1,
-                    'description' => 'This page contains the general settings',
-                    'icon' => '',
-                )
-            ),
-            // Add any custom form groups
-            'groups' => array(
-            
-                array(
-                    'id' => 'form_settings',
-                    'page_id' => 'general_settings',
-                    'title' => 'General Settings',
-                    'weight' => 1,
-                    'description' => 'This page contains the general settings',
-                    'icon' => '',
-                )
-            ),
-            // Add any custom form fields
-            'fields' => array(
-            
-                array(
-                    'machine_code' => 'form_attributes',
-                    'field_label' => 'Form Attributes',
-                    'weight' => 2,
-                    'field_type' => 'textfield',
-                    'field_dependancy' => false,
-                ),
-                
-                array(
-                    'machine_code' => 'form_extra_class',
-                    'field_label' => 'Extra Form Classes',
-                    'field_type' => 'textfield',
-                    'weight' => 5,
-                    'field_dependancy' => array(
-                        'outcome' => 'show',
-                        'requires' => 'all',
-                        'conditions' => array(
-                            array('form_attributes','is','hello')
-                        )
-                    )
-                )         
-            )
-        );
-    }
-    
-    static function Form_Params() {
-        // Return any form params
-        return array();
-    }
-}
+        )
+    )
+));
 
 add_filter('vcff_meta_field_list',function($meta_fields,$form_instance){
     // Retrieve the global vcff forms class
@@ -120,8 +49,8 @@ add_filter('vcff_meta_field_list',function($meta_fields,$form_instance){
     // Create the form type field
     $meta_fields[] = array(
         'machine_code' => 'form_type',
-        'field_label' => 'Form Type',
-        'field_type' => 'select',
+        'label' => 'Form Type',
+        'type' => 'select',
         'validation' => array(
             'required' => true
         ),
@@ -137,8 +66,8 @@ add_filter('vcff_meta_field_list',function($meta_fields,$form_instance){
     // Create the form type field
     $meta_fields[] = array(
         'machine_code' => 'use_ajax',
-        'field_label' => 'Submit Via AJAX',
-        'field_type' => 'select',
+        'label' => 'Submit Via AJAX',
+        'type' => 'select',
         'validation' => array(
             'required' => true
         ),   
@@ -158,19 +87,19 @@ add_filter('vcff_settings_field_list',function($field_list, $form_instance){
     
     $field_list['form_attributes'] = array(
         'machine_code' => 'form_attributes',
-        'field_label' => 'Form Attributes',
+        'label' => 'Form Attributes',
         'weight' => 2,
         'validation' => array(),
-        'field_type' => 'textfield',
-        'field_dependancy' => false,
+        'type' => 'textfield',
+        'dependancy' => false,
     );
     
     $field_list['form_extra_class'] = array(
         'machine_code' => 'form_extra_class',
-        'field_label' => 'Extra Form Classes',
-        'field_type' => 'textfield',
+        'label' => 'Extra Form Classes',
+        'type' => 'textfield',
         'weight' => 5,
-        'field_dependancy' => array(
+        'dependancy' => array(
             'outcome' => 'show',
             'requires' => 'all',
             'conditions' => array(
@@ -181,5 +110,3 @@ add_filter('vcff_settings_field_list',function($field_list, $form_instance){
     
     return $field_list;
 },10,2);
-
-vcff_map_form('VCFF_Standard_Form');

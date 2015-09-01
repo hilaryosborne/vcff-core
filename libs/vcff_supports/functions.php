@@ -1,24 +1,14 @@
 <?php
 
-function vcff_map_support($class) {
+function vcff_map_support($mapping) {
     // Retrieve the global vcff forms class
     $vcff_supports = vcff_get_library('vcff_supports');
-    // Retrieve the form code
-    $type = $class::$type;
-    $title = $class::$title;
-    $class_base = $class;
-    $class_item = $class::$item_class;
-    $vc = $class::VC_Params();
-    $params = $class::Params();
-    // Add the form to our list of available forms
-    $vcff_supports->contexts[$type] = array(
-        'type' => $type,
-        'title' => $title,
-        'class_base' => $class_base,
-        'class_item' => $class_item,
-        'vc' => $vc,
-        'params' => $params
-    );
+    
+    $_type = $mapping['type'];
+    
+    $mapping = apply_filters('vcff_support_map',$mapping);
+    
+    $vcff_supports->contexts[$_type] = $mapping;
 }
 
 

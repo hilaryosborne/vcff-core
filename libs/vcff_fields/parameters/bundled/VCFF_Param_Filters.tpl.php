@@ -8,13 +8,11 @@
             <div class="col-rule col-sm-10">
                 <select class="ln-rule form-control vcff-nowebkit">
                     <option value="">No filter selected</option>
-                    <?php $filters = $this->Get_Filters();  ?>
-                    <?php foreach($filters as $rule_code => $rule_data): ?>
-                        <?php if (!in_array($rule_code, $settings['filter_rules'])) { continue; } ?>
-                        <?php if ($rule_item['rule'] == $rule_code): ?>
-                        <option value="<?php echo $rule_code; ?>" selected="selected"><?php echo $rule_data['label']; ?></option>
+                    <?php foreach($filter_logic as $k => $_filter): ?>
+                        <?php if ($rule_item['rule'] == $_filter['machine_code']): ?>
+                        <option value="<?php echo $_filter['machine_code']; ?>" selected="selected"><?php echo $_filter['title']; ?></option>
                         <?php else: ?>
-                        <option value="<?php echo $rule_code; ?>"><?php echo $rule_data['label']; ?></option>
+                        <option value="<?php echo $_filter['machine_code']; ?>"><?php echo $_filter['title']; ?></option>
                         <?php endif; ?>
                     <?php endforeach; ?>
                     <?php do_action('vcff_params_filters_rule_list',$this); ?>
@@ -27,6 +25,7 @@
         <?php endforeach; ?>
         <?php endif; ?>
     </div>
+    <a href="" class="add-filter">+ Add new filter</a>
     <?php do_action('vcff_params_filters_after_rules',$this); ?>
     <span class="vc_description vc_clearfix">Field filtering allows you to use a set of predefined filters to either sanitise or convert data submitted via the form into a safer and/or a desired format.</span>
     <script id="filter_ln_tmpl" type="text/x-handlebars-template">
@@ -34,10 +33,8 @@
         <div class="col-rule col-sm-10">
             <select class="ln-rule form-control vcff-nowebkit">
                 <option value="">No filter selected</option>
-                <?php $filters = $this->Get_Filters(); ?>
-                <?php foreach($filters as $rule_code => $rule_data): ?>
-                    <?php if (!in_array($rule_code, $settings['filter_rules'])) { continue; } ?>
-                    <option data-filter-description="" value="<?php echo $rule_code; ?>"><?php echo $rule_data['label']; ?></option>
+                <?php foreach($filter_logic as $k => $_filter): ?>
+                    <option data-filter-description="" value="<?php echo $_filter['machine_code']; ?>"><?php echo $_filter['title']; ?></option>
                 <?php endforeach; ?>
                 <?php do_action('vcff_params_filters_rule_list',$this); ?>
             </select>

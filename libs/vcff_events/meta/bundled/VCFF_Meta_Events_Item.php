@@ -2,7 +2,7 @@
 
 class VCFF_Meta_Events_Item extends VCFF_Meta_Item {
 
-    public function Contextual_Render($context='form') {
+    public function Render($context='form') {
         // Convert attrs to vars
         extract(shortcode_atts(array(
             'machine_code' => '',

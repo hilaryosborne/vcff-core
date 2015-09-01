@@ -45,7 +45,7 @@ class VCFF_Forms_Helper_Prepare extends VCFF_Helper {
         // Retrieve the form context
         $form_context = $vcff_forms->contexts[$form_type];
         // Retrieve the form item class name
-        $form_item_class = $form_context['class_item'];
+        $form_item_class = $form_context['class'];
         // BUILD THE FORM INSTANCE
         $form_instance = new $form_item_class(); 
         // Populate the form instance

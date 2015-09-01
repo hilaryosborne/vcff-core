@@ -77,7 +77,7 @@ class VCFF_Meta_Item extends VCFF_Item {
      */
     public function Check_Field_Conditions() {
         // If there are no conditions
-        if (!isset($this->data['field_dependancy'])) {
+        if (!isset($this->data['dependancy'])) {
             // Update the is hidden
             $this->is_hidden = false;
             // Update the field's conditions
@@ -86,7 +86,7 @@ class VCFF_Meta_Item extends VCFF_Item {
             ); return;
         }
 		// Retrieve the dependancy conditions
-        $dependancy = $this->data['field_dependancy']; 
+        $dependancy = $this->data['dependancy']; 
 		// If there are no conditions
         if (!is_array($dependancy)) {
             // Update the is hidden

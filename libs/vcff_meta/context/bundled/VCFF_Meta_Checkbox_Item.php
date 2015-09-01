@@ -2,12 +2,12 @@
 
 class VCFF_Meta_Checkbox_Item extends VCFF_Meta_Item {
     
-    public function Contextual_Render($context='form') {
+    public function Render() {
         // Convert attrs to vars
         extract(shortcode_atts(array(
             'machine_code' => '',
-            'field_label' => '',
-            'field_type' => '',
+            'label' => '',
+            'type' => '',
             'field_group' => '',
             'field_extra_class' => '',
             'extra_class' => '',

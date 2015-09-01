@@ -486,106 +486,210 @@ vcff_add_action('form_event_on_form_load',function(args){
     var form_obj = args.form;
     // Retrieve jQuery from the global space
     var $ = window.jQuery;
-    // An inc to help us give rules an id
-    var rule_i = 0;
-    // Dynamically add a new rule item
-    var Add_Rule = function() {
-        // Retrieve the handlebars template element
-        var tmpl_src = $("#trigger_item_conditional_rule").html();
-        // Compile the handlebars template
-        var tmpl_cmp = Handlebars.compile(tmpl_src);
-        // Create a new instance of our template
-        var new_item = $(tmpl_cmp({
-            'i':rule_i
-        }));
-        // Append to the 
-        $(form_obj).find('.conditional-rules').append(new_item);
-        // Prepare the rule's events
-        Prepare_Rule(new_item);
-        // Inc up the i var
-        rule_i++;
-        // If there is only onevalidation line
-        if ($(form_obj).find('.conditional-rule').length == 1) {
-            // Hide all remove links
-            $(form_obj).find('.trigger-conditional').find('.item-remove').hide();
-        } // Otherwise if there are multiple 
-        else { $(form_obj).find('.trigger-conditional').find('.item-remove').show(); }
-    }
-    // Prepare the rule item
-    var Prepare_Rule = function(rule_obj) {
-        // Append the change event on the rule dropdown
-        $(rule_obj).find('select.item-against').change(function(){ 
-            // Empty the 
-            $(rule_obj).find('select.item-check').empty();
-            // Retrieve the machine code
-            var machine_code = $(this).val();
-            // If there is a machine code and there are field conditions
-            if (machine_code && typeof vcff_trigger_conditions_fields[machine_code] == "object") {
-                // Retrieve the list of field conditions
-                var field_conditions = vcff_trigger_conditions_fields[machine_code]['field_conditions']; 
-                // Loop through each field condition
-                $.each(field_conditions,function(i,item){
-                    // Append the option
-                    $(rule_obj).find('select.item-check').append('<option value="'+i+'">'+item+'</option>');
-                });
-                // Show the check element
-                $(rule_obj).find('.item-check').show(); 
-                // Show the value element
-                $(rule_obj).find('.item-value').show();
-            } // If there is no machine code
-            else {
-                // Hide the check element
-                $(rule_obj).find('.item-check').hide();
-                // Hide the value element
-                $(rule_obj).find('.item-value').hide();
+    
+    var _i = 0;
+    
+    // Retrieve the validation parameter element
+    var _container = $('.trigger-conditional');
+    // If there is a validation parameter present
+    if ($(_container).length == 0) { return false; }
+    
+    function _Init() {
+    
+        if (typeof vcff_trigger_conditions_val == "object") {
+            
+            if (typeof vcff_trigger_conditions_val.rules == "object") {
+                
+                $.each(vcff_trigger_conditions_val.rules,function(i,item){ _Add_Item(item); });
             }
-        });
+        }
+        
+        if ($(_container).find('.conditions-item').length == 0) {
+            // Retrieve any saved data
+            _Add_Item({});
+        }
+        
+        // If there is only onevalidation line
+        if ($(_container).find('.conditions-item').length == 1) {
+            // Hide all remove links
+            $(_container).find('.item-remove').hide();
+        } // Otherwise if there are multiple 
+        else { $(_container).find('.item-remove').show(); }
+    }
+    
+    function _Add_Item(item_data) { 
+        // Retrieve the handlebars template element
+        var template_src = $("#trigger_item_conditional_rule").html();
+        // Compile the handlebars template
+        var template_compiled = Handlebars.compile(template_src);
+        // Create a new instance of our template
+        var item_el = $(template_compiled({'i':_i}));
+        // Perform a related action
+        vcff_do_action('vcff_params_validation_init_item',{'item':item_el,'container':_container});
+        // Append to the 
+        $(_container).find('.conditional-items').append(item_el); 
+        // Prepare the item
+        _Prepare(item_el,item_data);
+        // Inc up the i var
+        _i++;
+    }
+    
+    function _Prepare(item_el,item_data) {
+    
+        _Prepare_Elements(item_el,item_data);
+        
+        _Prepare_Conditions(item_el,item_data);
+        
+        _Prepare_Values(item_el,item_data);
         // Append the add event
-        $(rule_obj).find('.item-add').click(function(e){ 
-            // Add a new line
-            Add_Rule();
-            // Prevent the default browser click event
-            e.preventDefault();
+        $(item_el).find('.item-add').click(function(e){
+            // Add a new validation line
+            _Add_Item({}); 
+            // Perform a related action
+            vcff_do_action('vcff_params_validation_add',{'item':item_el,'container':_container});
+            // Prevent the default action
+            e.preventDefault(); 
         });
         // Append the remove event
-        $(rule_obj).find('.item-remove').click(function(e){
-            // Remove the template from the settings list
-            $(rule_obj).remove(); 
-            // Prevent the default browser click event
+        $(item_el).find('.item-remove').click(function(e){
+            // Prevent the default browser click action
             e.preventDefault();
+            // Remove the template from the settings list
+            $(item_el).remove(); 
             // If there is only onevalidation line
-            if ($(form_obj).find('.conditional-rule').length == 1) {
+            if ($(_container).find('.conditions-item').length == 1) {
                 // Hide all remove links
-                $(form_obj).find('.trigger-conditional').find('.item-remove').hide();
+                $(_container).find('.item-remove').hide();
             } // Otherwise if there are multiple 
-            else { $(form_obj).find('.trigger-conditional').find('.item-remove').show(); }
+            else { $(_container).find('.item-remove').show(); }
+            // Perform a related action
+            vcff_do_action('vcff_params_validation_remove',{'item':item_el,'container':_container});
+        });
+    }
+    
+    function _Prepare_Elements(item_el,item_data) {
+        
+        var element_field_el = $(item_el).find('.item-element');
+        
+        $.each(vcff_trigger_conditions_fields,function(i,item){
+            
+            $(element_field_el).append('<option value="'+i+'">'+i+'</option>');
         });
         
-        var fieldname_val = $(rule_obj).find('select.item-against').val();
-        // If there is no field selected
-        if (!fieldname_val || fieldname_val == '') {
-            // Hide the check dropdown
-            $(rule_obj).find('.item-check').hide(); 
-            // Hide the check value
-            $(rule_obj).find('.item-value').hide();
+        console.log(item_data);
+        
+        if (typeof item_data.machine_code != 'undefined') {
+            
+            $(element_field_el).val(item_data.machine_code);
         }
     }
-    // Loop through any existing rules
-    $(form_obj).find('.conditional-rule').each(function(){
-        // Prepare the rule's events
-        Prepare_Rule($(this));
-        // Inc up the i var
-        rule_i++;
-    });
-    // If there are no conditional rules
-    if ($(form_obj).find('.conditional-rule').length == 0) {
-        // Add a new rule item
-        Add_Rule();
+    
+    function _Prepare_Conditions(item_el,item_data) {
+        
+        var element_field_el = $(item_el).find('.item-element');
+        
+        var rules_field_el = $(item_el).find('.item-rules');
+
+        function __Do() {
+            
+            var val = $(element_field_el).val();
+            
+            $(rules_field_el).empty();
+            
+            if (!val || val == "") { $(rules_field_el).hide().val(""); return false; } 
+            
+            var _el_data = vcff_trigger_conditions_fields[val];
+            
+            $(rules_field_el).show().append('<option value="">Select A Rule</option>');
+
+            $.each(_el_data.logic_rules,function(i,item){
+
+                $(rules_field_el).append('<option value="'+item.machine_code+'">'+item.title+'</option>');
+            });
+        };
+        
+        $(element_field_el).change(function(){
+            __Do();
+        });
+        
+        if (typeof item_data.code != 'undefined') {
+            __Do();
+            $(rules_field_el).val(item_data.code);
+        }
     }
-    // If there is only one conditional rule
-    if ($(form_obj).find('.conditional-rule').length == 1) {
-        // Hide all remove links
-        $(form_obj).find('.trigger-conditional').find('.item-remove').hide();
-    } // Otherwise if there are multiple 
-    else { $(form_obj).find('.trigger-conditional').find('.item-remove').show(); }
+    
+    function _Prepare_Values(item_el,item_data) {
+        
+        var element_field_el = $(item_el).find('.item-element');
+        
+        var rules_field_el = $(item_el).find('.item-rules');
+        
+        $(element_field_el).change(function(){
+        
+            if ($(this).val()) { return false; }
+            
+            $(item_el).find('.col-value').empty();  
+        });
+        
+        function __Do() {
+            
+            var val = $(rules_field_el).val();
+            
+            var element_field_val = $(element_field_el).val();
+            
+            $(item_el).find('.col-value').empty();  
+            
+            if (!val || val == "") { return false; } 
+            
+            var _el = vcff_trigger_conditions_fields[element_field_val];
+
+            var _rule = false;
+            
+            $.each(_el.logic_rules,function(i,item) {
+                
+                if (item.machine_code != val) { return true; }
+                
+                _rule = item;
+            });
+ 
+            if (!_rule || !_rule.value) { return false; } 
+            
+            var __i = $(item_el).attr('data-item-i');
+            
+            var _name = 'event_action[triggers][conditional][rules][rule_'+__i+'][value]';
+            
+            if (typeof _rule.value == 'object') {
+                
+                var _sel_el = $('<select name="'+_name+'" class="item-value form-control">');
+                
+                $.each(_rule.value,function(i,item){
+                
+                    $(_sel_el).append('<option value="'+i+'">'+item+'</option>');
+                });
+                
+                $(item_el).find('.col-value').append(_sel_el);
+
+            } else {
+                
+                var _txt_el = $('<input name="'+_name+'" type="text" class="item-value form-control">');
+                
+                $(item_el).find('.col-value').append(_txt_el);
+            }
+        };
+        
+        $(rules_field_el).change(function(){
+
+            __Do();
+        });
+        
+        if (typeof item_data.value != 'undefined') {
+            __Do();
+            $(item_el).find('.item-value').val(item_data.value);
+        }
+        
+    }
+    
+    // Initiate 
+    _Init();
+    
 });

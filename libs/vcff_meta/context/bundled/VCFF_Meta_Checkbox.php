@@ -1,17 +1,7 @@
 <?php
 
-class VCFF_Meta_Checkbox {
-
-    static $meta_type = 'checkbox';
-    
-    static $meta_title = 'Checkbox';
-    
-    static $item_class = 'VCFF_Meta_Checkbox_Item';
-
-    static function Meta_Params() {
-        // Return any field params
-        return array();
-    }
-}
-
-vcff_map_meta_field('VCFF_Meta_Checkbox');
+vcff_map_meta_field(array(
+    'type' => 'checkbox',
+    'title' => 'Checkbox',
+    'class' => 'VCFF_Meta_Checkbox_Item'
+));

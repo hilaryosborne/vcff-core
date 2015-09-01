@@ -15,3 +15,51 @@ find icons for form elements in visual composer
 
 Add origin URL field
 Fix flood/XSS attack feature
+
+TAB INDEX!
+
+- Text Input
+- Radio Button Input
+- Submit Button
+- datalist
+- password field
+- checkbox
+- Input Type: number
+- Input Type: date
+- Input Type: color
+- Input Type: range
+- Input Type: month
+- Input Type: week
+- Input Type: time
+- Input Type: datetime
+- Input Type: email
+- Input Type: search
+- Input Type: tel
+- Input Type: url
+
+- disabled Attribute
+- size Attribute
+- maxlength Attribute
+- autocomplete Attribute
+- novalidate Attribute
+- autofocus Attribute
+- height and width Attributes
+- min and max Attributes
+- multiple Attribute
+- pattern Attribute
+- placeholder Attribute
+- required Attribute
+- step Attribute
+
+FORM OPTIONS
+- ID
+- Action Attribute
+- Method Attribute
+- Name Attribute
+- accept-charset
+- autocomplete
+- enctype
+- target
+
+FIELD OPTIONS
+- ID

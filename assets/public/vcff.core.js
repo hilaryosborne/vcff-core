@@ -8,6 +8,8 @@
     
         var _is_submitted = false;
         
+        var _buffer = {};
+        
         vcff_do_action('form_setup',{'form':vcff_form,'form_obj':_self});
         
         var _first_check = true;
@@ -44,10 +46,8 @@
                 
                 clearTimeout(_buffer);
             
-                _self.Check_Conditions(); 
+                _buffer = setTimeout(function(){ _self.Check_Conditions(); },450);
             });
-            
-            var _buffer = {};
             
             $(vcff_form).find('.key-change').keyup(function(){ 
             
@@ -66,6 +66,7 @@
         };
 
         _self.Pre_Send = function() {
+            clearTimeout(_buffer);
             $(vcff_form).find('.form-alerts').empty();
             $(vcff_form).find('.form-alerts-panel').empty();
             $(vcff_form).find('.container-alerts').empty();

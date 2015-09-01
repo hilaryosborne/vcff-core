@@ -108,20 +108,20 @@ class VCFF_Containers {
         // If no contexts were returned
         if (!$contexts || !is_array($contexts)) { return; }
         // Loop through each mapped field
-        foreach ($contexts as $_type => $_context_data) { 
+        foreach ($contexts as $_type => $_context) { 
             // Default vc settings
             $vc_params = array(
-                'name' => $_context_data['title'],
+                'name' => $_context['title'],
                 'icon' => 'icon-ui-splitter-horizontal',
-                'base' => $_context_data['type'],
+                'base' => $_context['type'],
                 'allowed_container_element' => 'vc_row',
                 'is_container' => true,
                 'category' => __('Form Controls', VCFF_NS),
             );
             // Merge the vc params
-            $vc_params = array_merge_recursive($vc_params,$_context_data['vc']); 
+            $vc_params = array_merge_recursive($vc_params,$_context['vc_map']); 
             // Run the params through a filter
-            $vc_params = apply_filters('vcff_container_vc_params',$vc_params,$_context_data);
+            $vc_params = apply_filters('vcff_container_vc_params',$vc_params,$_context);
             // Map the field to visual composer
             vc_map($vc_params);
         }
@@ -145,14 +145,13 @@ class VCFF_Containers {
                 // If no form instance can be found
                 if (!is_object($form_instance)) { return 'No Form Instance Found'; }
                 // Loop through the form's instanced fields
-                $containers = $form_instance->containers;
-                // Loop through the focused fields
-                foreach ($containers as $machine_code => $container_instance) {
-                    // If this not the field we are looking for
-                    if ($machine_code != $attr['machine_code']) { continue; }
-                    // Render the form
-                    return $container_instance->Render($contents);
-                }
+                $form_containers = $form_instance->containers;
+                // If no support instance could be found
+                if (!isset($form_containers[$attr['machine_code']])) { return 'No element instance found for '.$attr['machine_code']; }
+                // Retrieve the element instance
+                $container_el = $form_containers[$attr['machine_code']];
+                // Render the instance
+                return $container_el->Render($contents);
             });
         }
         // Fire the shortcode init action

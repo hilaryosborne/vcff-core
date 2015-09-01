@@ -6,10 +6,10 @@ class VCFF_Settings_Checkbox_Item extends VCFF_Settings_Item {
         // Convert attrs to vars
         extract(shortcode_atts(array(
             'machine_code' => '',
-            'field_label' => '',
-            'field_type' => '',
-            'field_group' => '',
-            'field_extra_class' => '',
+            'label' => '',
+            'type' => '',
+            'group' => '',
+            'extra_class' => '',
             'extra_class' => '',
             'hints_html' => '',
             'checkbox_value' => '',

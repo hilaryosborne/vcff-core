@@ -64,26 +64,19 @@ class VCFF_Events_Helper_Instance extends VCFF_Helper {
         // Retrieve the list of trigger contextrs
         $triggers = $vcff_events->event_triggers;  
         // Loop through each trigger
-        foreach ($triggers as $trigger_code => $trigger_context) {
+        foreach ($triggers as $trigger_code => $_context) {
             // Retrieve the trigger class item
-            $trigger_class_item = $trigger_context['class_item'];
-            // Retrieve the trigger class item
-            $trigger_params = $trigger_context['params'];
-            // If this trigger is specific to certain forms
-            if (isset($trigger_params['allow_forms']) && !in_array($form_type, $trigger_params['allow_forms'])) {
-                // Skip this trigger
-                continue;
-            } 
+            $class = $_context['class'];
             // Generate a new trigger class
-            $trigger_instance = new $trigger_class_item();
+            $trigger_instance = new $class();
             // Populate with the form instance
             $trigger_instance->form_instance = $form_instance;
             // Populate with the form instance
-            $trigger_instance->code = $trigger_context['code'];
+            $trigger_instance->code = $_context['code'];
             // Populate with the form instance
-            $trigger_instance->title = $trigger_context['title'];
+            $trigger_instance->title = $_context['title'];
             // Populate with the trigger context
-            $trigger_instance->context = $trigger_context;
+            $trigger_instance->context = $_context;
             // Populate with the action instance
             $trigger_instance->action_instance = $action_instance;
             // If the field has a sanitize method
@@ -131,13 +124,6 @@ class VCFF_Events_Helper_Instance extends VCFF_Helper {
         foreach ($events as $event_type => $event_context) {
             // Retrieve the event class item
             $event_class_item = $event_context['class_item'];
-            // Retrieve the trigger class item
-            $event_params = $event_context['params'];
-            // If this trigger is specific to certain forms
-            if (isset($event_params['allow_forms']) && !in_array($form_type, $event_params['allow_forms'])) {
-                // Skip this trigger
-                continue;
-            }
             // Generate a new event class
             $event_instance = new $event_class_item();
             // Populate with the form instance

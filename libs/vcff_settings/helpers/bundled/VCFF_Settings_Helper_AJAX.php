@@ -59,7 +59,7 @@ class VCFF_Settings_Helper_AJAX extends VCFF_Helper {
                     // Build the json data
                     $json_field = array(
                         'machine_code' => $field_data['machine_code'],
-                        'field_label' => $field_data['field_label'],
+                        'label' => $field_data['label'],
                         'html' => $field_data['html'],
                     );
                     // Retrieve the field instance context
@@ -150,9 +150,9 @@ class VCFF_Settings_Helper_AJAX extends VCFF_Helper {
             // Loop through each of the fields
             foreach ($settings_fields as $k => $settings_field_data) { 
                 // If this is not the field we are looking for
-                if ($settings_field_data['field_group'] && $settings_group['id'] != $settings_field_data['field_group']) { continue; } 
+                if ($settings_field_data['group'] && $settings_group['id'] != $settings_field_data['group']) { continue; } 
                 // If the group has no page id, use the default
-                if (!$settings_field_data['field_group'] && $settings_group['id'] != $this->default_group) { continue; } 
+                if (!$settings_field_data['group'] && $settings_group['id'] != $this->default_group) { continue; } 
                 // Retrieve the field name
                 $settings_machine_code = $settings_field_data['machine_code'];
                 // Retrieve the settings field instance

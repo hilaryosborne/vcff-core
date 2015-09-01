@@ -13,17 +13,25 @@ class VCFF_Containers_Helper_Populator extends VCFF_Helper {
 		return $this;
 	}
 	
-	protected function _Get_Container_Instance($container_data) { 
+	protected function _Get_Container_Instance($_el) {
         // Retrieve the form instance
 		$form_instance = $this->form_instance;
-		// Retrieve the container name
-		$machine_code = $container_data['name'];
+        // Retrieve the container name
+		$type = $_el['type'];
+        // Retrieve the global vcff forms class
+        $vcff_containers = vcff_get_library('vcff_containers');
+        // If the context does not exist
+        if (!isset($vcff_containers->contexts[$type])) { return; }
+        // Retrieve the context
+        $_context = $vcff_containers->contexts[$type]; 
+        // Retrieve the container name
+		$machine_code = $_el['name'];
+        // If no form instance was found
+		if (!$machine_code) { return; }
 		// Create the field item classname
-		$container_classname = $container_data['context']['class_item'];
+		$container_classname = $_context['class'];
 		// If no form instance was found
-		if (!$machine_code) { die('No container name could be found'); return; }
-		// If no form instance was found
-		if (!$container_classname) { die('No container class item could be found'); return; }   
+		if (!$container_classname) { return; }   
 		// Create a new item instance for this field
 		$container_instance = new $container_classname();
         // Populate the instance property
@@ -31,12 +39,12 @@ class VCFF_Containers_Helper_Populator extends VCFF_Helper {
 		// Populate the container form
 		$container_instance->form_instance = $this->form_instance;
 		$container_instance->machine_code = $machine_code;
-		$container_instance->container_type = $container_data['context']['type'];
-		$container_instance->context = $container_data['context'];
-		$container_instance->attributes = $container_data['attributes'];
+		$container_instance->container_type = $_context['type'];
+		$container_instance->context = $_context;
+		$container_instance->attributes = $_el['attributes'];
         // Populate the handler object
-		$container_instance->el = $container_data['el'];
-		$container_instance->el_children = $container_data['children'];
+		$container_instance->el = $_el['el'];
+		$container_instance->el_children = $_el['children'];
         // Add any child fields
         $this->_Add_Child_Fields();
         $this->_Add_Child_Supports();
@@ -114,15 +122,15 @@ class VCFF_Containers_Helper_Populator extends VCFF_Helper {
         // Retrieve the form instance
 		$form_instance = $this->form_instance;
 		// Retrieve the field data
-		$containers_data = vcff_parse_container_data($form_instance->form_content);
+		$_els = vcff_parse_container_data($form_instance->form_content);
 		// If an error has been detected, return out
-		if (!$containers_data || !is_array($containers_data)) { return; }
+		if (!$_els || !is_array($_els)) { return; }
 		// Retrieve the form instance
 		$form_instance = $this->form_instance; 
 		// Loop through each of the containers
-		foreach ($containers_data as $k => $container_data) {
+		foreach ($_els as $k => $_el) {
 			// Retrieve the container instance
-			$container_instance = $this->_Get_Container_Instance($container_data);
+			$container_instance = $this->_Get_Container_Instance($_el);
 			// Add the container to the form instance
 			$form_instance->Add_Container($container_instance);
 		}

@@ -4,6 +4,10 @@ class VCFF_Param_Conditional {
 
     public $field_data;
 
+    public $form_instance;
+    
+    public $conditions_item;
+
     public $value;
 
     public function __construct() {
@@ -16,111 +20,90 @@ class VCFF_Param_Conditional {
         },100);
     }
     
-    protected function _Get_Current_Rules() {
-        // Retrieve the stored value
-        $value = json_decode(base64_decode($this->value),true);
-        // If the data is not what we need
-        if (!is_array($value) || !isset($value['conditions'])) { return; }
-        // Retrieve the conditions
-        $rules = $value['conditions'];
-        // If no rules were present
-        if (!$rules || !is_array($rules)) { return; }
-        // Retrieve the form instance fields
-        $form_fields = $this->field_data;
-        // Loop through each of the rules
-        foreach ($rules as $k => $rule) {
-            // The field list var
-            $field_list = array();
-            // The field conditions
-            $condition_list = false;
-            // Loop through each field instance
-            foreach ($form_fields as $k => $_field) {
-                // Retrieve the field context
-                $context = $_field['context'];
-                // Retrieve the allowed conditions
-                $allowed_conditions = isset($context['params']['allowed_conditions']) ? $context['params']['allowed_conditions'] : array() ;
-                // If the field does not allow conditions
-                if (!$allowed_conditions) { continue; }
-                // Retrieve the field name
-                $machine_code = $_field['name'];
-                // Populate the field list
-                $field_list[$machine_code] = array(
-                    'machine_code' => $_field['name'],
-                    'field_label' => $_field['label'],
-                    'selected' => $rule['check_field'] == $machine_code ? true : false
-                );
-                // If this is the selected field
-                if ($rule['check_field'] == $machine_code) {
-                    // Loop through each rule
-                    foreach ($allowed_conditions as $rule_name => $rule_label) {
-                        // Populate the condition data
-                        $condition_list[$rule_name] = array(
-                            'rule_name' => $rule_name,
-                            'rule_label' => $rule_label,
-                            'selected' => $rule['check_condition'] == $rule_name ? true : false
-                        );
-                    }
-                }
-            }
-            // Add to the rule date
-            $rule_data[] = array(
-                'field_list' => $field_list,
-                'field_conditions' => $condition_list,
-                'field_value' => $rule['check_value']
-            );
-        } 
-        // Return the rule data
-        return $rule_data;
+    protected function _Build_Form_Instance() {
+        // Parse the form data
+        parse_str(base64_decode($_POST['post_contents']),$output);
+        // Retrieve the form uuid
+        $form_uuid = vcff_get_uuid_by_form($output['post_ID']);
+        // If there is no form type and form id
+        if (!$output['form_type'] && $output['post_ID']) {
+            // Get the saved vcff form type
+            $meta_form_type = get_post_meta($output['post_ID'], 'form_type',true);
+        } // Otherwise use the passed form type 
+        else { $meta_form_type = $output['form_type']; }
+        // PREPARE PHASE
+        $form_prepare_helper = new VCFF_Forms_Helper_Prepare();
+        // Get the form instance
+        $form_instance = $form_prepare_helper
+            ->Get_Form(array(
+                'uuid' => $form_uuid,
+                'contents' => $output['content'],
+                'type' => $meta_form_type,
+            ));
+        // If the form instance could not be created
+        if (!$form_instance) { die('could not create form instance'); }
+        // POPULATE PHASE
+        $form_populate_helper = new VCFF_Forms_Helper_Populate();
+        // Run the populate helper
+        $form_populate_helper
+            ->Set_Form_Instance($form_instance)
+            ->Populate(array(
+                'meta_values' => $output
+            ));
+        // CALCULATE PHASE
+        $form_calculate_helper = new VCFF_Forms_Helper_Calculate();
+        // Initiate the calculate helper
+        $form_calculate_helper
+            ->Set_Form_Instance($form_instance)
+            ->Calculate(array(
+                'validation' => false,
+                'origin' => false
+            ));
+        // Populate the form instance
+        $this->form_instance = $form_instance;
     }
     
-    protected function _Get_Field_List() {
-        // Retrieve the form instance fields
-        $form_fields = $this->field_data;
-        // The array for the form fields
-        $field_list = array();
-        // If a list of field instances was returned
-        if (!$form_fields || !is_array($form_fields)) { return array(); }
-        // Loop through each field instance
-        foreach ($form_fields as $k => $_field) {
-            // Retrieve the field context
-            $context = $_field['context'];
-            // Retrieve the allowed conditions
-            $allowed_conditions = isset($context['params']['allowed_conditions']) ? $context['params']['allowed_conditions'] : array() ;
-            // If the field does not allow conditions
-            if (!$allowed_conditions) { continue; }
-            // Retrieve the field name
-            $machine_code = $_field['name'];
-            // Populate the field list
-            $field_list[$machine_code] = array(
-                'machine_code' => $_field['name'],
-                'field_label' => $_field['label'],
-                'field_conditions' => $allowed_conditions
+   
+    protected function _Prepare() {
+        
+        $this->_Build_Form_Instance();
+        
+        $form_instance = $this->form_instance;
+        
+        $this->conditions_item = new VCFF_Conditions_Item(false);
+        
+        $this->conditions_item
+            ->Set_Form_Instance($form_instance)
+            ->Prepare();
+        
+    }
+    
+    protected function _Els() {
+        
+        $conditions_item = $this->conditions_item;
+        
+        $_els = $conditions_item->els;
+        
+        $_json = array();
+        
+        if (!$_els || !is_array($_els)) { return $_json;  }
+        
+        foreach ($_els as $k => $_el) {
+            
+            $_json[$k] = array(
+                'machine_code' => $_el['machine_code'],
+                'logic_rules' => $_el['logic_rules'],
             );
         }
-        // Return the field list
-        return $field_list;
+        
+        return $_json;
     }
     
-    protected function _Get_Field_JSON() {
-        // Return the field list
-        return json_encode($this->_Get_Field_List());
-    }
-
     public function render($settings,$value) { 
-        // Decode the form data
-        $raw_post_contents = base64_decode($_POST['post_contents']);
-        // Parse the form data
-        parse_str($raw_post_contents,$post_data);
-        // If no post could be found
-        if (!$post_data) { return; }
-        // Populate the field data
-        $this->field_data = vcff_parse_field_data($post_data['content']);
-        // Populate the current value
-        $this->value = $value;
-        // Retrieve the current rules
-        $current_rules = $this->_Get_Current_Rules(); 
-        // Retrieve the current form fields
-        $current_fields = $this->_Get_Field_List();
+    
+        $this->_Prepare();
+        
+        $_decoded = json_decode(base64_decode($value),true);
         // Start gathering content
         ob_start();
         // Retrieve the context director

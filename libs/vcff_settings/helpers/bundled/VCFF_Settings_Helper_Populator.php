@@ -139,9 +139,9 @@ class VCFF_Settings_Helper_Populator extends VCFF_Helper {
         // Retrieve the field name
 		$machine_code = $field_data['machine_code'];
 		// Retrieve the field type
-		$field_type = $field_data['field_type']; 
+		$field_type = $field_data['type']; 
 		// Retrieve the field type
-		$field_label = $field_data['field_label'];
+		$field_label = $field_data['label'];
         // Retrieve the field type
 		$validation = $field_data['validation'];
 		// If the context does not exist
@@ -149,7 +149,7 @@ class VCFF_Settings_Helper_Populator extends VCFF_Helper {
         // Retrieve the field context information
 		$field_context = $contexts[$field_type]; 
 		// Retrieve the class item name
-		$field_classname = $field_context['class_item'];
+		$field_classname = $field_context['class'];
 		// Create a new field instance
 		$field_instance = new $field_classname();
         // Populate the form instance

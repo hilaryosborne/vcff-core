@@ -20,6 +20,13 @@
             });
         } // Otherwise add an empty validation line 
         else { _Add_Filter_Item(); }
+        
+        $(filter_container).find('.add-filter').click(function(e){
+        
+            e.preventDefault();
+            
+            _Add_Filter_Item();
+        });
     }
 
     function _Add_Filter_Item() {
@@ -64,21 +71,11 @@
             vcff_do_action('vcff_params_filters_remove',{'item':item_el,'container':filter_container});
             // Remove the template from the settings list
             $(item_el).remove(); 
-            // If there is only onevalidation line
-            if ($(filter_container).find('.filter-item').length == 1) {
-                // Hide all remove links
-                $(filter_container).find('.ln-remove').hide();
-            } // Otherwise if there are multiple 
-            else { $(filter_container).find('.ln-remove').show(); }
             // Ecode and store the current state
             _Store(); 
+            
+            if ($(filter_container).find('.filter-item').length == 0) { _Add_Filter_Item(); }
         });
-        // If there is only onevalidation line
-        if ($(filter_container).find('.filter-item').length == 1) {
-            // Hide all remove links
-            $(filter_container).find('.ln-remove').hide();
-        } // Otherwise if there are multiple 
-        else { $(filter_container).find('.ln-remove').show(); }
         // Do prepare action
         vcff_do_action('vcff_params_filters_after_prepare',{'item':item_el,'container':filter_container});
     }

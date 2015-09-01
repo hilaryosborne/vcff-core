@@ -61,26 +61,21 @@ class VCFF_Events_Page_Event_Form extends VCFF_Page {
             // If no action instance was returned
             if (!$action_instance) {
                 // Create a new instance helper
-                $events_helper_instance = new VCFF_Events_Helper_Instance();
+                $events_helper_populator = new VCFF_Events_Helper_Populator();
                 // Create an instance instance from the posted data
-                $this->action_instance = $events_helper_instance
+                $this->action_instance = $events_helper_populator
                     ->Set_Form_Instance($this->form_instance)
-                    ->Build(array());
+                    ->Update(array()); 
             } // Otherwise load the action instance
-            else {   
-                // Update the update flag
-                $action_instance->is_update = true;
-                // Save the action instance
-                $this->action_instance = $action_instance; 
-            }
+            else { $this->action_instance = $action_instance; }
         } // Otherwise if we are creating a new instance 
         else {
             // Create a new instance helper
-            $events_helper_instance = new VCFF_Events_Helper_Instance();
+            $events_helper_populator = new VCFF_Events_Helper_Populator();
             // Create an instance instance from the posted data
-            $this->action_instance = $events_helper_instance
+            $this->action_instance = $events_helper_populator
                 ->Set_Form_Instance($this->form_instance)
-                ->Build(array());
+                ->Update(array()); 
         }
     }
     

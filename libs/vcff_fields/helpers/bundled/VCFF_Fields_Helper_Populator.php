@@ -27,64 +27,55 @@ class VCFF_Fields_Helper_Populator {
 		return $this;
 	}
 	
-	protected function _Get_Contexts() {
-		// Retrieve the global vcff forms class
-        $vcff_fields = vcff_get_library('vcff_fields');
-        // Get the fields
-        $field_contexts = $vcff_fields->contexts;
-		// Return the field contexts
-		return $field_contexts;
-	}
-	
     public function Populate() {
         // Retrieve the form instance
 		$form_instance = $this->form_instance;
-		// Retrieve the form contents
-		$form_contents = $form_instance->form_content;
 		// Retrieve the field data
-		$fields_data = vcff_parse_field_data($form_contents); 
+		$_els = vcff_parse_field_data($form_instance->form_content);
 		// If an error has been detected, return out
-		if ($this->error) { return; } 
-		// Retrieve the form instance
-		$form_instance = $this->form_instance;
+		if (!$_els || !is_array($_els)) { return; } 
 		// Loop through each of the fields
-		foreach ($fields_data as $k => $field_data) { 
+		foreach ($_els as $k => $_el) { 
 			// Retrieve the field instance
-			$field_instance = $this->_Get_Field_Instance($field_data); 
+			$field_instance = $this->_Get_Field_Instance($_el); 
 			// Add the field to the form instance
 			$form_instance->Add_Field($field_instance);
 		}
 	}
 
-	protected function _Get_Field_Instance($field_data) {
-		// Retrieve the field name
-		$machine_code = $field_data['attributes']['machine_code'];
+	protected function _Get_Field_Instance($_el) {
+        // Retrieve the form instance
+		$form_instance = $this->form_instance;
+        // Retrieve the container name
+		$type = $_el['type']; 
+        // Retrieve the global vcff forms class
+        $vcff_fields = vcff_get_library('vcff_fields'); 
+        // If the context does not exist
+        if (!isset($vcff_fields->contexts[$type])) { return; }
+		// Retrieve the context
+        $_context = $vcff_fields->contexts[$type]; 
+        // Retrieve the container name
+		$machine_code = $_el['name'];
+        // If no form instance was found
+		if (!$machine_code) { return; }
 		// Create the field item classname
-		$field_classname = $field_data['context']['class_item'];
+		$field_classname = $_context['class'];
 		// If no form instance was found
-		if (!$machine_code) {
-			// Populate with an error and return out
-			$this->error = 'No field name could be found'; return;
-		}
-		// If no form instance was found
-		if (!$field_classname) {
-			// Populate with an error and return out
-			$this->error = 'No field class item could be found'; return;
-		}
+		if (!$field_classname) { return; }
 		// Create a new item instance for this field
 		$field_instance = new $field_classname();
 		// Populate the field name
 		$field_instance->machine_code = $machine_code;
         // Populate the field name
-		$field_instance->field_type = $field_data['context']['type'];
+		$field_instance->field_type = $_context['type'];
 		// Populate the handler object
-		$field_instance->context = $field_data['context'];
+		$field_instance->context = $_context;
 		// Populate the field list
-		$field_instance->attributes = $field_data['attributes'];
+		$field_instance->attributes = $_el['attributes'];
 		// Populate the field list
 		$field_instance->form_instance = $this->form_instance;
         // Populate the field list
-		$field_instance->el = $field_data['el'];
+		$field_instance->el = $_el['el'];
 		// Get the field value
         $this->_Get_Field_Value($field_instance);
         // If the field has a sanitize method

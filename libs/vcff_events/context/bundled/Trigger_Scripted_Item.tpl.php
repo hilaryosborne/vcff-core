@@ -1,3 +1,3 @@
-<div data-trigger-code="<?php echo $this->code; ?>" class="trigger-item">
+<div data-trigger-code="<?php echo $this->type; ?>" class="trigger-item">
 
 </div>

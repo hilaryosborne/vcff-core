@@ -1,17 +1,14 @@
 <?php
 
-function vcff_map_container($class) {
-    
+function vcff_map_container($mapping) {
+    // Retrieve the global vcff forms class
     $vcff_containers = vcff_get_library('vcff_containers');
-
-    $vcff_containers->contexts[$class::$container_type] = array(
-        'type' => $class::$container_type,
-        'title' => $class::$container_title,
-        'class_base' => $class,
-        'class_item' => $class::$item_class,
-        'vc' => $class::VC_Params(),
-        'params' => $class::Container_Params()
-    );
+    
+    $_type = $mapping['type'];
+    
+    $mapping = apply_filters('vcff_container_map',$mapping);
+    
+    $vcff_containers->contexts[$_type] = $mapping;
 }
 
 function vcff_parse_container_data($text) {

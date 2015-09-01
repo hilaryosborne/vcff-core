@@ -2,11 +2,11 @@
 
 class VCFF_Date_Field_Item extends VCFF_Field_Item {
 
-    /**
-         * RENDER FORM FIELD FOR INPUT (Required)
-         * Use shortcode logic, attributes and template files
-         * to display the form field shortcode within a form context
-         */
+    public function __construct() {
+    
+        $this->Add_Action('create',array($this,'_Create'));
+    }
+
     public function Form_Render() {  
         // Convert attrs to vars
         extract(shortcode_atts(array(
@@ -14,8 +14,10 @@ class VCFF_Date_Field_Item extends VCFF_Field_Item {
             'view_label'=>'',
             'machine_code'=>'',
             'default_value'=>'',
-            'allowed_dates'=>'',
-            'date_format'=>'',
+            'display_mode'=>'',
+            'min_date' => '',
+            'max_date' => '',
+            'output_format' => '',
             'dynamically_populate'=>'',
             'validation'=>'',
             'conditions'=>'',
@@ -38,224 +40,163 @@ class VCFF_Date_Field_Item extends VCFF_Field_Item {
         return $output;
     }
     
-    public function Get_Years() {
-        
-        $allowed_dates = $this->attributes['allowed_dates'];
-        
-        $year_list = array();
-        
-        if (!$allowed_dates) {
-            
-            for ($y=0;$y<=100;$y++) {
-                
-                $year_list[] = date('Y',strtotime('-'.$y.' years'));
-            }
-            
-        } else { 
-            
-            $date_items = explode('|',$allowed_dates); 
-            
-            $start_date = $this->_Parse_Date($date_items[0]);
-            $end_date = $this->_Parse_Date($date_items[1]);
+    public function _Create() {
 
-            $to_year = $end_date['year'];
-            $num_years = $end_date['year']-$start_date['year'];
-            for ($y=0;$y<=$num_years;$y++) {
-                
-                $year_list[] = $to_year-$y;
-            }
-        }
+        if (!$this->posted_value) { return; }
         
-        return $year_list;
-    }
-    
-    protected function _Parse_Date($date) {
-    
-        $date_day = '';
-        $date_month = '';
-        $date_year = '';
-        // Explode the date
-        $date_exploded = explode(':',$date);
-        // Either a year or command was provided
-        if (count($date_exploded) == 1) {
-        
-            if (is_numeric($date_exploded[0])) {
-                $date_day = '01';
-                $date_month = '01';
-                $date_year = $date_exploded[0];
-            } else { 
-                $command_date = strtotime($date_exploded[0]);
-                
-                $date_day = date('d',$command_date);
-                $date_month = date('m',$command_date);
-                $date_year = date('Y',$command_date);
-            }
-        
-        } // Otherwise a year and a month was provided 
-        elseif (count($date_exploded) == 2) {
-            $date_day = '01';
-            $date_month = $date_exploded[0];
-            $date_year = $date_exploded[1];
-        } // Otherwise a full date was provided
-        elseif (count($date_exploded) == 3) {
-            $date_day = $date_exploded[0];
-            $date_month = $date_exploded[1];
-            $date_year = $date_exploded[2];
-        }
-        // Return the date values
-        return array(
-            'day' => $date_day,
-            'month' => $date_month,
-            'year' => $date_year
-        );
-    }
-    
-    
-    public function Do_Validate() { return true;
-        // Retrieve the posted day
-        $day = $this->posted_value['day'];
-        // Retrieve the posted month
-        $month = $this->posted_value['month'];
-        // Retrieve the posted year
-        $year = $this->posted_value['year'];
-        // If none of the date fields are filled out
-        // If the date is required or any other validation, let gump handle that!
-        if (!$day && !$month && !$year) { return true; }
-        // If the date fails to validate
-        if (!checkdate ($month , $day , $year)) { return 'The date is not a valid date'; }
-        // Retrieve the allowed dates option
-        $allowed_dates = $this->attributes['allowed_dates'];
-        // If there are allowed dates specified
-        if ($allowed_dates) {
-            // Explode the allowed dates
-            $date_items = explode('|',$allowed_dates); 
-            // Retrieve the start date
-            $date_start = $this->_Parse_Date($date_items[0]);
-            // Retrieve the start date timestamp
-            $date_start_stamp = strtotime($date_start['year'].'-'.$date_start['month'].'-'.$date_start['day']);
-            // Retrieve the end date
-            $date_end = $this->_Parse_Date($date_items[1]);
-            // Retrieve the end date stamp
-            $date_end_stamp = strtotime($date_end['year'].'-'.$date_end['month'].'-'.$date_end['day']);
-            // Retrieve the end date stamp
-            $posted_date_stamp = strtotime($year.'-'.$month.'-'.$day);
-            
-            if ($posted_date_stamp > $date_end_stamp || $posted_date_stamp < $date_start_stamp) {
-                // Return an error
-                return 'The date is not valid';
-            }
-        }
-        // Return true
-        return true;
-    }
-    
-    public function Get_Stringified_Value() {
-        // If no value was provided, return false
         if (!is_array($this->posted_value)) { return; }
-        // Retrieve the posted day
-        $day = $this->posted_value['day'];
-        // Retrieve the posted month
-        $month = $this->posted_value['month'];
-        // Retrieve the posted year
-        $year = $this->posted_value['year'];
-        // Some of the fields are not filled out
-        if (!$day || !$month || !$year) { return; }
-        // Create a date string
-        return $year.'-'.$month.'-'.$day;
+        
+        if (!$this->posted_value['yyyy'] || !$this->posted_value['mm'] || !$this->posted_value['dd']) {
+            
+            $this->posted_value = false;
+            
+        } else {
+            
+            // Build the date string
+            $_date_string = $this->posted_value['yyyy'].'-'.$this->posted_value['mm'].'-'.$this->posted_value['dd'];
+
+            $_date_obj = new DateTime($_date_string);
+
+            $this->posted_value = $_date_obj->format('Y-m-d');
+        }
     }
     
+    public function Do_Validate() {
+        
+        $posted_value = $this->posted_value;
+        
+        if (!$posted_value) { return; }
+        
+        $posted_datetime = new DateTime($posted_value);
+        
+        $max_date = $this->_Get_Max_Date(false);
+
+        if ($max_date && $max_date->getTimestamp() < $posted_datetime->getTimestamp()) {
+            $this->Add_Alert('The date can be no more than '.$max_date->format('Y-m-d'),'danger');         
+            $this->is_valid = false;
+            return;
+        }
+        
+        $min_date = $this->_Get_Min_Date(false);
+        
+        if ($min_date && $min_date->getTimestamp() > $min_date->getTimestamp()) {
+            $this->Add_Alert('The date can be no less than '.$min_date->format('Y-m-d'),'danger');         
+            $this->is_valid = false;
+            return;
+        }
+    }
+    
+    public function _Get_Max_Date($default='+100 years') {
+        
+        if (!$default) { return $this->attributes['max_date'] ? new DateTime($this->attributes['max_date']) : false; }
+         
+        return $this->attributes['max_date'] ? new DateTime($this->attributes['max_date']) : new DateTime($default) ;
+    }
+    
+    public function _Get_Min_Date($default='-100 years') {
+        
+        if (!$default) { return $this->attributes['min_date'] ? new DateTime($this->attributes['min_date']) : false; }
+         
+        return $this->attributes['min_date'] ? new DateTime($this->attributes['min_date']) : new DateTime($default) ;
+    }
+    
+    public function _Get_Date() {
+        
+        return $this->posted_value ? new DateTime($this->posted_value) : false;
+    }
+
+    public function _Get_Date_Day() {
+        
+        $_date = $this->_Get_Date();
+        
+        if (!$_date) { return; }
+        
+        return $_date->format('d');
+    }
+    
+    public function _Get_Date_Month() {
+    
+        $_date = $this->_Get_Date();
+        
+        if (!$_date) { return; }
+        
+        return $_date->format('m');
+        
+    }
+    
+    public function _Get_Date_Year() {
+        
+        $_date = $this->_Get_Date();
+        
+        if (!$_date) { return; }
+        
+        return $_date->format('Y');
+    }
+    
+    /**
+     * Select Mode Methods
+     */
+    
+    protected function _Select_Get_Years() {    
+        $max_timestamp = $this->_Get_Max_Date();
+        $min_timestamp = $this->_Get_Min_Date();
+        $_years_num = $max_timestamp->diff($min_timestamp)->y;
+        // If less than or equal to a year
+        if ($_years_num < 2) { return array(date('Y',$min_timestamp)); }
+        // Add one year
+        $_years_num++;
+        // List to store the years in
+        $_years = array(); 
+        // Generate the years
+        for ($i=0;$i<$_years_num;$i++) {
+            // Generate the year
+            $_years[] = date('Y',strtotime('+'.$i.' year',$min_timestamp->getTimestamp()));
+        }
+        return $_years;
+    }
+
     /**
          * CONDITIONAL FUNCTIONS
          * 
          */        
     public function Check_Rule_IS($against) {
         // If no value was provided, return false
-        if (!is_array($this->posted_value)) { return false; }
-        // Retrieve the posted day
-        $day = $this->posted_value['day'];
-        // Retrieve the posted month
-        $month = $this->posted_value['month'];
-        // Retrieve the posted year
-        $year = $this->posted_value['year'];
-        // Some of the fields are not filled out
-        if (!$day || !$month || !$year) { return true; }
-        // Create a date string
-        $date_string = $year.'-'.$month.'-'.$day;
+        if (!$this->posted_value) { return false; }
+        // Generate datetime objects
+        $posted_datetime = new DateTime($this->posted_value);
+        $against_datetime = new DateTime($against);
         // If more or less than one value was posted through
-        if ($date_string != $against) { return false; } else { return true; }
+        if ($posted_datetime->format('Y-m-d') != $against_datetime->format('Y-m-d')) { return false; } else { return true; }
     }
 
     public function Check_Rule_IS_NOT($against) {
         // If no value was provided, return false
-        if (!is_array($this->posted_value)) { return false; }
-        // Retrieve the posted day
-        $day = $this->posted_value['day'];
-        // Retrieve the posted month
-        $month = $this->posted_value['month'];
-        // Retrieve the posted year
-        $year = $this->posted_value['year'];
-        // Some of the fields are not filled out
-        if (!$day || !$month || !$year) { return true; }
-        // Create a date string
-        $date_string = $year.'-'.$month.'-'.$day;
+        if (!$this->posted_value) { return false; }
+        // Generate datetime objects
+        $posted_datetime = new DateTime($this->posted_value);
+        $against_datetime = new DateTime($against);
         // If the first value does not match the against
-        if ($date_string != $against) { return true; } else { return false; }
+        if ($posted_datetime->format('Y-m-d') != $against_datetime->format('Y-m-d')) { return true; } else { return false; }
     }
 
     public function Check_Rule_GREATER_THAN($against) {
         // If no value was provided, return false
-        if (!is_array($this->posted_value)) { return false; }
-        // Retrieve the posted day
-        $day = $this->posted_value['day'];
-        // Retrieve the posted month
-        $month = $this->posted_value['month'];
-        // Retrieve the posted year
-        $year = $this->posted_value['year'];
-        // Some of the fields are not filled out
-        if (!$day || !$month || !$year) { return true; }
-        // Create a date string
-        $date_string = $year.'-'.$month.'-'.$day;
-        // Retrieve the end date stamp
-        $date_string_stamp = strtotime($year.'-'.$month.'-'.$day);
-        // Retrieve the end date stamp
-        $against_stamp = strtotime($against);
+        if (!$this->posted_value) { return false; }
+        // Generate datetime objects
+        $posted_datetime = new DateTime($this->posted_value);
+        $against_datetime = new DateTime($against);
         // If the number of posted values is higher
-        if ($date_string_stamp > $against_stamp) { return true; } else { return false; }
+        if ($posted_datetime->getTimestamp() > $against_datetime->getTimestamp()) { return true; } else { return false; }
     }
 
     public function Check_Rule_LESS_THAN($against) {
         // If no value was provided, return false
-        if (!is_array($this->posted_value)) { return false; }
-        // Retrieve the posted day
-        $day = $this->posted_value['day'];
-        // Retrieve the posted month
-        $month = $this->posted_value['month'];
-        // Retrieve the posted year
-        $year = $this->posted_value['year'];
-        // Some of the fields are not filled out
-        if (!$day || !$month || !$year) { return true; }
-        // Create a date string
-        $date_string = $year.'-'.$month.'-'.$day;
-        // Retrieve the end date stamp
-        $date_string_stamp = strtotime($year.'-'.$month.'-'.$day);
-        // Retrieve the end date stamp
-        $against_stamp = strtotime($against);
+        if (!$this->posted_value) { return false; }
+        // Generate datetime objects
+        $posted_datetime = new DateTime($this->posted_value);
+        $against_datetime = new DateTime($against);
         // If the number of posted values is lower
-        if ($date_string_stamp < $against_stamp) { return true; } else { return false; }
+        if ($posted_datetime->getTimestamp() < $against_datetime->getTimestamp()) { return true; } else { return false; }
     }
-
-    public function Check_Rule_CONTAINS($against) {
-        // No useful check
-        return true;
-    }
-
-    public function Check_Rule_STARTS_WITH($against) {
-        // No useful check
-        return true;
-    }
-
-    public function Check_Rule_ENDS_WITH($against) {
-        // No useful check
-        return true;
-    }
+    
 }

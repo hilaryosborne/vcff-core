@@ -12,7 +12,7 @@
         
         var _event_data = args.event_data;
         
-        if (typeof _event != "clear") { return false; }
+        if (_event != "clear") { return false; }
         
         $(_form_el).get(0).reset();
     }

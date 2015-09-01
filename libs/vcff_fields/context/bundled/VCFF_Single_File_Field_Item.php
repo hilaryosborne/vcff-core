@@ -213,10 +213,10 @@ add_filter('vcff_settings_field_list',function($field_list, $form_instance){
     
     $field_list[] = array(
         'machine_code' => 'field_upload_structure',
-        'field_label' => 'Folder Structure',
-        'field_group' => 'field_upload_config',
+        'label' => 'Folder Structure',
+        'group' => 'field_upload_config',
         'weight' => 6,
-        'field_type' => 'select',
+        'type' => 'select',
         'values' => array(
             '' => 'Select Folder Structure',
             'NONE' => 'None',
@@ -228,20 +228,20 @@ add_filter('vcff_settings_field_list',function($field_list, $form_instance){
     
     $field_list[] = array(
         'machine_code' => 'field_upload_dir',
-        'field_label' => 'Upload Directory',
-        'field_group' => 'field_upload_config',
+        'label' => 'Upload Directory',
+        'group' => 'field_upload_config',
         'weight' => 1,
-        'field_type' => 'textfield',
-        'field_dependancy' => false
+        'type' => 'textfield',
+        'dependancy' => false
     );
     
     $field_list[] = array(
         'machine_code' => 'field_upload_temp_dir',
-        'field_label' => 'Temp Directory',
-        'field_group' => 'field_upload_config',
+        'label' => 'Temp Directory',
+        'group' => 'field_upload_config',
         'weight' => 2,
-        'field_type' => 'textfield',
-        'field_dependancy' => false
+        'type' => 'textfield',
+        'dependancy' => false
     );
     
     return $field_list;

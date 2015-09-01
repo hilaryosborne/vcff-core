@@ -57,7 +57,7 @@ class VCFF_Meta_Helper_AJAX {
                     // Build the json data
                     $json_field = array(
                         'machine_code' => $field_data['machine_code'],
-                        'field_label' => $field_data['field_label'],
+                        'label' => $field_data['label'],
                         'html' => $field_data['html'],
                     );
                     // Retrieve the field instance context
@@ -160,7 +160,7 @@ class VCFF_Meta_Helper_AJAX {
                 // Retrieve the meta instance
                 $meta_field_data['instance'] = $meta_field_instance;
                 // Add the html
-                $meta_field_data['html'] = $meta_field_instance->Contextual_Render('form');
+                $meta_field_data['html'] = $meta_field_instance->Render();
                 // Store in the container var
                 $build_meta_field_list[$meta_machine_code] = $meta_field_data;
             }

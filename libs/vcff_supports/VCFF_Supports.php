@@ -127,7 +127,7 @@ class VCFF_Supports {
         // If no contexts were returned
         if (!$contexts || !is_array($contexts)) { return; }
         // Loop through each of the found contexts
-        foreach ($contexts as $_type => $_context) { 
+        foreach ($contexts as $_type => $_context) {  
             // Add the render function
             add_shortcode($_type, array($this,'Render_Shortcode'));
         }
@@ -140,17 +140,14 @@ class VCFF_Supports {
         $vcff_forms = vcff_get_library('vcff_forms');
         // Retrieve the form instance
         $form_instance = $vcff_forms->vcff_focused_form;
-        // Retrieve the supports
-        $support_instances = $form_instance->supports;
-        
-        foreach ($support_instances as $k => $support_instance) {
-            // Retrieve the support name
-            $machine_code = $support_instance->machine_code;
-            // If this not the field we are looking for
-            if ($machine_code != $attr['machine_code']) { continue; }
-            // Render the form
-            return $support_instance->Render($contents);
-        }
+        // Retrieve the form supports
+        $form_supports = $form_instance->supports; 
+        // If no support instance could be found
+        if (!isset($form_supports[$attr['machine_code']])) { return 'No element instance found for '.$attr['machine_code']; }
+        // Retrieve the element instance
+        $support_el = $form_supports[$attr['machine_code']];
+        // Render the instance
+        return $support_el->Render($contents);
     }
 
     public function Map_Visual_Composer() {
@@ -163,18 +160,18 @@ class VCFF_Supports {
         // If no contexts were returned
         if (!$contexts || !is_array($contexts)) { return; }
         // Loop through each mapped field
-        foreach ($contexts as $_type => $_context_data) {
+        foreach ($contexts as $_type => $_context) {
             // Default vc settings
             $vc_params = array(
-                "name" => $_context_data['title'],
+                "name" => $_context['title'],
                 "icon" => "icon-ui-splitter-horizontal",
-                "base" => $_context_data['type'],
+                "base" => $_context['type'],
                 'category' => __('Form Controls', VCFF_NS),
             );
             // Merge the vc params
-            $vc_params = array_merge_recursive($vc_params,$_context_data['vc']); 
+            $vc_params = array_merge_recursive($vc_params,$_context['vc_map']); 
             // Run the params through a filter
-            $vc_params = apply_filters('vcff_support_vc_params',$vc_params,$_context_data);
+            $vc_params = apply_filters('vcff_support_vc_params',$vc_params,$_context);
             // Map the field to visual composer
             vc_map($vc_params); 
         }

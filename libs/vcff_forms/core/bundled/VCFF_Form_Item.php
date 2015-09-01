@@ -248,6 +248,15 @@ class VCFF_Form_Item extends VCFF_Item {
     
         return $this->events;
     }
+    
+    public function Get_Elements() {
+    
+        $_elements = array_merge($this->events,$this->fields,$this->containers,$this->supports);
+        
+        $_elements = apply_filters('vcff_form_elements',$_elements,$this);
+        
+        return $_elements;
+    }
 	
     public function Is_Valid() {
         

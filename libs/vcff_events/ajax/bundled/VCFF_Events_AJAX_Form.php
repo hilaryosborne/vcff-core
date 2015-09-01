@@ -74,12 +74,7 @@ class VCFF_Events_AJAX_Form {
                     ->Set_Form_Instance($this->form_instance)
                     ->Build(array());
             } // Otherwise load the action instance
-            else {   
-                // Update the update flag
-                $action_instance->is_update = true;
-                // Save the action instance
-                $this->action_instance = $action_instance; 
-            }
+            else { $this->action_instance = $action_instance; }
         } // Otherwise if we are creating a new instance 
         else {
             // Create a new instance helper
@@ -100,16 +95,14 @@ class VCFF_Events_AJAX_Form {
         parse_str(base64_decode($_POST['form_data']),$_FORM);
         // Populate the form instance
         $form_instance = $this->form_instance;
+        // Create a new instance helper
+        $events_helper_populator = new VCFF_Events_Helper_Populator();
+        // Create an instance instance from the posted data
+        $this->action_instance = $events_helper_populator
+            ->Set_Form_Instance($this->form_instance)
+            ->Update($_FORM['event_action']); 
         // Create a new validation helper
         $events_validation_helper = new VCFF_Events_Helper_Validation(); 
-        // Create a new instance helper
-        $events_helper_instance = new VCFF_Events_Helper_Instance();
-        // Create an instance instance from the posted data
-        $this->action_instance = $events_helper_instance
-            ->Set_Form_Instance($this->form_instance)
-            ->Build($_FORM['event_action']); 
-        // Update the update flag
-        $this->action_instance->is_update = true;
         // Check the action instance
         $events_validation_helper
             ->Set_Action_Instance($this->action_instance)

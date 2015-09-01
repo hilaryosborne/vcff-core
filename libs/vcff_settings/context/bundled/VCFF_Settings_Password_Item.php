@@ -6,9 +6,9 @@ class VCFF_Settings_Password_Item extends VCFF_Settings_Item {
         // Convert attrs to vars
         extract(shortcode_atts(array(
             'machine_code' => '',
-            'field_label' => '',
-            'field_type' => '',
-            'field_group' => '',
+            'label' => '',
+            'type' => '',
+            'group' => '',
             'required' => '',
             'default_value' => '',
         ), $this->data));

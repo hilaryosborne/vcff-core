@@ -2,12 +2,11 @@
 
 class Trigger_Conditional_Item extends VCFF_Trigger_Item {
     
-    public function Render() {
+    public $conditions_item;
     
-        // Retrieve the current rules
-        $current_rules = $this->_Get_Current_Rules();
-        // Retrieve the current form fields
-        $current_fields = $this->_Get_Field_List();
+    public function Render() {
+        
+        $this->_Prepare();
         // Retrieve the context director
         $trigger_dir = untrailingslashit( plugin_dir_path(__FILE__ ) );
         // If context data was passed
@@ -45,84 +44,6 @@ class Trigger_Conditional_Item extends VCFF_Trigger_Item {
         return isset($trigger_value['criteria']) ? $trigger_value['criteria'] : false;
     }
     
-    protected function _Get_Field_List() {
-        // Retrieve the form instance fields
-        $form_fields = $this->form_instance->fields;
-        // The array for the form fields
-        $field_list = array();
-        // If a list of field instances was returned
-        if (!$form_fields || !is_array($form_fields)) { return array(); }
-        // Loop through each field instance
-        foreach ($form_fields as $machine_code => $_field_instance) {
-            // Retrieve the allowed conditions
-            $allowed_conditions = $_field_instance->Get_Allowed_Conditions();
-            // If the field does not allow conditions
-            if (!$allowed_conditions) { continue; }
-            // Populate the field list
-            $field_list[$machine_code] = array(
-                'machine_code' => $machine_code,
-                'field_label' => $_field_instance->Get_Label(),
-                'field_conditions' => $_field_instance->Get_Allowed_Conditions()
-            );
-        }
-        // Return the field list
-        return $field_list;
-    }
-    
-    protected function _Get_Field_JSON() {
-        // Return the field list
-        return json_encode($this->_Get_Field_List());
-    }
-    
-    protected function _Get_Current_Rules() {
-        // Retrieve the conditions
-        $rules = $this->_Get_Rules();
-        // If no rules were present
-        if (!$rules || !is_array($rules)) { return; }
-        // Retrieve the form instance fields
-        $form_fields = $this->form_instance->fields;
-        // Loop through each of the rules
-        foreach ($rules as $k => $rule) {
-            // The field list var
-            $field_list = array();
-            // The field conditions
-            $condition_list = false;
-            // Loop through each field instance
-            foreach ($form_fields as $machine_code => $_field_instance) {
-                // Retrieve the allowed conditions
-                $allowed_conditions = $_field_instance->Get_Allowed_Conditions();
-                // If the field does not allow conditions
-                if (!$allowed_conditions) { continue; }
-                // Populate the field list
-                $field_list[$machine_code] = array(
-                    'machine_code' => $machine_code,
-                    'field_label' => $_field_instance->Get_Label(),
-                    'selected' => $rule['against'] == $machine_code ? true : false
-                );
-                // If this is the selected field
-                if ($rule['against'] == $machine_code) {
-                    // Loop through each rule
-                    foreach ($allowed_conditions as $rule_name => $rule_label) {
-                        // Populate the condition data
-                        $condition_list[$rule_name] = array(
-                            'rule_name' => $rule_name,
-                            'rule_label' => $rule_label,
-                            'selected' => $rule['check'] == $rule_name ? true : false
-                        );
-                    }
-                }
-            } 
-            // Add to the rule date
-            $rule_data[] = array(
-                'field_list' => $field_list,
-                'field_conditions' => $condition_list,
-                'field_value' => $rule['value']
-            );
-        } 
-        // Return the rule data
-        return $rule_data;
-    }
-    
     public function Check_Validation() {
 
         $action_instance = $this->action_instance;
@@ -149,6 +70,38 @@ class Trigger_Conditional_Item extends VCFF_Trigger_Item {
         if (count($this->validation_errors) == 0) { return; }
         
         $action_instance->is_valid = false;
+    }
+    
+    protected function _Prepare() {
+        
+        $form_instance = $this->form_instance;
+        
+        $this->conditions_item = new VCFF_Conditions_Item($this);
+        
+        $this->conditions_item
+            ->Set_Form_Instance($form_instance)
+            ->Prepare();
+    }
+    
+    protected function _Els() {
+        
+        $conditions_item = $this->conditions_item;
+        
+        $_els = $conditions_item->els;
+        
+        $_json = array();
+        
+        if (!$_els || !is_array($_els)) { return $_json;  }
+        
+        foreach ($_els as $k => $_el) {
+            
+            $_json[$k] = array(
+                'machine_code' => $_el['machine_code'],
+                'logic_rules' => $_el['logic_rules'],
+            );
+        }
+        
+        return $_json;
     }
     
     public function Check() { 
@@ -183,42 +136,26 @@ class Trigger_Conditional_Item extends VCFF_Trigger_Item {
         if (!isset($trigger_value['criteria'])) { return false; }
         // Retrieve the conditions require
         $trigger_criteria = $trigger_value['criteria'];
-        // Retrieve the form's fields
-        $form_fields = $form_instance->fields; 
-        // The incremental vars
-        $rules_failed = array();
-        $rules_passed = array(); 
-        // Loop through each condition
-        foreach($trigger_rules as $k => $rule){
-            // Retrieve the condition's settings
-            $check_against = $rule['against'];
-            $check_check = $rule['check'];
-            $check_value = $rule['value']; 
-            // If the required field is present
-            if (!isset($form_fields[$check_against])) { continue; } 
-            // Retrieve the field instance
-            $field_instance = $form_fields[$check_against];
-            // If the field does not allow for conditions
-            if (!$field_instance->allow_conditions) { continue; }
-            // Create the checking method name
-            $field_instance_check_method = 'Check_Rule_'.strtoupper($check_check);
-            // Check the method exists
-            if (!method_exists($field_instance,$field_instance_check_method)) { continue; } 
-            // Call the checking method
-            $check_result = call_user_func_array(array($field_instance, $field_instance_check_method), array($check_value));
-            // Increment the correct variable
-            if ($check_result) { $rules_passed[$k] = $rule; } else { $rules_failed[$k] = $rule; }
-        }
+        // Create a new conditions item
+        $conditions_item = new VCFF_Conditions_Item($this);
+        // Check the conditions item
+        $conditions_item
+            ->Set_Form_Instance($this->form_instance)
+            ->Set_Rules($trigger_rules)
+            ->Prepare()
+            ->Check_Rules();
+        // Retrieve the number of triggered rules
+        $_triggered = count($conditions_item->Get_Triggered());
+        // Retrieve the number of non triggered rules
+        $_non_triggered = count($conditions_item->Get_Non_Triggered()); 
         // If we require all fields to pass
         if ($trigger_criteria == 'all') {
-            // The field will be visible if no conditions failed
-            $trigger_passed = count($rules_failed) == 0 ? true : false; 
+            // The container will be visible if no conditions failed
+            return $_non_triggered == 0 ? true : false; 
         } // Otherwise if we only require some conditions to pass 
-        elseif ($trigger_criteria == 'any') {
-            // The field will be visible if at least one conditions passed
-            $trigger_passed = count($rules_passed) > 0 ? true : false;
+        elseif ($trigger_criteria == 'any') { 
+            // The container will be visible if at least one conditions passed
+            return $_triggered != 0 ? true : false;
         }
-        // Return the 
-        return $trigger_passed;
     }
 }

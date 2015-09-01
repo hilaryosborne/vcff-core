@@ -1,27 +1,15 @@
 <?php
 
-function vcff_map_form($class) { 
+function vcff_map_form($mapping) { 
+
     // Retrieve the global vcff forms class
     $vcff_forms = vcff_get_library('vcff_forms');
-    // Retrieve the form code
-    $form_type = $class::$form_type;
-    $form_title = $class::$form_title;
-    $form_base_class = $class;
-    $form_item_class = $class::$item_class;
-    $form_meta = $class::Form_Meta();
-    $form_settings = $class::Form_Settings();
-    $form_params = $class::Form_Params();
-    // Add the form to our list of available forms
-    $vcff_forms->contexts[$form_type] = array(
-        'type' => $form_type,
-        'title' => $form_title,
-        'class_base' => $form_base_class,
-        'class_item' => $form_item_class,
-        'meta' => $form_meta,
-        'params' => $form_params,
-        'settings' => $form_settings,
-        'instances' => array()
-    );
+
+    $_type = $mapping['type'];
+
+    $mapping = apply_filters('vcff_form_map',$mapping);
+
+    $vcff_forms->contexts[$_type] = $mapping;
 }
 
 function vcff_get_uuid_by_form($form_id,$generate=false) {

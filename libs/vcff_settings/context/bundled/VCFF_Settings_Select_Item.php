@@ -6,10 +6,10 @@ class VCFF_Settings_Select_Item extends VCFF_Settings_Item {
         // Convert attrs to vars
         extract(shortcode_atts(array(
             'machine_code' => '',
-            'field_label' => '',
-            'field_type' => '',
-            'field_group' => '',
-            'field_extra_class' => '',
+            'label' => '',
+            'type' => '',
+            'group' => '',
+            'extra_class' => '',
             'extra_class' => '',
             'values' => '',
             'hints_html' => '',

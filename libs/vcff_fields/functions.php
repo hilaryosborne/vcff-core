@@ -1,26 +1,14 @@
 <?php
 
-function vcff_map_field($class) {
+function vcff_map_field($mapping) {
     // Retrieve the global vcff forms class
     $vcff_fields = vcff_get_library('vcff_fields');
-    // Retrieve the form code
-    $field_type = $class::$field_type;
-    $field_title = $class::$field_title;
-    $field_class_base = $class;
-    $field_class_item = $class::$item_class;
-    $field_vc = $class::VC_Params();
-    $field_settings = $class::Field_Settings();
-    $field_params = $class::Field_Params();
-    // Add the form to our list of available forms
-    $vcff_fields->contexts[$field_type] = array(
-        'type' => $field_type,
-        'title' => $field_title,
-        'class_base' => $field_class_base,
-        'class_item' => $field_class_item,
-        'vc' => $field_vc,
-        'settings' => $field_settings,
-        'params' => $field_params
-    );
+    
+    $_type = $mapping['type'];
+    
+    $mapping = apply_filters('vcff_field_map',$mapping);
+    
+    $vcff_fields->contexts[$_type] = $mapping;
 }
 
 function vcff_parse_field_data($text) {

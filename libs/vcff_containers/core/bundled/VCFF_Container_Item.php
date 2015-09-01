@@ -76,88 +76,53 @@ class VCFF_Container_Item extends VCFF_Item {
 	}
 
     public function Check_Conditions() {
-		// Retrieve the form instance
-		$form_instance = $this->form_instance;
-        // If no conditions, return true
-        if (!isset($this->attributes['conditions'])) {
-            // Set the field hidden flag
-            $this->is_hidden = false;
-			// Set the field's conditions result
-			$this->result_conditions = array(
-				'result' => 'visible',
-			); return;
-		}
-        // Retrieve the form's fields
-        $form_fields = $form_instance->fields;
-        // Decode the field's conditions
-        $container_conditions = json_decode(base64_decode($this->attributes['conditions']));
-        // Various condition vars
-        $condition_use = $container_conditions->use_conditions;
-        $condition_visibility = $container_conditions->visibility;
-        $condition_target = $container_conditions->target;
-        // The incremental vars
-        $conditions_failed = array();
-        $conditions_passed = array();
-        // Loop through each condition
-        foreach($container_conditions->conditions as $k => $_container_condition){
-            // Retrieve the condition's settings
-            $check_field = $_container_condition->check_field;
-            $check_condition = $_container_condition->check_condition;
-            $check_value = $_container_condition->check_value;
-            // If the required field is present
-            if ($form_fields[$check_field]) {
-                // Retrieve the field instance
-                $field_instance = $form_fields[$check_field];
-                // Create the checking method name
-                $field_instance_check_method = 'Check_Rule_'.strtoupper($check_condition);
-                // Check the method exists
-                if (!method_exists($field_instance,$field_instance_check_method)) { continue; }
-                // Call the checking method
-                $check_result = call_user_func_array(array($field_instance, $field_instance_check_method), array($check_value));
-                // Increment the correct variable
-                if ($check_result) { $conditions_passed[$k] = $_container_condition; } else { $conditions_failed[$k] = $_container_condition; }
-            }
-        }
-        
-        if (count($conditions_failed) == 0 && count($conditions_passed) == 0) {
-            // Set the field hidden flag
-            $this->is_hidden = false;
-			// Set the field's conditions result
-			$this->result_conditions = array(
-				'result' => 'visible',
-			); return;
-        }
-		// Set the container
-		$container_visible = false;
+		// Retrieve the field's attributes
+        $_attributes = $this->attributes;
+        // If there are no conditions set
+        if (!isset($_attributes['conditions'])) { return; }
+        // Retrieve the conditions data
+        $_conditions = json_decode(base64_decode($_attributes['conditions']),true);
+        // If there are no rules
+        if (!isset($_conditions['rules']) || count($_conditions['rules']) == 0) { return; }
+        // Create a new conditions item
+        $conditions_item = new VCFF_Conditions_Item($this);
+        // Check the conditions item
+        $conditions_item
+            ->Set_Form_Instance($this->form_instance)
+            ->Set_Rules($_conditions['rules'])
+            ->Prepare()
+            ->Check_Rules(); 
+        // Retrieve the result settings
+        $_settings_result = $_conditions['result'];
+        // Retrieve the matching settings
+        $_settings_match = $_conditions['match'];
+        // Retrieve the number of triggered rules
+        $_triggered = count($conditions_item->Get_Triggered());
+        // Retrieve the number of non triggered rules
+        $_non_triggered = count($conditions_item->Get_Non_Triggered());
         // If the container is to be show on passing conditions
-        if ($condition_visibility == 'show') {
+        if ($_settings_result == 'show') {
             // If we require all fields to pass
-            if ($condition_target == 'all') {
+            if ($_settings_match == 'all') {
                 // The container will be visible if no conditions failed
-                $container_visible = count($conditions_failed) == 0 ? true : false; 
+                $this->is_hidden = $_non_triggered == 0 ? false : true; 
             } // Otherwise if we only require some conditions to pass 
-            elseif ($condition_target == 'any') {
+            elseif ($_settings_match == 'any') {
                 // The container will be visible if at least one conditions passed
-                $container_visible = count($conditions_passed) != 0 ? true : false;
+                $this->is_hidden = $_triggered != 0 ? false : true;
             }
         } // Otherwise if the container is to be hidden on passing conditions 
-        elseif ($condition_visibility == 'hide') {
+        elseif ($_settings_result == 'hide') {
             // If we require all fields to pass
-            if ($condition_target == 'all') {
+            if ($_settings_match == 'all') {
                 // The container will not be visible if no conditions failed
-                $container_visible = count($conditions_failed) == 0 ? false : true; 
+                $this->is_hidden = $_non_triggered == 0 ? true : false; 
             } // Otherwise if we only require some conditions to pass 
-            elseif ($condition_target == 'any') {
+            elseif ($_settings_match == 'any') {
                 // The container will not be visible if at least one conditions passed
-                $container_visible = count($conditions_passed) != 0 ? false : true;
+                $this->is_hidden = $_triggered != 0 ? true : false;
             }
         }
-        // If the container is not going to visible
-        if (!$container_visible) {
-            // Set the field hidden flag
-            $this->is_hidden = true;
-        }// Otherwise if the container is visible
-        else { $this->is_hidden = false; }
 	}
     
     public function Do_Validation() {

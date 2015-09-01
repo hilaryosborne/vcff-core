@@ -22,6 +22,13 @@
             });
         } // Otherwise add an empty validation line 
         else { _Add_Validation_Item(); }
+        
+        $(validation_container).find('.add-validation').click(function(e){
+        
+            e.preventDefault();
+            
+            _Add_Validation_Item();
+        });
     }
 
     function _Add_Validation_Item() {
@@ -92,23 +99,13 @@
             e.preventDefault();
             // Remove the template from the settings list
             $(item_el).remove(); 
-            // If there is only onevalidation line
-            if ($(validation_container).find('.validation-item').length == 1) {
-                // Hide all remove links
-                $(validation_container).find('.item-remove').hide();
-            } // Otherwise if there are multiple 
-            else { $(validation_container).find('.item-remove').show(); }
             // Perform a related action
             vcff_do_action('vcff_params_validation_remove',{'item':item_el,'container':validation_container});
             // Ecode and store the current state
             _Store(); 
+            
+            if ($(validation_container).find('.validation-item').length == 0) { _Add_Validation_Item(); }
         });
-        // If there is only onevalidation line
-        if ($(validation_container).find('.validation-item').length == 1) {
-            // Hide all remove links
-            $(validation_container).find('.item-remove').hide();
-        } // Otherwise if there are multiple 
-        else { $(validation_container).find('.item-remove').show(); }
         // Do prepare action
         vcff_do_action('vcff_params_validation_after_prepare',{'item':item_el,'container':validation_container});
     }

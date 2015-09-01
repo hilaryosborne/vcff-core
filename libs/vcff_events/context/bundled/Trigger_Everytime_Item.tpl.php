@@ -1,4 +1,4 @@
-<div data-trigger-code="<?php echo $this->code; ?>" class="trigger-item action-field-group">
+<div data-trigger-code="<?php echo $this->type; ?>" class="trigger-item action-field-group">
     <div class="action-group-header">
         <h4><strong><?php echo __('What Conditions Settings?', VCFF_NS); ?></strong></h4><a href="" target="vcff_hint" class="help-lnk"><span class="dashicons dashicons-editor-help"></span> Help</a>
     </div>

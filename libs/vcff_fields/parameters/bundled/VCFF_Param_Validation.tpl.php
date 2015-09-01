@@ -8,13 +8,11 @@
             <div class="col-item col-sm-6">
                 <select class="item-rule vcff-nowebkit form-control">
                     <option value=""><?php echo __('No rule selected',VCFF_NS); ?></option>
-                    <?php $validation_rules = $this->Get_Validation_Rules(); ?>
-                    <?php foreach($validation_rules as $rule_code => $rule_data): ?>
-                        <?php if (!in_array($rule_code, $settings['validation_rules'])) { continue; } ?>
-                        <?php if ($rule_item['rule'] == $rule_code): ?>
-                        <option <?php if ($rule_data['has_value']): ?>data-val-hasvalue="yes"<?php endif; ?> data-val-description="<?php echo $rule_data['description']; ?>" value="<?php echo $rule_code; ?>" selected="selected"><?php echo $rule_data['label']; ?></option>
+                    <?php foreach($validation_logic as $k => $_rule): ?>
+                        <?php if ($rule_item['rule'] == $_rule['machine_code']): ?>
+                        <option <?php if ($_rule['value']): ?>data-val-hasvalue="yes"<?php endif; ?> data-val-description="<?php echo $_rule['description']; ?>" value="<?php echo $_rule['machine_code']; ?>" selected="selected"><?php echo $_rule['title']; ?></option>
                         <?php else: ?>
-                        <option <?php if ($rule_data['has_value']): ?>data-val-hasvalue="yes"<?php endif; ?> data-val-description="<?php echo $$rule_data_rule_info['description']; ?>" value="<?php echo $rule_code; ?>"><?php echo $rule_data['label']; ?></option>
+                        <option <?php if ($_rule['value']): ?>data-val-hasvalue="yes"<?php endif; ?> data-val-description="<?php echo $_rule['description']; ?>" value="<?php echo $_rule['machine_code']; ?>"><?php echo $_rule['title']; ?></option>
                         <?php endif; ?>
                     <?php endforeach; ?>
                     <?php do_action('vcff_params_conditions_rule_list',$this); ?>
@@ -30,16 +28,15 @@
         <?php endforeach; ?>
         <?php endif; ?>
     </div>
+    <a href="" class="add-validation">+ Add new validation</a>
     <?php do_action('vcff_params_conditions_after_rules',$this); ?>
     <script id="validation_ln_tmpl" type="text/x-handlebars-template">
     <div class="row validation-item">
         <div class="col-item col-sm-6">
             <select class="item-rule form-control vcff-nowebkit">
                 <option value=""><?php echo __('No rule selected',VCFF_NS); ?></option>
-                <?php $validation_rules = $this->Get_Validation_Rules(); ?>
-                <?php foreach($validation_rules as $rule_code => $rule_data): ?>
-                    <?php if (!in_array($rule_code, $settings['validation_rules'])) { continue; } ?>
-                    <option <?php if ($rule_data['has_value']): ?>data-val-hasvalue="yes"<?php endif; ?> data-val-description="<?php echo $rule_data['description']; ?>" value="<?php echo $rule_code; ?>"><?php echo $rule_data['label']; ?></option>
+                <?php foreach($validation_logic as $k => $_rule): ?>
+                    <option <?php if ($_rule['value']): ?>data-val-hasvalue="yes"<?php endif; ?> data-val-description="<?php echo $_rule['description']; ?>" value="<?php echo $_rule['machine_code']; ?>"><?php echo $_rule['title']; ?></option>
                 <?php endforeach; ?>
                 <?php do_action('vcff_params_conditions_rule_list',$this); ?>
             </select>

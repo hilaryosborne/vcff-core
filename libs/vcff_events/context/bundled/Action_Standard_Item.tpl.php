@@ -90,7 +90,7 @@
                     <div class="form-group">
                         <select name="event_action[selected_trigger]" class="select-trigger form-control">
                             <?php foreach ($this->triggers as $k => $trigger_instance): ?>
-                            <option <?php if ($this->Get_Selected_Trigger() == $trigger_instance->code): ?>selected="selected"<?php endif; ?> value="<?php echo $trigger_instance->code; ?>"><?php echo $trigger_instance->title; ?></option>
+                            <option <?php if ($this->Get_Selected_Trigger() == $trigger_instance->type): ?>selected="selected"<?php endif; ?> value="<?php echo $trigger_instance->type; ?>"><?php echo $trigger_instance->title; ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>

@@ -36,7 +36,7 @@ class VCFF_Forms_AJAX_Conditions {
             ->Set_Form_Instance($form_instance)
             ->Calculate(array(
                 'validation' => false,
-                //'origin' => false
+                'origin' => false
             ));
         // REVIEW PHASE
         $form_review_helper = new VCFF_Forms_Helper_Review();

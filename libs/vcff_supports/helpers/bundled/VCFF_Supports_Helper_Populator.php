@@ -11,27 +11,37 @@ class VCFF_Supports_Helper_Populator extends VCFF_Helper {
 		return $this;
 	}
     
-    protected function _Get_Instance($_data) { 
+    protected function _Get_Instance($_el) { 
         // Retrieve the form instance
 		$form_instance = $this->form_instance;
-		// Retrieve the container name
-		$machine_code = $_data['name'];
+        // Retrieve the support name
+		$type = $_el['type'];
+        // Retrieve the global vcff forms class
+        $vcff_supports = vcff_get_library('vcff_supports');
+        // If the context does not exist
+        if (!isset($vcff_supports->contexts[$type])) { return; }
+        // Retrieve the context
+        $_context = $vcff_supports->contexts[$type];
+        // Retrieve the support name
+		$machine_code = $_el['name']; 
+        // If no form instance was found
+		if (!$machine_code) { die('No support name could be found'); return; }
 		// Create the field item classname
-		$support_classname = $_data['context']['class_item'];
+		$support_classname = $_context['class'];
 		// If no form instance was found
-		if (!$machine_code || !$support_classname) { return; }
+		if (!$support_classname) { die('No support class item could be found'); return; } 
 		// Create a new item instance for this field
 		$support_instance = new $support_classname();
-		// Populate the container form
+		// Populate the support form
 		$support_instance->form = $this->form_instance;
-		// Populate the container fields
+		// Populate the support fields
 		$support_instance->machine_code = $machine_code;
-        // Populate the container fields
-		$support_instance->support_type = $_data['type'];
+        // Populate the support fields
+		$support_instance->support_type = $_context['type'];
 		// Populate the handler object
-		$support_instance->context = $_data['context'];
+		$support_instance->context = $_context;
 		// Populate the field list
-		$support_instance->attributes = $_data['attributes'];
+		$support_instance->attributes = $_el['attributes'];
         // If the field has a sanitize method
         if (method_exists($support_instance,'On_Create')) { $support_instance->On_Create(); }
         // Do any create actions
@@ -46,15 +56,15 @@ class VCFF_Supports_Helper_Populator extends VCFF_Helper {
         // Retrieve the form instance
 		$form_instance = $this->form_instance;
 		// Retrieve the field data
-		$parsed = vcff_parse_support_data($form_instance->form_content); 
+		$_els = vcff_parse_support_data($form_instance->form_content);
 		// If an error has been detected, return out
-		if (!$parsed || !is_array($parsed)) { return; }
+		if (!$_els || !is_array($_els)) { return; }
 		// Retrieve the form instance
 		$form_instance = $this->form_instance; 
 		// Loop through each of the containers
-		foreach ($parsed as $k => $_data) { 
+		foreach ($_els as $k => $_el) {
 			// Retrieve the container instance
-			$support_instance = $this->_Get_Instance($_data);
+			$support_instance = $this->_Get_Instance($_el);
 			// Add the container to the form instance
 			$form_instance->Add_Support($support_instance);
 		}

@@ -102,12 +102,12 @@ class VCFF_Settings_Item extends VCFF_Item {
         // Retrieve the form instance
         $form_instance = $this->form_instance;
         // If there are no conditions
-        if (!isset($this->data['field_dependancy'])) {
+        if (!isset($this->data['dependancy'])) {
             // Update the field's conditions
             $this->is_hidden = false; return;
         }
 		// Retrieve the dependancy conditions
-        $dependancy = $this->data['field_dependancy']; 
+        $dependancy = $this->data['dependancy']; 
 		// If there are no conditions
         if (!is_array($dependancy)) {
             // Update the field's conditions

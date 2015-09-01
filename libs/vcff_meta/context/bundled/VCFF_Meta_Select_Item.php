@@ -2,19 +2,19 @@
 
 class VCFF_Meta_Select_Item extends VCFF_Meta_Item {
 
-    public function Contextual_Render($context='form') {
+    public function Render() {
         // Convert attrs to vars
         extract(shortcode_atts(array(
             'machine_code' => '',
-            'field_label' => '',
-            'field_type' => '',
+            'label' => '',
+            'type' => '',
             'field_group' => '',
             'field_extra_class' => '',
             'extra_class' => '',
             'values' => '',
             'hints_html' => '',
             'default_value' => '',
-        ), $this->data));
+        ), $this->data)); 
         // Start gathering content
         ob_start();
         // Retrieve the context director

@@ -1,17 +1,7 @@
 <?php
 
-class Event_Email {
-    
-    static $type = 'send_email';
-    
-    static $title = 'I would like to send a email notification';
-    
-	static $class_item = 'Event_Email_Item';
-	
-    static function Params() {
-        // Return any field params
-        return array();
-    } 
-}
-
-vcff_map_event('Event_Email');
+vcff_map_event(array(
+    'type' => 'send_email',
+    'title' => 'I would like to send a email notification',
+    'class' => 'Event_Email_Item'
+));

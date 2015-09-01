@@ -124,73 +124,68 @@ class VCFF_Meta_Helper_Populator {
 		return $this;
 	}
 	
-	protected function _Get_Meta_Instance($meta_data) {
+	protected function _Get_Meta_Instance($data) { 
 		// Retrieve the form instance
 		$form_instance = $this->form_instance;
-        
-        $form_id = vcff_get_form_id_by_uuid($form_instance->Get_UUID());
-		// Retrieve the field name
-		$meta_machine_code = $meta_data['machine_code'];
-		// Retrieve the field type
-		$meta_field_type = $meta_data['field_type'];
-		// Retrieve the field type
-		$meta_field_label = $meta_data['field_label'];
-        // Retrieve the field type
-		$meta_validation = $meta_data['validation'];
         // Get the vcff containers
         $vcff_meta = vcff_get_library('vcff_meta');
         // Retrieve the meta contexts
-        $meta_contexts = $vcff_meta->contexts;
-		
-		if (!isset($meta_contexts[$meta_field_type])) { return; }
+        $context = $vcff_meta->contexts;
+		// Retrieve the field type
+		$type = $data['type'];
+        // If there is no context
+		if (!$type || !isset($context[$type])) { return; }
 		// Retrieve the field context information
-		$meta_field_context = $meta_contexts[$meta_field_type]; 
-		
-		$meta_field_classname = $meta_field_context['class_item'];
+		$field_context = $context[$type];
+		// Retrieve the field name
+		$machine_code = $data['machine_code'];
+        // Retrieve the form idw
+        $form_id = vcff_get_form_id_by_uuid($form_instance->Get_UUID());
+        // Retrieve the class name
+		$class = $field_context['class'];
 		// Create a new meta field instance
-		$field_meta_instance = new $meta_field_classname();
+		$field_instance = new $class();
 		// Set the meta instance handler
-		$field_meta_instance->form_instance = $form_instance;
+		$field_instance->form_instance = $form_instance;
 		// Set the meta instance handler
-		$field_meta_instance->context = $meta_field_context;
+		$field_instance->context = $field_context;
 		// Set the meta instance field name
-		$field_meta_instance->machine_code = $meta_machine_code;
+		$field_instance->machine_code = $machine_code;
 		// Set the meta instance field name
-		$field_meta_instance->field_label = $meta_field_label;
+		$field_instance->label = $data['label'];
 		// Set the meta instance data
-		$field_meta_instance->data = $meta_data;
+		$field_instance->data = $data;
         // Set the meta instance data
-		$field_meta_instance->validation = $meta_validation;
+		$field_instance->validation = $data['validation'];
 		// Retrieve the field data
 		$field_data = $this->field_data;
 		// Retrieve any stored meta value
-		$stored_meta_value = get_post_meta($form_id,$meta_machine_code,true); 
+		$stored_meta_value = get_post_meta($form_id,$machine_code,true); 
 		// Retrieve any posted value
-		$posted_meta_value = isset($field_data[$meta_machine_code]) ? $field_data[$meta_machine_code] : false;
+		$posted_meta_value = isset($field_data[$machine_code]) ? $field_data[$machine_code] : false;
 		// Retrieve any set meta value
-		$set_meta_value = isset($meta_data['value']) ? $meta_data['value'] : false ;
+		$set_meta_value = isset($data['value']) ? $data['value'] : false ;
 		// Retrieve any default meta value
-		$default_meta_value = isset($meta_data['default_value']) ? $meta_data['default_value'] : false ;
-		
+		$default_meta_value = isset($data['default_value']) ? $data['default_value'] : false ;
 		// If there is posted meta value
-		if (isset($field_data[$meta_machine_code])) { 
+		if (isset($field_data[$machine_code])) { 
 			
-			$field_meta_instance->value = $posted_meta_value; 
+			$field_instance->value = $posted_meta_value; 
 		} // Otherwise if there is stored meta value
 		elseif ($stored_meta_value) { 
 			
-			$field_meta_instance->value = $stored_meta_value; 
+			$field_instance->value = $stored_meta_value; 
 		} // Otherwise if there is set meta value
 		elseif ($set_meta_value) { 
 			
-			$field_meta_instance->value = $set_meta_value; 
+			$field_instance->value = $set_meta_value; 
 		} // Otherwise if there is a default meta value
 		elseif ($default_meta_value) { 
 			
-			$field_meta_instance->value = $default_meta_value; 
-		} else { $field_meta_instance->value = ''; }
+			$field_instance->value = $default_meta_value; 
+		} else { $field_instance->value = ''; }
 		
-		return $field_meta_instance;
+		return $field_instance;
 	}
 	
 	public function Populate() {

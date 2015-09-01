@@ -1,7 +1,7 @@
 <div class="form-group vcff-meta-checkbox <?php echo $extra_class; ?>">
     <label class="col-sm-3 control-label">
         <?php do_action('vcff_meta_field_pre_label',$this); ?>
-        <?php echo apply_filters('vcff_meta_field_label',$field_label,$this); ?> <?php if ($this->Is_Required()): ?><span class="required">*</span><?php endif; ?>
+        <?php echo apply_filters('vcff_meta_field_label',$label,$this); ?> <?php if ($this->Is_Required()): ?><span class="required">*</span><?php endif; ?>
         <?php do_action('vcff_meta_field_post_label',$this); ?>
     </label>
     <div class="col-sm-9">

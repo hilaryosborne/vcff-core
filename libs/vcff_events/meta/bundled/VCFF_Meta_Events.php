@@ -1,20 +1,10 @@
 <?php
 
-class VCFF_Meta_Events {
-
-    static $meta_type = 'events_wizard';
-    
-    static $meta_title = 'Submission Events Wizard';
-
-    static $item_class = 'VCFF_Meta_Events_Item';
-
-    static function Meta_Params() {
-        // Return any field params
-        return array();
-    }
-}
-
-vcff_map_meta_field('VCFF_Meta_Events');
+vcff_map_meta_field(array(
+    'type' => 'events_wizard',
+    'title' => 'Submission Events Wizard',
+    'class' => 'VCFF_Meta_Events_Item'
+));
 
 // Register the vcff admin css
 vcff_admin_enqueue_script('events_wizard', VCFF_EVENTS_URL.'/assets/admin/events_wizard.js', array('vcff-core'));
@@ -52,10 +42,10 @@ add_filter('vcff_meta_field_list',function($meta_fields,$form_instance){
 
     $meta_fields[] = array(
         'machine_code' => 'events_wizard',
-        'field_label' => 'Submission Events',
+        'label' => 'Submission Events',
         'field_group' => 'submission_events',
-        'field_type' => 'events_wizard',
-        'field_dependancy' => false
+        'type' => 'events_wizard',
+        'dependancy' => false
     );
 
     return $meta_fields;

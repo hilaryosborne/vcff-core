@@ -66,6 +66,40 @@ class VCFF_Action_Item extends VCFF_Item {
         return isset($this->data['selected_event']) ? $this->data['selected_event'] : null ;
     }
     
+    public function Add_Event($event_instance) { 
+		
+        if (!$event_instance) { return $this; }
+        
+        if (!is_object($event_instance)) { return $this; }
+        
+        if (!$event_instance->type) { return $this; }
+        
+		$_type = $event_instance->type;
+		
+		$event_instance->action_instance = $this;
+		
+        $event_instance->value = $this->data['events'][$_type];
+        
+		$this->events[$_type] = $event_instance;
+	}
+    
+    public function Add_Trigger($trigger_instance) { 
+		
+        if (!$trigger_instance) { return $this; }
+        
+        if (!is_object($trigger_instance)) { return $this; }
+        
+        if (!$trigger_instance->type) { return $this; }
+        
+		$_type = $trigger_instance->type;
+		
+		$trigger_instance->action_instance = $this;
+		
+        $trigger_instance->value = $this->data['triggers'][$_type];
+        
+		$this->triggers[$_type] = $trigger_instance;
+	}
+    
     public function Get_Curly_Tags() {
         // Retrieve the selected trigger
         $selected_event = $this->Get_Selected_Event(); 

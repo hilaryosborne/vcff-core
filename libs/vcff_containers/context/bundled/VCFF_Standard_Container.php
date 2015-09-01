@@ -1,75 +1,64 @@
 <?php
 
-
-class VCFF_Standard_Container {
-    
-    static $container_type = 'vcff_container';
-    
-    static $container_title = 'Standard Container';
-
-    static $item_class = 'VCFF_Standard_Container_Item';
-
-    static function VC_Params() {
-        // Return any visual composer params
-        return array(
-            'admin_enqueue_js' => VCFF_CONTAINERS_URL.'/assets/admin/vcff_container.js',
-            'admin_enqueue_css' => VCFF_CONTAINERS_URL.'/assets/admin/vcff_container.css',
-            'params' => array(
-                // add params same as with any other content element
-                array (
-                    "type" => "vcff_heading",
-                    "heading" => false,
-                    "param_name" => "container_heading",
-                    'html_title' => 'VCFF Container',
-                    'html_description' => 'You can set this field to accept dynamic values from either POST, GET or REQUEST variables. This is useful if you have forms posting to each other or if you want to refill form fields via a URL link.',
-                    'help_url' => 'http://blah',
-                ),
-                array (
-                    "type" => "vcff_machine",
-                    "heading" => __ ( "Machine Code", VCFF_FORM ),
-                    "param_name" => "machine_code",
-                ), 
-                // CORE FIELD SETTINGS
-                array (
-                    "type" => "vcff_heading",
-                    "heading" => false,
-                    "param_name" => "label_heading",
-                    'html_title' => 'Container Labels',
-                    'html_description' => 'You can set this field to accept dynamic values from either POST, GET or REQUEST variables. This is useful if you have forms posting to each other or if you want to refill form fields via a URL link.',
-                ),
-                array(
-                    "type" => "textfield",
-                    "heading" => __("Container Label", VCFF_NS),
-                    "param_name" => "label"
-                ),
-                array(
-                    "type" => "textfield",
-                    "heading" => __("Extra class name", VCFF_NS),
-                    "param_name" => "extra_class",
-                ),
-                array (
-                    'type' => 'vcff_conditional',
-                    'heading' => false,
-                    'param_name' => 'conditions',
-                    'group' => 'Adv. Logic'
-                ),
-                array(
-                    'type' => 'css_editor',
-                    'heading' => __( 'Css', 'my-text-domain' ),
-                    'param_name' => 'css',
-                    'group' => __( 'Design Options', 'my-text-domain' ),
-                ),
+vcff_map_container(array(
+    'type' => 'vcff_container',
+    'title' => 'Standard Container',
+    'class' => 'VCFF_Standard_Container_Item',
+    'filter_logic' => array(),
+    'conditional_logic' => array(),
+    'validation_logic' => array(),
+    'vc_map' => array(
+        'admin_enqueue_js' => VCFF_CONTAINERS_URL.'/assets/admin/vcff_container.js',
+        'admin_enqueue_css' => VCFF_CONTAINERS_URL.'/assets/admin/vcff_container.css',
+        'params' => array(
+            // add params same as with any other content element
+            array (
+                "type" => "vcff_heading",
+                "heading" => false,
+                "param_name" => "container_heading",
+                'html_title' => 'VCFF Container',
+                'html_description' => 'You can set this field to accept dynamic values from either POST, GET or REQUEST variables. This is useful if you have forms posting to each other or if you want to refill form fields via a URL link.',
+                'help_url' => 'http://blah',
             ),
-            'js_view' => 'VCFFStandardContainerView',
-        );
-    }
-    
-    static function Container_Params() {
-        // Return any field params
-        return array();
-    }
-    
-}
+            array (
+                "type" => "vcff_machine",
+                "heading" => __ ( "Machine Code", VCFF_FORM ),
+                "param_name" => "machine_code",
+            ), 
+            // CORE FIELD SETTINGS
+            array (
+                "type" => "vcff_heading",
+                "heading" => false,
+                "param_name" => "label_heading",
+                'html_title' => 'Container Labels',
+                'html_description' => 'You can set this field to accept dynamic values from either POST, GET or REQUEST variables. This is useful if you have forms posting to each other or if you want to refill form fields via a URL link.',
+            ),
+            array(
+                "type" => "textfield",
+                "heading" => __("Container Label", VCFF_NS),
+                "param_name" => "label"
+            ),
+            array(
+                "type" => "textfield",
+                "heading" => __("Extra class name", VCFF_NS),
+                "param_name" => "extra_class",
+            ),
+            array (
+                'type' => 'vcff_conditional',
+                'heading' => false,
+                'param_name' => 'conditions',
+                'group' => 'Adv. Logic'
+            ),
+            array(
+                'type' => 'css_editor',
+                'heading' => __( 'Css', 'my-text-domain' ),
+                'param_name' => 'css',
+                'group' => __( 'Design Options', 'my-text-domain' ),
+            ),
+        ),
+        'js_view' => 'VCFFStandardContainerView',
+    )
+));
 
 class WPBakeryShortCode_VCFF_Container extends WPBakeryShortCodesContainer {
     
@@ -140,5 +129,3 @@ class WPBakeryShortCode_VCFF_Container extends WPBakeryShortCodesContainer {
     }
 
 }
-
-vcff_map_container('VCFF_Standard_Container');
