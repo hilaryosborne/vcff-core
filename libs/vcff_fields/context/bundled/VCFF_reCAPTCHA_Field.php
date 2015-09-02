@@ -21,31 +21,6 @@ vcff_map_field(array(
                 "heading" => __ ( "Machine Code", VCFF_FORM ),
                 "param_name" => "machine_code",
             ), 
-            array (
-                "type" => "vcff_heading",
-                "heading" => false,
-                "param_name" => "label_heading",
-                'html_title' => 'Field Labels',
-                'html_description' => 'You can set this field to accept dynamic values from either POST, GET or REQUEST variables. This is useful if you have forms posting to each other or if you want to refill form fields via a URL link.',
-            ),
-            array (
-                "type" => "textfield",
-                "heading" => __ ( "Label (Data Entry)", VCFF_FORM ),
-                "param_name" => "field_label",
-                'value' => __('Enter a field label..'),
-                'admin_label' => true,
-            ),
-            array (
-                "type" => "textfield",
-                "heading" => __ ( "Label (Data Viewing)", VCFF_FORM ),
-                "param_name" => "view_label",
-            ),
-            array (
-                'type' => 'textfield',
-                'heading' => __ ( 'Extra Class', VCFF_FORM ),
-                'param_name' => 'extra_class',
-                'group' => 'Adv. Settings',
-            ),
             // VC CSS EDITOR
             array(
                 'type' => 'css_editor',

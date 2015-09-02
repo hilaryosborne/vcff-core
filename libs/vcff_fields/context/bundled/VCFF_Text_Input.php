@@ -178,6 +178,36 @@ vcff_map_field(array(
                 'group' => 'Adv. Settings',
             ),
             array (
+                'type' => 'vcff_filters',
+                'heading' => false,
+                'param_name' => 'filter',
+                'group' => 'Adv. Logic',
+                'filter_rules' => array(
+                    'sanitize_string',
+                    'sanitize_email',
+                    'basic_tags',
+                    'base64_encode'
+                )
+            ),
+            array (
+                'type' => 'checkbox',
+                'heading' => false,
+                'param_name' => 'use_adv_filter',
+                'group' => 'Adv. Logic',
+                'value' => array('Use advanced GUMP filter rules' => 'yes')
+            ),
+            array (
+                'type' => 'textfield',
+                'heading' => 'Advanced Filter Rules',
+                'description' => 'You may use any combination of the GUMP filter rules ie trim|sanitize_string. For further information visit the <a href="https://github.com/Wixel/GUMP" target="GUMP">GUMP documentation</a>.',
+                'param_name' => 'adv_filter',
+                'group' => 'Adv. Logic',
+                'dependency' => array(
+                    'element' => 'use_adv_filter',
+                    'value' => 'yes',
+                )
+            ),
+            array (
                 'type' => 'vcff_conditional',
                 'heading' => false,
                 'param_name' => 'conditions',
@@ -210,36 +240,6 @@ vcff_map_field(array(
                 'group' => 'Adv. Logic',
                 'dependency' => array(
                     'element' => 'use_adv_validation',
-                    'value' => 'yes',
-                )
-            ),
-            array (
-                'type' => 'vcff_filters',
-                'heading' => false,
-                'param_name' => 'filter',
-                'group' => 'Adv. Logic',
-                'filter_rules' => array(
-                    'sanitize_string',
-                    'sanitize_email',
-                    'basic_tags',
-                    'base64_encode'
-                )
-            ),
-            array (
-                'type' => 'checkbox',
-                'heading' => false,
-                'param_name' => 'use_adv_filter',
-                'group' => 'Adv. Logic',
-                'value' => array('Use advanced GUMP filter rules' => 'yes')
-            ),
-            array (
-                'type' => 'textfield',
-                'heading' => 'Advanced Filter Rules',
-                'description' => 'You may use any combination of the GUMP filter rules ie trim|sanitize_string. For further information visit the <a href="https://github.com/Wixel/GUMP" target="GUMP">GUMP documentation</a>.',
-                'param_name' => 'adv_filter',
-                'group' => 'Adv. Logic',
-                'dependency' => array(
-                    'element' => 'use_adv_filter',
                     'value' => 'yes',
                 )
             ),

@@ -42,10 +42,26 @@ vcff_map_field(array(
                 "param_name" => "view_label",
             ),
             array (
+                "type" => "vcff_heading",
+                "heading" => false,
+                "param_name" => "advanced_label",
+                'html_title' => 'Advanced Settings',
+                'group' => 'Adv. Settings',
+                'html_description' => 'Fields may have a set of advanced configurable options which allow you to better configure a field to behave differently within the form. Examples of these may be to add a placeholder text field or to add a default value. More advanced fields may have significantly more advanced settings. These are generally optional.',
+            ),
+            array (
                 "type" => "textfield",
                 "heading" => __ ( "Default Value", VCFF_FORM ),
                 "param_name" => "default_value",
                 'group' => 'Adv. Settings',
+            ),
+            array (
+                "type" => "vcff_heading",
+                "heading" => false,
+                "param_name" => "element_label",
+                'html_title' => 'Element Settings',
+                'group' => 'Adv. Settings',
+                'html_description' => 'Use the following options to configure the field element. These options will help you add information such as element attributes or add a custom CSS class.',
             ),
             array (
                 "type" => "textfield",
@@ -60,16 +76,18 @@ vcff_map_field(array(
                 'group' => 'Adv. Settings',
             ),
             array (
+                "type" => "vcff_heading",
+                "heading" => false,
+                "param_name" => "dynamic_pop_label",
+                'html_title' => 'Dynamic Population',
+                'group' => 'Adv. Settings',
+                'html_description' => 'You can set this field to accept dynamic values from either POST, GET or REQUEST variables. This is useful if you have forms posting to each other or if you want to refill form fields via a URL link.',
+            ),
+            array (
                 "type" => "vcff_url_vars",
                 "heading" => false,
                 "param_name" => "dynamically_populate",
                 'group' => 'Adv. Settings',
-            ),
-            array (
-                'type' => 'vcff_conditional',
-                'heading' => false,
-                'param_name' => 'conditions',
-                'group' => 'Adv. Logic'
             ),
         )
     )

@@ -4,7 +4,15 @@ vcff_map_field(array(
     'type' => 'vcff_field_checkbox',
     'title' => 'Checkbox Field',
     'class' => 'VCFF_Checkbox_Field_Item',
-    'filter_logic' => array(),
+    'filter_logic' => array(
+        array(
+            'machine_code' => 'SANITZE_STRING',
+            'title' => 'Sanitize String',
+            'callback' => false,
+            'description' => 'Remove script tags and encode HTML entities',
+            'gump_code' => 'sanitize_string',
+        ),
+    ),
     'validation_logic' => array(
         array(
             'machine_code' => 'REQUIRED',
@@ -52,7 +60,6 @@ vcff_map_field(array(
             'value' => true
         )
     ),
-    'validation_logic' => array(),
     'vc_map' => array(
         'params' => array(
             array (
@@ -112,6 +119,42 @@ vcff_map_field(array(
                 'group' => 'Adv. Settings',
             ),
             array (
+                'type' => 'vcff_filters',
+                'heading' => false,
+                'param_name' => 'filter',
+                'group' => 'Adv. Logic',
+                'filter_rules' => array(
+                    'sanitize_string',
+                    'sanitize_email',
+                    'basic_tags',
+                    'base64_encode'
+                )
+            ),
+            array (
+                'type' => 'checkbox',
+                'heading' => false,
+                'param_name' => 'use_adv_filter',
+                'group' => 'Adv. Logic',
+                'value' => array('Use advanced GUMP filter rules' => 'yes')
+            ),
+            array (
+                'type' => 'textfield',
+                'heading' => 'Advanced Filter Rules',
+                'description' => 'You may use any combination of the GUMP filter rules ie trim|sanitize_string. For further information visit the <a href="https://github.com/Wixel/GUMP" target="GUMP">GUMP documentation</a>.',
+                'param_name' => 'adv_filter',
+                'group' => 'Adv. Logic',
+                'dependency' => array(
+                    'element' => 'use_adv_filter',
+                    'value' => 'yes',
+                )
+            ),
+            array (
+                'type' => 'vcff_conditional',
+                'heading' => false,
+                'param_name' => 'conditions',
+                'group' => 'Adv. Logic'
+            ),
+            array (
                 'type' => 'vcff_validation',
                 'heading' => false,
                 'param_name' => 'validation',
@@ -128,7 +171,7 @@ vcff_map_field(array(
                 'heading' => false,
                 'param_name' => 'use_adv_validation',
                 'group' => 'Adv. Logic',
-                'value' => array('Use advanced validation rules' => 'yes')
+                'value' => array('Use advanced GUMP validation rules' => 'yes')
             ),
             array (
                 'type' => 'textfield',
@@ -140,41 +183,6 @@ vcff_map_field(array(
                     'element' => 'use_adv_validation',
                     'value' => 'yes',
                 )
-            ),
-            array (
-                'type' => 'vcff_filters',
-                'heading' => false,
-                'param_name' => 'filter',
-                'group' => 'Adv. Logic',
-                'filter_rules' => array(
-                    'sanitize_string',
-                    'sanitize_email',
-                    'basic_tags'
-                )
-            ),
-            array (
-                'type' => 'checkbox',
-                'heading' => false,
-                'param_name' => 'use_adv_filter',
-                'group' => 'Adv. Logic',
-                'value' => array('Use advanced filter rules' => 'yes')
-            ),
-            array (
-                'type' => 'textfield',
-                'heading' => 'Advanced Filter Rules',
-                'description' => 'You may use any combination of the GUMP validation rules ie required|exact_len,15. For further information visit the <a href="https://github.com/Wixel/GUMP" target="GUMP">GUMP documentation</a>.',
-                'param_name' => 'adv_filter',
-                'group' => 'Adv. Logic',
-                'dependency' => array(
-                    'element' => 'use_adv_filter',
-                    'value' => 'yes',
-                )
-            ),
-            array (
-                'type' => 'vcff_conditional',
-                'heading' => false,
-                'param_name' => 'conditions',
-                'group' => 'Adv. Logic'
             ),
             array(
                 'type' => 'css_editor',

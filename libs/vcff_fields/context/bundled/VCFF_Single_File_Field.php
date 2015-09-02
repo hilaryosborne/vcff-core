@@ -4,7 +4,18 @@ vcff_map_field(array(
     'type' => 'vcff_field_single_file',
     'title' => 'Single File Upload',
     'class' => 'VCFF_Single_File_Field_Item',
-    'conditional_logic' => array(),
+    'filter_logic' => array(
+        array(
+            'machine_code' => 'SANITZE_STRING',
+            'title' => 'Sanitize String',
+            'callback' => false,
+            'description' => 'Remove script tags and encode HTML entities',
+            'gump_code' => 'sanitize_string',
+        ),
+    ),
+    'conditional_logic' => array(
+
+    ),
     'validation_logic' => array(
         'file_upload_max_size' => array(
             'label' => 'Maximum Filesize',
@@ -52,7 +63,6 @@ vcff_map_field(array(
                 "type" => "textfield",
                 "heading" => __ ( "Label (Data Entry)", VCFF_FORM ),
                 "param_name" => "field_label",
-                'value' => __('Enter a field label..'),
                 'admin_label' => true,
             ),
             array (
@@ -61,6 +71,28 @@ vcff_map_field(array(
                 "param_name" => "view_label",
             ),
             // ADVANCED SETTING
+            array (
+                "type" => "vcff_heading",
+                "heading" => false,
+                "param_name" => "advanced_label",
+                'html_title' => 'Advanced Settings',
+                'group' => 'Adv. Settings',
+                'html_description' => 'Fields may have a set of advanced configurable options which allow you to better configure a field to behave differently within the form. Examples of these may be to add a placeholder text field or to add a default value. More advanced fields may have significantly more advanced settings. These are generally optional.',
+            ),
+            array (
+                "type" => "textfield",
+                "heading" => __ ( "Default Value", VCFF_FORM ),
+                "param_name" => "default_value",
+                'group' => 'Adv. Settings',
+            ),
+            array (
+                "type" => "vcff_heading",
+                "heading" => false,
+                "param_name" => "element_label",
+                'html_title' => 'Element Settings',
+                'group' => 'Adv. Settings',
+                'html_description' => 'Use the following options to configure the field element. These options will help you add information such as element attributes or add a custom CSS class.',
+            ),
             array (
                 "type" => "textfield",
                 "heading" => __ ( "Additional Attributes", VCFF_FORM ),
@@ -73,24 +105,74 @@ vcff_map_field(array(
                 'param_name' => 'extra_class',
                 'group' => 'Adv. Settings',
             ),
+            array (
+                "type" => "vcff_heading",
+                "heading" => false,
+                "param_name" => "dynamic_pop_label",
+                'html_title' => 'Dynamic Population',
+                'group' => 'Adv. Settings',
+                'html_description' => 'You can set this field to accept dynamic values from either POST, GET or REQUEST variables. This is useful if you have forms posting to each other or if you want to refill form fields via a URL link.',
+            ),
+            array (
+                "type" => "vcff_url_vars",
+                "heading" => false,
+                "param_name" => "dynamically_populate",
+                'group' => 'Adv. Settings',
+            ),
             // FIELD VALIDATION PARAMETERS
             array (
-                'type' => 'vcff_validation',
+                'type' => 'vcff_filters',
                 'heading' => false,
-                'param_name' => 'validation',
+                'param_name' => 'filter',
                 'group' => 'Adv. Logic',
-                'validation_rules' => array(
-                    'file_upload_max_size',
-                    'file_upload_extensions',
-                    'file_upload_required'
+            ),
+            array (
+                'type' => 'checkbox',
+                'heading' => false,
+                'param_name' => 'use_adv_filter',
+                'group' => 'Adv. Logic',
+                'value' => array('Use advanced GUMP filter rules' => 'yes')
+            ),
+            array (
+                'type' => 'textfield',
+                'heading' => 'Advanced Filter Rules',
+                'description' => 'You may use any combination of the GUMP filter rules ie trim|sanitize_string. For further information visit the <a href="https://github.com/Wixel/GUMP" target="GUMP">GUMP documentation</a>.',
+                'param_name' => 'adv_filter',
+                'group' => 'Adv. Logic',
+                'dependency' => array(
+                    'element' => 'use_adv_filter',
+                    'value' => 'yes',
                 )
             ),
-            // FIELD CONDITIONAL PARAMETERS
             array (
                 'type' => 'vcff_conditional',
                 'heading' => false,
                 'param_name' => 'conditions',
                 'group' => 'Adv. Logic'
+            ),
+            array (
+                'type' => 'vcff_validation',
+                'heading' => false,
+                'param_name' => 'validation',
+                'group' => 'Adv. Logic',
+            ),
+            array (
+                'type' => 'checkbox',
+                'heading' => false,
+                'param_name' => 'use_adv_validation',
+                'group' => 'Adv. Logic',
+                'value' => array('Use advanced GUMP validation rules' => 'yes')
+            ),
+            array (
+                'type' => 'textfield',
+                'heading' => 'Advanced Validation Rules',
+                'description' => 'You may use any combination of the GUMP validation rules ie required|exact_len,15. For further information visit the <a href="https://github.com/Wixel/GUMP" target="GUMP">GUMP documentation</a>.',
+                'param_name' => 'adv_validation',
+                'group' => 'Adv. Logic',
+                'dependency' => array(
+                    'element' => 'use_adv_validation',
+                    'value' => 'yes',
+                )
             ),
             // VC CSS EDITOR
             array(
