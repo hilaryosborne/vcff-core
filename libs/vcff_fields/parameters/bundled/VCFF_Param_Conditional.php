@@ -50,15 +50,6 @@ class VCFF_Param_Conditional {
             ->Populate(array(
                 'meta_values' => $output
             ));
-        // CALCULATE PHASE
-        $form_calculate_helper = new VCFF_Forms_Helper_Calculate();
-        // Initiate the calculate helper
-        $form_calculate_helper
-            ->Set_Form_Instance($form_instance)
-            ->Calculate(array(
-                'validation' => false,
-                'origin' => false
-            ));
         // Populate the form instance
         $this->form_instance = $form_instance;
     }
