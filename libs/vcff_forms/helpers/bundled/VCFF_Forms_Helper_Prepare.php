@@ -58,7 +58,7 @@ class VCFF_Forms_Helper_Prepare extends VCFF_Helper {
         $form_instance->form_data = isset($params['data']) ? $params['data'] : null ;
         $form_instance->form_referrer = isset($params['vcff_referrer']) ? $params['vcff_referrer'] : null ;
         $form_instance->form_name = isset($params['name']) ? $params['name'] : null ; 
-        $form_instance->form_content = isset($params['content']) ? stripslashes($params['content']) : null ;
+        $form_instance->form_content = isset($params['contents']) ? stripslashes($params['contents']) : null ;
         $form_instance->form_state = isset($params['state']) ? $params['state'] : null ;
         $form_instance->is_submission = isset($params['is_submission']) ? $params['is_submission'] : null ;
         $form_instance->is_ajax = isset($params['is_ajax']) ? $params['is_ajax'] : null ;

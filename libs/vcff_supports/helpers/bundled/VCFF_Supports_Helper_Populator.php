@@ -25,11 +25,11 @@ class VCFF_Supports_Helper_Populator extends VCFF_Helper {
         // Retrieve the support name
 		$machine_code = $_el['name']; 
         // If no form instance was found
-		if (!$machine_code) { die('No support name could be found'); return; }
+		if (!$machine_code) { return; }
 		// Create the field item classname
 		$support_classname = $_context['class'];
 		// If no form instance was found
-		if (!$support_classname) { die('No support class item could be found'); return; } 
+		if (!$support_classname) { return; } 
 		// Create a new item instance for this field
 		$support_instance = new $support_classname();
 		// Populate the support form

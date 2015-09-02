@@ -4,6 +4,16 @@ vcff_map_field(array(
     'type' => 'vcff_field_single_select',
     'title' => 'Single Select Field',
     'class' => 'VCFF_Single_Select_Field_Item',
+    'validation_logic' => array(
+        array(
+            'machine_code' => 'REQUIRED',
+            'title' => 'Required Field',
+            'callback' => false,
+            'description' => 'Insures the specified key value exists and is not empty',
+            'value' => false,
+            'gump_code' => 'required',
+        ),
+    ),
     'conditional_logic' => array(
         array(
             'machine_code' => 'IS',

@@ -5,6 +5,16 @@ vcff_map_field(array(
     'title' => 'Email Field',
     'class' => 'VCFF_Email_Field_Item',
     'filter_logic' => array(),
+    'validation_logic' => array(
+        array(
+            'machine_code' => 'REQUIRED',
+            'title' => 'Required Field',
+            'callback' => false,
+            'description' => 'Insures the specified key value exists and is not empty',
+            'value' => false,
+            'gump_code' => 'required',
+        ),
+    ),
     'conditional_logic' => array(
         array(
             'machine_code' => 'IS',
@@ -42,7 +52,6 @@ vcff_map_field(array(
             'value' => true
         )
     ),
-    'validation_logic' => array(),
     'vc_map' => array(
         'params' => array(
             array (

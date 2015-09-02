@@ -38,7 +38,7 @@ class VCFF_Param_Conditional {
             ->Get_Form(array(
                 'uuid' => $form_uuid,
                 'contents' => $output['content'],
-                'type' => $meta_form_type,
+                'type' => $meta_form_type ? $meta_form_type : 'vcff_standard_form',
             ));
         // If the form instance could not be created
         if (!$form_instance) { die('could not create form instance'); }
