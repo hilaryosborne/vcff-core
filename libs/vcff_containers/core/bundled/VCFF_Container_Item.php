@@ -20,6 +20,8 @@ class VCFF_Container_Item extends VCFF_Item {
     
     public $el;
 
+    public $el_children;
+
     public $is_hidden = false;
 
     public $is_valid = true;

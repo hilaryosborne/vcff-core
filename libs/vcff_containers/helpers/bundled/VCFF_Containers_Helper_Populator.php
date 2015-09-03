@@ -3,9 +3,7 @@
 class VCFF_Containers_Helper_Populator extends VCFF_Helper {
 	
 	protected $form_instance;	
-		
-    protected $container_instance;
-        
+
 	public function Set_Form_Instance($form_instance) {
 		
 		$this->form_instance = $form_instance;
@@ -34,8 +32,6 @@ class VCFF_Containers_Helper_Populator extends VCFF_Helper {
 		if (!$container_classname) { return; }   
 		// Create a new item instance for this field
 		$container_instance = new $container_classname();
-        // Populate the instance property
-        $this->container_instance = $container_instance;
 		// Populate the container form
 		$container_instance->form_instance = $this->form_instance;
 		$container_instance->machine_code = $machine_code;
@@ -46,8 +42,8 @@ class VCFF_Containers_Helper_Populator extends VCFF_Helper {
 		$container_instance->el = $_el['el'];
 		$container_instance->el_children = $_el['children'];
         // Add any child fields
-        $this->_Add_Child_Fields();
-        $this->_Add_Child_Supports();
+        $this->_Add_Child_Fields($container_instance);
+        $this->_Add_Child_Supports($container_instance);
         // If the field has a sanitize method
         if (method_exists($container_instance,'On_Create')) { $container_instance->On_Create(); }
         // Do any create actions
@@ -58,15 +54,13 @@ class VCFF_Containers_Helper_Populator extends VCFF_Helper {
 		return $container_instance;
 	}
     
-    protected function _Add_Child_Fields() {
+    protected function _Add_Child_Fields($container_instance) {
         // Retrieve the form instance
 		$form_instance = $this->form_instance;
-        // Retrieve the container instance
-        $container_instance = $this->container_instance;
         // Retrieve the container's children
-        $el_children = $container_instance->el_children;
+        $el_children = $container_instance->el_children; 
         // If no shortcodes were returned
-        if (!$el_children || !is_array($children)) { return $container_instance; } 
+        if (!$el_children || !is_array($el_children)) { return; } 
         // Loop through each shortcode
         foreach ($el_children as $k => $el) {
             // If this is not a tag
@@ -78,7 +72,7 @@ class VCFF_Containers_Helper_Populator extends VCFF_Helper {
             // Retrieve the field instance
             $field_instance = $form_instance->Get_Field($_attributes['machine_code']);
             // If no field instance was returned
-            if (!$field_instance) { continue; }
+            if (!$field_instance) { continue; } 
             // Add the field instance to the container
             $container_instance->Add_Field($field_instance);
             // Do any create actions
@@ -88,11 +82,9 @@ class VCFF_Containers_Helper_Populator extends VCFF_Helper {
         }
     }
     
-    protected function _Add_Child_Supports() {
+    protected function _Add_Child_Supports($container_instance) {
         // Retrieve the form instance
 		$form_instance = $this->form_instance;
-        // Retrieve the container instance
-        $container_instance = $this->container_instance;
         // Retrieve the container's el_children
         $el_children = $container_instance->el_children;
         // If no shortcodes were returned
