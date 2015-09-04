@@ -55,6 +55,8 @@ class VCFF_Containers_Helper_AJAX extends VCFF_Helper {
             $_ajax['validation'] = $container_instance->Is_Valid() ? 'passed' : 'failed';
             // Populate the container type
             $_ajax['alerts'] = $container_instance->Get_Alerts_HTML();
+            // Populate the container type
+            $_ajax['data'] = $container_instance->ajax;
             // Run the ajax data through any filters
             $_ajax = $container_instance->Apply_Filters('container_ajax',$_ajax,array('helper' => $this, '_ajax' => $_ajax));
             // Populate the ajax data

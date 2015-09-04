@@ -55,6 +55,8 @@ class VCFF_Supports_Helper_AJAX extends VCFF_Helper {
             $_ajax['validation'] = $support_instance->Is_Valid() ? 'passed' : 'failed';
             // Populate the support type
             $_ajax['alerts'] = $support_instance->Get_Alerts_HTML();
+            // Populate the support type
+            $_ajax['data'] = $support_instance->ajax;
             // Run the ajax data through any filters
             $_ajax = $support_instance->Apply_Filters('support_ajax',$_ajax,array('helper' => $this, '_ajax' => $_ajax));
             // Populate the ajax data

@@ -48,6 +48,7 @@ class VCFF_Forms_Helper_Result extends VCFF_Helper {
             'result' => $form_instance->Is_Valid() ? 'passed' : 'failed',
             'origin_key' => $form_instance->Gen_Origin_Key(),
             'alerts' => $form_instance->Get_Alerts_HTML(),
+            'data' => $form_instance->ajax
         ); 
         // Create a new fields ajax helper
         $fields_helper_AJAX = new VCFF_Fields_Helper_AJAX();
