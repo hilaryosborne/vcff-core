@@ -17,24 +17,30 @@ vcff_map_field(array(
 
     ),
     'validation_logic' => array(
-        'file_upload_max_size' => array(
-            'label' => 'Maximum Filesize',
+        array(
+            'machine_code' => 'MAX_UPLOAD_SIZE',
+            'title' => 'Maximum Filesize',
+            'callback' => '_MAX_UPLOAD_SIZE',
             'description' => 'Insures the specified key value exists and is not empty',
-            'has_value' => true
+            'value' => true,
+            'gump_code' => false,
         ),
-
-        'file_upload_extensions' => array(
-            'label' => 'Allowed Extensions',
+        array(
+            'machine_code' => 'ALLOWED_EXTENSIONS',
+            'title' => 'Allowed Extensions',
+            'callback' => '_ALLOWED_EXTENSIONS',
             'description' => 'Insures the specified key value exists and is not empty',
-            'has_value' => true
+            'value' => true,
+            'gump_code' => false,
         ),
-
-        'file_upload_required' => array(
-            'label' => 'Required',
+        array(
+            'machine_code' => 'REQUIRED',
+            'title' => 'Required Field',
+            'callback' => false,
             'description' => 'Insures the specified key value exists and is not empty',
-            'has_value' => false,
-            'callback' => '_Val_Required'
-        )
+            'value' => false,
+            'gump_code' => 'required',
+        ),
     ),
     'vc_map' => array(
         'params' => array(

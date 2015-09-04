@@ -117,7 +117,7 @@ class VCFF_Fields_Helper_Validation {
 		// Loop through each containers
 		foreach ($form_fields as $machine_code => $field_instance) {
 			// If this field has a custom validation method
-			if (method_exists($field_instance,'After_Validation')) { $field_instance->Post_Validation(); }
+			if (method_exists($field_instance,'After_Validation')) { $field_instance->After_Validation(); }
             // Do any actions
             $field_instance->Do_Action('after_validation',array());
             // Retrieve the validation result

@@ -424,6 +424,24 @@ class VCFF_Field_Item extends VCFF_Item {
      * VALIDATION FUNCTIONS
      * 
      */
+     
+    public function Get_Validation() {
+        
+        $attributes = $this->attributes;
+        
+        $validation = $attributes['validation'] ? json_decode(base64_decode($attributes['validation']),true) : false;
+        
+        if (!$validation || !is_array($validation)) { return false; }
+        
+        $_rules = array();
+        
+        foreach ($validation as $k => $_rule) {
+            
+            $_rules[$_rule['rule']] = $_rule;
+        }
+        
+        return $_rules;
+    }
 
     public function Check_Field_Validation() {
         // If there are no validation rules
@@ -465,7 +483,7 @@ class VCFF_Field_Item extends VCFF_Item {
                     // If there is no callback, continue on
                     if (!method_exists($this,$validator_callback)) { continue; }
                     // Retrieve the callback
-                    $this->$validator_callback();
+                    $this->$validator_callback($_validator);
                 } // Otherwise if this is a gump filter
                 else { 
                     // Create a new gump validation class

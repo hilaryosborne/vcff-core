@@ -20,6 +20,7 @@
     <input name="<?php echo $machine_code; ?>[original]" type="hidden" value="<?php echo $this->Get_Original_Filename(); ?>" class="form-control field-original">
     <input name="<?php echo $machine_code; ?>[name]" type="hidden" value="<?php echo $this->Get_Actual_Filename(); ?>" class="form-control field-filename">
     <input name="<?php echo $machine_code; ?>[location]" type="hidden" value="<?php echo $this->Get_Actual_Location(); ?>" class="form-control field-location">
+    <input name="<?php echo $machine_code; ?>[url]" type="hidden" value="<?php echo $this->Get_Actual_URL(); ?>" class="form-control field-url">
     <button type="button" class="btn btn-upload">Select File</button>
     <?php do_action('vcff_field_post_input',$this); ?>
 </div>

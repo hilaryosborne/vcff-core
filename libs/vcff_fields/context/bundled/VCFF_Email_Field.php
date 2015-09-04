@@ -86,7 +86,6 @@ vcff_map_field(array(
                 "type" => "textfield",
                 "heading" => __ ( "Label (Data Entry)", VCFF_FORM ),
                 "param_name" => "field_label",
-                'value' => __('Enter a field label..'),
                 'admin_label' => true,
             ),
             array (

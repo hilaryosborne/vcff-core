@@ -6,46 +6,20 @@ class VCFF_Single_File_Field_Item extends VCFF_Field_Item {
     
     public $allow_conditions = false;
     
-    public function _Post_Form_Validation($form_instance) {
+    public function After_Validation() {
+        // Return the form instance
+        $form_instance = $this->form_instance;
         // If the form is not valid
         if (!$form_instance->is_valid) { return; }
         // If the form is not in a submission state
         if (!$form_instance->is_submission) { return; }
-        // Create a new field upload helper
-        $upload_helper = new VCFF_Single_File_Field_Upload();
-        // Set the form instance
-        $upload_helper->form_instance = $form_instance;
-        // Set the field instance
-        $upload_helper->field_instance = $this;
-        // Retrieve the field's posted value
-        $posted_value = $this->posted_value;
-        // Confirm the upload
-        $upload_helper->Confirm_Upload($posted_value);
+        // Create a new upload helper
+        $file_upload_helper = new VCFF_Fields_Helper_Upload();
+        // Setup the helper
+        $file_upload_helper
+            ->Set_Form_Instance($form_instance)
+            ->Confirm_Upload($this->posted_value);
     } 
-    
-    public function Is_Required() { 
-        
-        $rule = $this->Get_Validation_Rule('file_upload_required');
-        
-        return $rule ? true : false;
-    }
-    
-    public function _Val_Required() {
-        // Retrieve the posted value
-        if (!$this->Get_Actual_Location()) {
-            // Set the validation flag to false
-            $this->is_valid = false;
-            // Create the error string
-            $error_string = 'You must upload a file';
-            // Update the post value with the sanitized version
-            $this->result_validation = array(
-                'result' => 'failed',
-                'message' => $error_string,
-            );
-            // Add a danger alert for this field
-            $this->Add_Alert($error_string,'danger');
-        }
-    }
     
     public function Form_Render() {  
         // Convert attrs to vars
@@ -70,6 +44,14 @@ class VCFF_Single_File_Field_Item extends VCFF_Field_Item {
         ob_end_clean();
         // Return the contents
         return $output;
+    }
+    
+    public function _MAX_UPLOAD_SIZE($_config) {
+        
+    }
+    
+    public function _ALLOWED_EXTENSIONS($_config) {
+        
     }
     
     public function Get_Original_Filename() {
@@ -99,29 +81,28 @@ class VCFF_Single_File_Field_Item extends VCFF_Field_Item {
         return $posted_value['location'];
     }
     
+    public function Get_Actual_URL() {
+        
+        $posted_value = $this->posted_value;
+        
+        if (!isset($posted_value['url'])) { return ''; }
+        
+        return $posted_value['url'];
+    }
+    
     public function Get_Allowed_Extensions() {
         
-        $rule = $this->Get_Validation_Rule('file_upload_extensions');
+        $validation = $this->Get_Validation();
 
-        if (!$rule) { return array('txt'); }
-        
-        if (!isset($rule['param']['value'])) { return array('txt'); }
-        
-        if (!$rule['param']['value']) { return array('txt'); }
-
-        $extensions = explode(',',str_replace(' ','',$rule['param']['value']));
-        
-        $extension_list = array();
-        
-        foreach ($extensions as $k => $extension) {
+        if (isset($validation['ALLOWED_EXTENSIONS']) && $validation['ALLOWED_EXTENSIONS']['value']) {
             
-            $extension_list[] = $extension;
-        }
-        
-        return $extension_list;
+            return explode(',',str_replace(' ','',$validation['ALLOWED_EXTENSIONS']['value']));    
+        } 
+        else { return array('txt'); }
     }
     
     public function Get_Display_Filesize() {
+    
         $allowed_filesize = $this->Get_Allowed_Filesize();
         
         if ($allowed_filesize < 1000) {
@@ -133,38 +114,36 @@ class VCFF_Single_File_Field_Item extends VCFF_Field_Item {
         } else {
             return number_format($allowed_filesize/1000000000,2).'gig';
         }
-        
     }
     
     public function Get_Allowed_Filesize() {
-       
-        $rule = $this->Get_Validation_Rule('file_upload_max_size');
+        
+        $validation = $this->Get_Validation();
 
-        if (!$rule) { return $this->_Get_INI_Max_Upload(); }
-        
-        if (!isset($rule['param']['value'])) { return $this->_Get_INI_Max_Upload(); }
+        if (isset($validation['MAX_UPLOAD_SIZE']) && $validation['MAX_UPLOAD_SIZE']['value']) {
+            
+            $supplied_size = $validation['MAX_UPLOAD_SIZE']['value'];
+            
+            $supplied_size_bytes = 0;
 
-        if (!$rule['param']['value']) { return $this->_Get_INI_Max_Upload(); }
-        
-        $supplied_size = $rule['param']['value'];
-        
-        $supplied_size_bytes = 0;
-        
-        $max_allowed = $this->_Get_INI_Max_Upload();
-        
-        $int_val = (int)filter_var($supplied_size, FILTER_SANITIZE_NUMBER_INT);
-        
-        if (stripos($supplied_size,'kb') !== false) {
-            
-            $supplied_size_bytes = round($int_val*1000);
+            $max_allowed = $this->_Get_INI_Max_Upload();
+
+            $int_val = (int)filter_var($supplied_size, FILTER_SANITIZE_NUMBER_INT);
+
+            if (stripos($supplied_size,'kb') !== false) {
+
+                $supplied_size_bytes = round($int_val*1000);
+            } 
+            elseif (stripos($supplied_size,'mb') !== false) {
+
+                $supplied_size_bytes = round($int_val*1000000);
+            } 
+            else { $supplied_size_bytes = $int_val; }
+
+            return $supplied_size_bytes > $max_allowed ? $max_allowed : $supplied_size_bytes ;
+
         } 
-        elseif (stripos($supplied_size,'mb') !== false) {
-            
-            $supplied_size_bytes = round($int_val*1000000);
-        } 
-        else { $supplied_size_bytes = $int_val; }
-        
-        return $supplied_size_bytes > $max_allowed ? $max_allowed : $supplied_size_bytes ;
+        else { return $this->_Get_INI_Max_Upload(); }
     } 
 
     protected function _Get_INI_Max_Upload()  

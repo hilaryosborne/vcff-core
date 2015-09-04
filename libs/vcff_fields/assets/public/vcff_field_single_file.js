@@ -24,10 +24,12 @@ vcff_add_action('form_setup',function(args){
             _tmp_iframe_el.attr("name",_iframe_id);
             // Append the iframe to the body
             $('body').append(_tmp_iframe_el);
+            // Retrieve the field machine name
+            var _machine_name = $(field_el).attr('data-vcff-field-name');
             // Create a temp form element
             _tmp_form_el = $('<form />');
             // Set the form attributes
-            _tmp_form_el.attr("action",vcff_data.ajaxurl+"?action=vcff_single_field_upload");
+            _tmp_form_el.attr("action",vcff_data.ajaxurl+"?action=vcff_field_upload&ajax_action=upload&ajax_code="+_machine_name);
             _tmp_form_el.attr("method","post");
             _tmp_form_el.attr("enctype","multipart/form-data");
             // Append the form to the body
@@ -48,8 +50,6 @@ vcff_add_action('form_setup',function(args){
             var _form_key = $(vcff_form).find('[name="vcff_key"]').val();
             // Add the security key to a hidden field
             _tmp_form_el.append('<input type="hidden" name="vcff_key" value="'+_form_key+'">');
-            // Retrieve the field machine name
-            var _machine_name = $(field_el).attr('data-vcff-field-name');
             // Add the form field machine code to a hidden field
             _tmp_form_el.append('<input type="hidden" name="machine_name" value="'+_machine_name+'">');
             // Set the iframe styling
@@ -100,6 +100,8 @@ vcff_add_action('form_setup',function(args){
             $(field_el).find('.field-filename').val(json.data.filename);
             // Store the location
             $(field_el).find('.field-location').val(json.data.location);
+            // Store the location
+            $(field_el).find('.field-url').val(json.data.url);
             // Remove the tmp form
             _tmp_form_el.remove();
             // Remove the tmp iframe
@@ -126,12 +128,10 @@ vcff_add_action('form_setup',function(args){
             // Post the data to the webservice
             $.post(vcff_data.ajaxurl,{
                 // The wordpress ajax action
-                'action':'vcff_single_field_remove',
-                // The form uuid
+                'action':'vcff_field_upload',
+                'ajax_action':'remove',
+                'ajax_code':_machine_name,
                 'vcff_form_uuid':_form_uuid,
-                // The field machine name
-                'machine_name':_machine_name,
-                // The filename to remove
                 'filename':_filename
             // Process the json data
             },function(result_json){ 
