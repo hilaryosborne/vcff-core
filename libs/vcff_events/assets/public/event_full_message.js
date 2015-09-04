@@ -12,7 +12,7 @@
         
         var _event_data = args.event_data;
         
-        if (typeof _event != "full_message") { return false; }
+        if (_event != "full_message") { return false; }
         
         $(_form_el).hide();
         

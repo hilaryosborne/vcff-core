@@ -12,7 +12,7 @@
         
         var _event_data = args.event_data;
         
-        if (typeof _event != "redirect") { return false; }
+        if (_event != "redirect") { return false; }
         
         var _redirect = _event_data;
 

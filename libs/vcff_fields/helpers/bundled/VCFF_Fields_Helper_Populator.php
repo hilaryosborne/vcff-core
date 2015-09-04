@@ -135,7 +135,7 @@ class VCFF_Fields_Helper_Populator {
         // Apply filters for dynamic rules
         $dynamic_rules = apply_filters('vcff_fields_dynamic_fields', $dynamic_rules, $field_instance, $this);
         // If there are dynamic rules to apply
-        if ($dynamic_rules && is_array($dynamic_rules)) {
+        if ($dynamic_rules && is_array($dynamic_rules)) { 
             // Loop through each of the rules
             foreach ($dynamic_rules as $k => $rule) {
                 // The request method to expect
@@ -149,7 +149,7 @@ class VCFF_Fields_Helper_Populator {
                 } // If this rule is looking for a get request
                 elseif (strtolower($rule_method) == 'get' && isset($_GET[$rule_key])) {
                     // Run the data through the field specific processor or store raw data
-                    $field_instance->posted_value = $_GET[$rule_key]; 
+                    $field_instance->posted_value = $_GET[$rule_key];
                 } // If this rule is looking for a general request
                 elseif (strtolower($rule_method) == 'request' && isset($_GET[$rule_key])) {
                     // Run the data through the field specific processor or store raw data

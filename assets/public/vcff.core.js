@@ -371,7 +371,6 @@
 }(window.jQuery);
 
 var CaptchaCallback = function() {
-    console.log('asdasd');
     var $ = window.jQuery;
     
     $('.recaptcha-field').each(function(){
