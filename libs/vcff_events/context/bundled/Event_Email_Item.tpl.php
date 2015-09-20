@@ -245,7 +245,7 @@
     
     <div class="action-field-group">
         <div class="action-group-header">
-            <h4><strong><?php echo __('HTML Text Contents', VCFF_NS); ?></strong></h4><a href="" target="vcff_hint" class="help-lnk"><span class="dashicons dashicons-editor-help"></span> Help</a>
+            <h4><strong><?php echo __('Text Message Contents', VCFF_NS); ?></strong></h4><a href="" target="vcff_hint" class="help-lnk"><span class="dashicons dashicons-editor-help"></span> Help</a>
         </div>
         <div class="action-group-contents">
             <div class="row">
