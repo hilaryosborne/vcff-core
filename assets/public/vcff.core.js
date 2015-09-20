@@ -46,14 +46,14 @@
                 
                 clearTimeout(_buffer);
             
-                _buffer = setTimeout(function(){ _self.Check_Conditions(); },450);
+                _buffer = setTimeout(function(){ _self.Pre_Send(); _self.Check_Conditions(); },450);
             });
             
             $(vcff_form).find('.key-change').keyup(function(){ 
             
                 clearTimeout(_buffer);
                 
-                _buffer = setTimeout(function(){ _self.Check_Conditions(); },450);
+                _buffer = setTimeout(function(){ _self.Pre_Send(); _self.Check_Conditions(); },450);
             });
 
             $(vcff_form).find('.click-refresh').click(function(){ 

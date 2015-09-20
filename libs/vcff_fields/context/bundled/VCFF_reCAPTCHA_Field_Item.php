@@ -24,6 +24,8 @@ class VCFF_reCAPTCHA_Field_Item extends VCFF_Field_Item {
         $recaptcha_site_key = vcff_get_setting_value('recaptcha_site_key');
         // Compile the css class
         $css_class = apply_filters(VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, vc_shortcode_custom_css_class($css, ' ' ), $this->settings['base'], $this->attributes);
+        // Add css classes
+        $css_class = apply_filters('vcff_el_css',$css_class,$this->attributes,$this);
         // Start gathering content
         ob_start();
         // Retrieve the context director
