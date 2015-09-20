@@ -14,7 +14,7 @@ vcff_map_field(array(
         ),
     ),
     'conditional_logic' => array(
-
+        
     ),
     'validation_logic' => array(
         array(
@@ -192,3 +192,56 @@ vcff_map_field(array(
 ));
 
 vcff_front_enqueue_script('vcff_field_single_file', VCFF_FIELDS_URL.'/assets/public/vcff_field_single_file.js',array('vcff-core'));
+
+add_filter('vcff_settings_group_list',function($group_list, $form_instance){
+    
+    $group_list[] = array(
+        'id' => 'field_upload_config',
+        'title' => 'File Upload Configuration',
+        'weight' => 5,
+        'hint_html' => '<h4><strong>Instructions</strong></h4><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur cursus erat at lectus commodo tempor eget vel turpis. Praesent vitae eros semper, aliquet ipsum vel, porttitor tellus.</p>',
+        'help_url' => 'http://vcff.theblockquote.com',
+    );
+    
+    return $group_list;
+    
+},0,2);
+
+add_filter('vcff_settings_field_list',function($field_list, $form_instance){
+    
+    $field_list[] = array(
+        'machine_code' => 'field_upload_structure',
+        'label' => 'Folder Structure',
+        'group' => 'field_upload_config',
+        'weight' => 6,
+        'type' => 'select',
+        'values' => array(
+            '' => 'Select Folder Structure',
+            'NONE' => 'None',
+            'YYMMDD' => 'Year / Month / Day',
+            'YYMM' => 'Year / Month',
+            'YY' => 'Year'
+        )
+    );
+    
+    $field_list[] = array(
+        'machine_code' => 'field_upload_dir',
+        'label' => 'Upload Directory',
+        'group' => 'field_upload_config',
+        'weight' => 1,
+        'type' => 'textfield',
+        'dependancy' => false
+    );
+    
+    $field_list[] = array(
+        'machine_code' => 'field_upload_temp_dir',
+        'label' => 'Temp Directory',
+        'group' => 'field_upload_config',
+        'weight' => 2,
+        'type' => 'textfield',
+        'dependancy' => false
+    );
+    
+    return $field_list;
+    
+},0,2);
