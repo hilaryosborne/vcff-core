@@ -74,8 +74,8 @@ class Event_Redirect_Item extends VCFF_Event_Item {
         $this->redirect_params = vcff_curly_compile($this->form_instance,$this->_Get_Redirect_Query());
         
         $form_instance->Add_Filter('ajax',array($this,'_AJAX_Filter'));
-        
-        $form_instance->Add_Filter('render',array($this,'_Standard_Filter'));
+
+        $form_instance->Add_Action('review_events',array($this,'_Standard_Redirect'));
     }
     
     public function _AJAX_Filter($value,$args) {
@@ -89,15 +89,19 @@ class Event_Redirect_Item extends VCFF_Event_Item {
         return $value;
     }
     
-    public function _Standard_Filter($output) {
+    public function _Standard_Redirect() {
+        // Retrieve the form instance
+        $form_instance = $this->form_instance;
+        // If this is an ajax form, exit
+        if ($form_instance->is_ajax) { return; }
          // If the redirect is a get redirect
-        if ($this->redirect_method == 'get') {
+        if ($this->redirect_method == 'get') { 
             // Calculate the 
             $get_url = $this->redirect_params ? $this->redirect_url.'?'.$this->redirect_params : $this->redirect_url;
             // Redirect to the new page
             header('Location: '.$get_url);
             // Exit wordpress
-            wp_die();
+            exit;
          
         } elseif ($this->redirect_method == 'post') {
             // Calculate the 
@@ -127,7 +131,7 @@ class Event_Redirect_Item extends VCFF_Event_Item {
             // Clean up
             ob_end_clean();
             // Return the contents
-            return $output;
+            echo $output; wp_die();
         }
     }
 }
