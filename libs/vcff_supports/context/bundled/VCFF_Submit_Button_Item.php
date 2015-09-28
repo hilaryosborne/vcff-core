@@ -5,6 +5,7 @@ class VCFF_Submit_Button_Item extends VCFF_Support_Item {
     public function Render() { 
         // Convert attrs to vars
         extract(shortcode_atts(array(
+            'machine_code' => '',
             'btn_label'=>'',
             'btn_value'=>'',
             'extra_class'=>'',

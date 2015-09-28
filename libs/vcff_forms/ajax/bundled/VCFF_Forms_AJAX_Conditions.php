@@ -10,6 +10,9 @@ class VCFF_Forms_AJAX_Conditions {
     public function _AJAX_Conditions() { 
         // Parse the form data
         parse_str(base64_decode($_POST['form_data']),$output);
+        // Do actions for ajax
+        do_action('vcff_pre_ajax',$output);
+        do_action('vcff_pre_ajax_conditions',$output);
         // PREPARE PHASE
         $form_prepare_helper = new VCFF_Forms_Helper_Prepare(); 
         // Get the form instance

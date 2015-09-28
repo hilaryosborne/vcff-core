@@ -5,7 +5,7 @@ class VCFF_Loading_Alert_Item extends VCFF_Support_Item {
     public function Render() { 
         // Convert attrs to vars
         extract(shortcode_atts(array(
-            'support_name'=>'',
+            'machine_code' => '',
             'loading_msg'=>'',
             'display'=>'',
             'usage'=>'',

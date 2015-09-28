@@ -5,6 +5,7 @@ class VCFF_Alert_Panel_Item extends VCFF_Support_Item {
     public function Render() { 
         // Convert attrs to vars
         extract(shortcode_atts(array(
+            'machine_code' => '',
             'extra_class'=>'',
             'css'=>'',
         ), $this->attributes));

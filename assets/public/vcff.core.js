@@ -246,7 +246,7 @@
 					// If there is no field of this name
 					if ($(container_obj).length === 0) { return true; }
 					// If there are conditions for this container
-					if (typeof container.visibility != "undefined") {
+					if (!$(container_obj).hasClass('ignore-visibility') && typeof container.visibility != "undefined") {
                         // If the field is set to visible
                         if (container.visibility == 'visible') {
                             // Show the field
@@ -274,7 +274,7 @@
 					// If there is no field of this name
 					if ($(field_obj).length === 0) { return true; }
 					// If there are conditions for this container
-					if (typeof field.visibility != "undefined") {
+					if (!$(field_obj).hasClass('ignore-visibility') && typeof field.visibility != "undefined") {
                         // If the field is set to visible
                         if (field.visibility == 'visible') {
                             // Show the field
@@ -300,9 +300,9 @@
 					// Retrieve the support dom element
 					var support_obj = $(vcff_form).find('[data-vcff-support-name="'+machine_code+'"]');  
 					// If there is no support of this name
-					if ($(support_obj).length === 0) { return true; }
+					if ($(support_obj).length === 0) { return true; } 
 					// If there are conditions for this container
-					if (typeof support.visibility != "undefined") {
+					if (!$(support_obj).hasClass('ignore-visibility') && typeof support.visibility != "undefined") {
                         // If the support is set to visible
                         if (support.visibility == 'visible') {
                             // Show the support
@@ -314,7 +314,7 @@
                     if (typeof support.alerts != 'undefined' && support.alerts) {
                         // Append any support alerts
                         $(support_obj).find('.support-alerts').show().html(support.alerts);
-                    }
+                    } 
                     // Pre form standard submission actions
                     vcff_do_action('support_do_refresh',{'form':vcff_form,'data':json.data,'support':support,'support_el':support_obj});
 				});

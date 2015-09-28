@@ -10,6 +10,9 @@ class VCFF_Forms_AJAX_Submissions {
     public function _AJAX_Submit() {
         // Parse the form data
         parse_str(base64_decode($_POST['form_data']),$output);
+        // Do actions for ajax
+        do_action('vcff_pre_ajax',$output);
+        do_action('vcff_pre_ajax_submission',$output);
         // PREPARE PHASE
         $form_prepare_helper = new VCFF_Forms_Helper_Prepare();
         // Get the form instance

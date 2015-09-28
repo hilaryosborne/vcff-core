@@ -33,7 +33,7 @@ class VCFF_Supports_Helper_Populator extends VCFF_Helper {
 		// Create a new item instance for this field
 		$support_instance = new $support_classname();
 		// Populate the support form
-		$support_instance->form = $this->form_instance;
+		$support_instance->form_instance = $this->form_instance;
 		// Populate the support fields
 		$support_instance->machine_code = $machine_code;
         // Populate the support fields
