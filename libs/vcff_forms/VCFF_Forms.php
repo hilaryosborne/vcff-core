@@ -261,6 +261,12 @@ class VCFF_Forms {
                     'heading' => __('Extra Class', VCFF_FORM ),
                     'param_name' => 'extra_class',
                 ),
+                array(
+                    'type' => 'css_editor',
+                    'heading' => __('CSS',VCFF_FORM),
+                    'param_name' => 'css',
+                    'group' => __('Design Options',VCFF_FORM),
+                ),
             ),$_post,$form_context);
             // Map the form to visual composer
             vc_map(array(

@@ -7,8 +7,11 @@ class VCFF_Standard_Form_Item extends VCFF_Form_Item {
         extract(shortcode_atts(array(
             'form_attributes'=>'',
             'extra_class'=>'',
+            'css'=>'',
         ), $this->form_attributes));
-
+        // Compile the css class
+        $css_class = apply_filters(VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, vc_shortcode_custom_css_class( $css, ' ' ), $this->settings['base'], $atts);
+        // Retrieve the form contents
         $form_content = $this->form_render;
         // Retrieve the output html
         $form_content = apply_filters('vcff_form_item_content',$form_content,$this); 

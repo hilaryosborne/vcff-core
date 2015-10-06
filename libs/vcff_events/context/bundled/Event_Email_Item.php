@@ -161,9 +161,7 @@ class Event_Email_Item extends VCFF_Event_Item {
         }
 
         $mailer->isHTML(true);
-        
-        
-        
+
         $mailer_is_smtp = vcff_get_setting_value('mailer_is_smtp');
         
         if ($mailer_is_smtp) { 
@@ -292,6 +290,8 @@ class Event_Email_Item extends VCFF_Event_Item {
         $mailer->AltBody = $text_content;
         
         if (!$mailer->send()) { $this->error = $mailer->ErrorInfo; $form_instance->Add_Alert('danger','There was a problem with PHPMailer: '.$mailer->ErrorInfo); } 
+        
+        
     }
 }
 
