@@ -58,9 +58,7 @@ class VCFF_Form_Item extends VCFF_Item {
     
     public $is_session = false;
     
-    public $session_key;
-    
-    public $session_data;
+    public $session_id;
     
     /**
      * ALERTS
@@ -106,6 +104,21 @@ class VCFF_Form_Item extends VCFF_Item {
     public function Get_Name() {
     
         return $this->form_name;
+    }
+    
+    public function Get_Session_ID() {
+        // Retrieve the post data
+        $post_data = $this->form_data; 
+        // If a session key has been provided via post data
+        if (isset($post_data['vcff_session_id']) && $post_data['vcff_session_id']) {
+            // Generate the new session key
+            return $post_data['vcff_session_id'];
+        } // Otherwise generate a new session key
+        else { 
+        
+            $this->form_data['vcff_session_id'] = md5(uniqid());
+        
+        return $this->form_data['vcff_session_id']; }
     }
 
     public function Gen_Origin_Key() {
@@ -350,37 +363,6 @@ class VCFF_Form_Item extends VCFF_Item {
         }
         // Return all of the values
         return $field_values;
-    }
-    
-    public function Setup() {
-        // Create a new session helper
-        $session_helper = new VCFF_Forms_Helper_Session();
-        // Update the form's session
-        $session_helper
-            ->Set_Form_Instance($this)
-            ->Get_Key();
-        // Populate the session data
-        $this->session_data = $session_helper->Get_Data();
-        // Return out
-        return $this; 
-    }
-    
-    public function Get_Session_Data() {
-        
-        return $this->session_data;
-    }
-    
-    public function Set_Session_Data($session_data) {
-        // Create a new session helper
-        $session_helper = new VCFF_Forms_Helper_Session();
-        // Update the session data
-        $this->session_data = $session_data;
-        // Update the form's session
-        $session_helper
-            ->Set_Form_Instance($this)
-            ->Update();
-        // Return out
-        return $this; 
     }
 
 }

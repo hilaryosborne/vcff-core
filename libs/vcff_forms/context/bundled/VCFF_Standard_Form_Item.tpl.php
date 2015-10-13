@@ -13,4 +13,5 @@
     <input type="hidden" name="vcff_form_id" value="<?php echo $this->Get_ID(); ?>">
     <input type="hidden" name="vcff_form_uuid" value="<?php echo $this->Get_UUID(); ?>">
     <input type="hidden" name="vcff_post_id" value="<?php echo $this->Get_Post_ID(); ?>">
+    <input type="hidden" name="vcff_session_id" value="<?php echo $this->Get_Session_ID(); ?>">
 </form>

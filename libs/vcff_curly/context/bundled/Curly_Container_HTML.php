@@ -34,6 +34,8 @@ class Curly_Container_HTML extends VCFF_Item {
         $form_instance = $this->form_instance;
         // Retrieve the form fields
         $form_containers = $form_instance->Get_Containers();
+        // If there are no form containers
+        if (!$form_containers || !is_array($form_containers) || count($form_containers) == 0) { return array(); }
         // The list for all code hints
         $hints = array();
         // Populate the curly tags
@@ -64,6 +66,8 @@ class Curly_Container_HTML extends VCFF_Item {
         $form_instance = $this->form_instance;
         // Retrieve the field instance
         $container_instance = $form_instance->Get_Container($machine_code);
+        // If no container instance was returned
+        if (!$container_instance || !is_object($container_instance)) { return; }
         // Return the html value
         return $container_instance->Get_HTML_Value();
     }

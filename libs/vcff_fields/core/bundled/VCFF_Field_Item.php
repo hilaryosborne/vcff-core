@@ -94,6 +94,15 @@ class VCFF_Field_Item extends VCFF_Item {
         return $attributes['view_label'];
     }
     
+    public function Get_Contents() {
+        
+        $el = $this->el;
+        
+        if (!is_array($el->children) || !isset($el->children[0])) { return; }
+        
+        return $el->children[0]->string;
+    }
+    
     public function Check_Conditions() {
         // Retrieve the field's attributes
         $_attributes = $this->attributes;
