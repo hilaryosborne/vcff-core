@@ -92,5 +92,15 @@ class VCFF_reCAPTCHA_Field_Item extends VCFF_Field_Item {
             $this->Add_Alert('Invalid reCAPTCHA Response','danger');
         }
     }
+    
+    public function Get_HTML_Value() {
+
+        return '';
+    }
+    
+    public function Get_TEXT_Value() {
+        
+        return '';
+    }
 
 }

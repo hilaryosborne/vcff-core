@@ -68,6 +68,8 @@ class Curly_Container_Text extends VCFF_Item {
         $container_instance = $form_instance->Get_Container($machine_code);
         // If no container instance was returned
         if (!$container_instance || !is_object($container_instance)) { return; }
+        // If no container instance was returned
+        if (isset($container_instance->no_curly) && $container_instance->no_curly) { return; }
         // Return the html value
         return $container_instance->Get_Text_Value();
     }

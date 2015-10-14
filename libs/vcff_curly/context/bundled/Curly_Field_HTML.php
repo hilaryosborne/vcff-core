@@ -56,6 +56,10 @@ class Curly_Field_HTML extends VCFF_Item {
         $form_instance = $this->form_instance;
         // Retrieve the field instance
         $field_instance = $form_instance->Get_Field($machine_code);
+        // If no container instance was returned
+        if (!$field_instance || !is_object($field_instance)) { return; }
+        // If no container instance was returned
+        if (isset($field_instance->no_curly) && $field_instance->no_curly) { return; }
         // Return the html value
         return $field_instance->Get_HTML_Value();
     }
