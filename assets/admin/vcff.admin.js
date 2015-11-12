@@ -17,17 +17,17 @@
         
         if (typeof vc.EditElementPanelView == 'undefined') { return false; }
         
+        vc.EditElementPanelView.prototype.__ajaxData = vc.EditElementPanelView.prototype.ajaxData;
+        
         vc.EditElementPanelView.prototype.ajaxData = function() {
             // Serialise the post form
             var post_contents = $("#post").serialize();
-            
-            return {
-				action: 'vc_edit_form',
-				tag: this.model.get( 'shortcode' ),
-				post_id: $( '#post_ID' ).val(),
-				params: this.model.get( 'params' ),
-                post_contents:base64.encode(post_contents)
-			};
+
+			var _data = this.__ajaxData();
+
+			_data.post_contents = post_contents;
+			
+			return _data;
         }
         
     });
