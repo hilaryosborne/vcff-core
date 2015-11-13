@@ -156,6 +156,6 @@ add_action('vc_before_init',function(){
         ->Load_Scripts_Admin()
         ->Load_Shortcodes()
         ->Handle_Submissions();
-});
+},20);
 
 
