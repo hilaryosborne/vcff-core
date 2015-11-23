@@ -35,11 +35,19 @@ class VCFF_Forms_Helper_Prepare extends VCFF_Helper {
         } // If a form id was passed
         elseif (isset($params['id'])) {
             // Retrieve the form type from the post meta
-            $form_type = get_post_meta($params['id'],'form_type',true);
+            $form_type = get_post_meta($params['id'],'form_type',true); 
             // If still no form type, use the default
             if (!$form_type) { $form_type = $this->default_type; } 
+        } // If a form id was passed
+        elseif (isset($params['uuid'])) {
+        	// Retrieve the post object
+            $wp_post = vcff_get_form_by_uuid($params['uuid']);
+            // Retrieve the form type from the post meta
+            $form_type = get_post_meta($wp_post->ID,'form_type',true); 
+            // If still no form type, use the default
+            if (!$form_type) { $form_type = $this->default_type; }
         } // Otherwise use the default form type
-        else { $form_type = $this->default_type; }
+        else { $form_type = $this->default_type; } 
         // If no context was found
         if (!isset($vcff_forms->contexts[$form_type])) { die('A context for this form type does not exist'); }
         // Retrieve the form context
